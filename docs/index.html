@@ -290,13 +290,13 @@ Located in ./vendor/QRCode
 <div class="send-footer"><p id="saveCapability">传输时请保持两端页面打开。文件夹请先压缩。</p><button class="btn" id="sendBtn" disabled><svg class="icon sm"><use href="#i-send"/></svg><span id="sendBtnText">开始发送</span></button></div></section>
 <section class="card" id="historyCard"><div class="heading"><div class="heading-title"><svg class="icon"><use href="#i-transfer"/></svg><h2>传输记录</h2></div><button class="text-btn" id="clearHistoryBtn">清理已结束</button></div><div class="tabbar"><div class="tabs" role="tablist" aria-label="传输记录分类"><button class="tab active" id="allTab" role="tab" aria-selected="true" data-tab="all">全部 <span id="allCount">0</span></button><button class="tab" id="inTab" role="tab" aria-selected="false" data-tab="in">收到的 <span id="inCount">0</span></button><button class="tab" id="outTab" role="tab" aria-selected="false" data-tab="out">发出的 <span id="outCount">0</span></button></div><input class="search" id="searchInput" type="search" placeholder="搜索文件名" aria-label="搜索文件名"></div><div class="transfer-list" id="transferList" role="tabpanel"></div></section>
 </div>
-</main><footer class="footer"><div class="footer-left"><svg class="icon sm"><use href="#i-globe"/></svg><span>静态网页 · 无文件服务器 · 请保持双方在线</span></div><div class="footer-right"><button id="helpBtn">使用说明</button><button id="diagnosticsBtn">连接诊断</button><span>v3.0</span></div></footer>
+</main><footer class="footer"><div class="footer-left"><svg class="icon sm"><use href="#i-globe"/></svg><span>静态网页 · 无文件服务器 · 请保持双方在线</span></div><div class="footer-right"><button id="helpBtn">使用说明</button><button id="diagnosticsBtn">连接 / 速度诊断</button><span>v3.1 · 批量传输</span></div></footer>
 </div>
 <dialog id="shareDialog"><div class="modal-heading"><h2>让另一台设备加入</h2><button class="icon-btn" data-close="shareDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy">用系统相机扫描二维码，或分享下方链接。对方发起连接后，请在本机确认。</p><div class="qr-wrap"><canvas id="qrCanvas" aria-label="本机邀请链接二维码" role="img"></canvas></div><div class="share-code" id="shareCode"></div><label for="shareUrl">邀请链接</label><input id="shareUrl" class="share-url" readonly><div class="modal-actions"><button class="btn secondary" id="nativeShareBtn" hidden>系统分享</button><button class="btn" id="copyLinkBtn"><svg class="icon sm"><use href="#i-copy"/></svg>复制邀请链接</button></div></dialog>
 <dialog id="manualDialog"><div class="modal-heading"><h2>手动连接</h2><button class="icon-btn" data-close="manualDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy">不经过在线配对服务。A 生成连接信息交给 B，B 生成回复交还 A。双方必须保持本页打开，且网络允许 WebRTC 通信。</p><label class="check-label"><input type="checkbox" id="manualLocal" checked><span>仅使用局域网候选地址，不访问 STUN / TURN。跨网络时可取消勾选，使用设置中的 ICE 服务。</span></label><section class="manual-section"><h3>① 发起方 A</h3><p>点击生成后，将下方输出完整复制给另一台设备。</p><button class="btn secondary" id="createOfferBtn">生成连接信息</button></section><section class="manual-section"><h3>② 粘贴对方的信息</h3><label for="manualInput" class="tiny">B 粘贴 A 的连接信息；A 粘贴 B 的回复。</label><textarea id="manualInput" spellcheck="false" placeholder="LC3.…"></textarea><button class="btn" id="applyManualBtn">读取信息 / 生成回复</button></section><section class="manual-section"><h3>③ 本机输出</h3><textarea id="manualOutput" readonly spellcheck="false" aria-label="本机连接信息输出" placeholder="生成的连接信息或回复会出现在这里"></textarea><button class="btn secondary small" id="copyManualBtn" disabled>复制本机输出</button><button class="text-btn danger" id="cancelManualBtn" style="margin-left:12px">取消本次手动连接</button></section><p class="manual-state" id="manualState" role="status">提示：连接信息含网络候选地址，请只交给可信的接收方。</p></dialog>
 <dialog id="settingsDialog"><div class="modal-heading"><h2>设置</h2><button class="icon-btn" data-close="settingsDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><form id="settingsForm"><div class="field"><label for="deviceNameInput">设备名称</label><input id="deviceNameInput" maxlength="40" required><p class="tiny">名称由设备自行填写，不是经过认证的身份。</p></div><div class="field"><label for="signalUrlInput">信令 WebSocket 地址</label><input id="signalUrlInput" type="url" spellcheck="false" required><p class="tiny">默认使用公共 PeerServer；无需你部署后端。可填写兼容 PeerServer 协议的地址，HTTPS 页面只接受 wss://。</p></div><div class="field"><label for="signalKeyInput">PeerServer key</label><input id="signalKeyInput" spellcheck="false" maxlength="100"></div><div class="field"><label for="iceInput">ICE 服务（JSON，可选 STUN / TURN）</label><textarea id="iceInput" class="mono" rows="5" spellcheck="false"></textarea><p class="tiny">默认只有 STUN，不保证穿透所有网络。填写 [] 可停用。TURN 凭据仅保存在当前浏览器，不要将私人凭据写入公开仓库。</p></div><label class="check-label"><input id="manualOnlyInput" type="checkbox"><span>停用在线配对，仅使用手动连接</span></label><p class="tiny" style="margin-top:12px">设置保存在此浏览器。网络设置仅影响新建连接；已有文件传输不因重连信令而主动中断。</p><div class="modal-actions"><button class="btn secondary" id="resetSettingsBtn" type="button">恢复默认网络设置</button><button class="btn" type="submit">保存设置</button></div></form></dialog>
-<dialog id="helpDialog"><div class="modal-heading"><h2>使用说明</h2><button class="icon-btn" data-close="helpDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="help-item"><h3>怎样在 GitHub Pages 使用？</h3><p>将此 index.html 上传到仓库的 Pages 发布目录，在仓库 Settings → Pages 中选择发布分支。打开发布后的 HTTPS 地址即可使用，不要运行旧版 server.js。</p></div><div class="help-item"><h3>怎样互传？</h3><p>两端打开网页，一方输入对方的配对码或打开邀请链接，另一方确认连接。选择已连接设备与文件，点击发送。对方确认接收后开始传输。双方都可以发文件。</p></div><div class="help-item"><h3>大文件怎么保存？</h3><p>支持“选择位置接收”的浏览器可边接收边写入磁盘，不设应用层文件大小上限，仍受磁盘、浏览器及网络条件限制。其他浏览器采用内存接收，本页文件数据总预算 256 MiB，实际内存占用更高且可能更早耗尽，收到后须点击下载。超出预算请分卷压缩，或换用支持直接保存的浏览器。</p></div><div class="help-item"><h3>离线与隐私</h3><p>自动配对需要能访问公共信令服务，它会获知配对 ID、连接协商信息和连接 IP，但文件正文通过加密数据通道传输，不上传到 GitHub。网页加载后可通过手动交换连接信息，在允许设备互访的局域网内尝试不依赖外部服务的直连。手动模式不是绕过防火墙。</p></div><div class="help-item"><h3>为什么连接失败？</h3><p>先确认双方没有关闭网页、配对码填写正确。信令不可达时尝试手动连接。连接协商失败时，检查访客 Wi-Fi / AP 隔离、VPN 和防火墙；跨网络可能需要可用的 TURN 服务。手机请保持浏览器前台且屏幕亮着。</p></div><div class="help-item"><h3>边界与安全</h3><p>不会自动扫描整个局域网。文件夹先压缩，不限制文件后缀但浏览器或安全软件仍可能阻止某些下载。不打开或执行收到的文件；不要接受陌生连接。重要文件可通过另一个可信渠道核对双方显示的连接校验码。刷新、关闭页面或断线后不支持续传；需重新发送。未点击下载的内存文件会在关闭页面后丢失。</p></div></dialog>
-<dialog id="diagnosticsDialog"><div class="modal-heading"><h2>连接诊断</h2><button class="icon-btn" data-close="diagnosticsDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy" id="diagnosticInfo"></p><pre class="log" id="diagnosticLog"></pre><div class="modal-actions"><button class="btn secondary" id="diagnosticRetry">重连配对服务</button><button class="btn" id="diagnosticManual">使用手动连接</button></div></dialog>
+<dialog id="helpDialog"><div class="modal-heading"><h2>使用说明</h2><button class="icon-btn" data-close="helpDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="help-item"><h3>怎样在 GitHub Pages 使用？</h3><p>将此 index.html 上传到仓库的 Pages 发布目录，在仓库 Settings → Pages 中选择发布分支。打开发布后的 HTTPS 地址即可使用，不要运行旧版 server.js。</p></div><div class="help-item"><h3>怎样互传？</h3><p>两端打开网页，一方输入对方的配对码或打开邀请链接，另一方确认连接。选择已连接设备与文件，点击发送。对方确认接收后开始传输。双方都可以发文件。</p></div><div class="help-item"><h3>大文件怎么保存？</h3><p>支持“选择位置接收”的浏览器可边接收边写入磁盘，不设应用层文件大小上限，仍受磁盘、浏览器及网络条件限制。其他浏览器采用内存接收，本页文件数据总预算 256 MiB，实际内存占用更高且可能更早耗尽，收到后须点击下载。超出预算请分卷压缩，或换用支持直接保存的浏览器。</p></div><div class="help-item"><h3>v3.1 传输优化</h3><p>双方刷新到 v3.1 后，以 1 MiB 读取和合并写入；网络帧保持约 16 KiB，并通过发送缓冲事件和接收确认推进传输。与旧版配对时自动兼容。连接 / 速度诊断显示链路、延迟、读写次数和等待时间。优化不保证固定速度；不要关闭校验或无限扩大缓存。</p></div><div class="help-item"><h3>离线与隐私</h3><p>自动配对需要能访问公共信令服务，它会获知配对 ID、连接协商信息和连接 IP，但文件正文通过加密数据通道传输，不上传到 GitHub。网页加载后可通过手动交换连接信息，在允许设备互访的局域网内尝试不依赖外部服务的直连。手动模式不是绕过防火墙。</p></div><div class="help-item"><h3>为什么连接失败？</h3><p>先确认双方没有关闭网页、配对码填写正确。信令不可达时尝试手动连接。连接协商失败时，检查访客 Wi-Fi / AP 隔离、VPN 和防火墙；跨网络可能需要可用的 TURN 服务。手机请保持浏览器前台且屏幕亮着。</p></div><div class="help-item"><h3>边界与安全</h3><p>不会自动扫描整个局域网。文件夹先压缩，不限制文件后缀但浏览器或安全软件仍可能阻止某些下载。不打开或执行收到的文件；不要接受陌生连接。重要文件可通过另一个可信渠道核对双方显示的连接校验码。刷新、关闭页面或断线后不支持续传；需重新发送。未点击下载的内存文件会在关闭页面后丢失。</p></div></dialog>
+<dialog id="diagnosticsDialog"><div class="modal-heading"><h2>连接与速度诊断</h2><button class="icon-btn" data-close="diagnosticsDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy" id="diagnosticInfo"></p><pre class="log" id="performanceInfo" style="max-height:360px;white-space:pre-wrap;overflow-wrap:anywhere"></pre><pre class="log" id="diagnosticLog"></pre><div class="modal-actions"><button class="btn secondary" id="copyDiagnosticsBtn">复制诊断</button><button class="btn secondary" id="diagnosticRetry">重连配对服务</button><button class="btn" id="diagnosticManual">使用手动连接</button></div></dialog>
 <div class="toasts" id="toastStack" role="status" aria-live="polite"></div>
 <noscript><div style="padding:24px;text-align:center">本工具需要启用 JavaScript 才能传输文件。</div></noscript>
 <script>
@@ -1576,7 +1576,7 @@ module.exports = QRCode;
 };const cache={};function req(name){name=name.replace(/^\.\//,'');if(cache[name])return cache[name].exports;const module={exports:{}};cache[name]=module;modules[name](module,module.exports,req);return module.exports;}window.LocalQRCode=req('index');})();
 
 </script><script>
-/* 邻传 Pages v3.0 — Single-file, native WebRTC file transfer.
+/* 邻传 Pages v3.1 — Single-file, native WebRTC file transfer.
  * No application backend, build system, CDN script, or file upload endpoint.
  * Online signaling implements PeerServer's OFFER / ANSWER / CANDIDATE protocol.
  * Protocol reference: peers/peerjs v1.5.5 lib/socket.ts and lib/negotiator.ts.
@@ -1589,7 +1589,14 @@ const PREFIX = 'linchuan3-';
 const ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 const MEMORY_LIMIT = 256 * 1024 * 1024;
 const CHUNK_SIZE = 16384 - 16;
-const FLOW_WINDOW = 512 * 1024;
+// Wire protocol remains v3. Old peers use the original 512 KiB receive window.
+const LEGACY_WINDOW = 512 * 1024;
+const FLOW_WINDOW = 4 * 1024 * 1024;
+const READ_BATCH = 1024 * 1024;
+const WRITE_BATCH = 1024 * 1024;
+const SEND_HIGH = 1024 * 1024;
+const SEND_LOW = 256 * 1024;
+const RECEIVE_QUEUE_LIMIT = 6 * 1024 * 1024;
 const ACK_EVERY = 128 * 1024;
 const STALL_MS = 90000;
 const MAX_CONNECTIONS = 6;
@@ -1642,7 +1649,7 @@ const ror=(n,b)=>(n>>>b)|(n<<(32-b));
 class Sha256 {
   constructor(){this.h=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);this.buf=new Uint8Array(64);this.w=new Uint32Array(64);this.len=0;this.total=0;this.finished=false;}
   update(input){if(this.finished)throw new Error('SHA-256 already finalized');const a=input instanceof Uint8Array?input:new Uint8Array(input);this.total+=a.byteLength;let p=0;if(this.len){const n=Math.min(64-this.len,a.length);this.buf.set(a.subarray(0,n),this.len);this.len+=n;p=n;if(this.len===64){this.block(this.buf,0);this.len=0;}}while(p+64<=a.length){this.block(a,p);p+=64;}if(p<a.length){this.buf.set(a.subarray(p));this.len=a.length-p;}return this;}
-  block(a,p){const w=this.w;for(let i=0;i<16;i++){const j=p+i*4;w[i]=((a[j]<<24)|(a[j+1]<<16)|(a[j+2]<<8)|a[j+3])>>>0;}for(let i=16;i<64;i++){const x=w[i-15],y=w[i-2];w[i]=(w[i-16]+(ror(x,7)^ror(x,18)^(x>>>3))+w[i-7]+(ror(y,17)^ror(y,19)^(y>>>10)))>>>0;}let [a0,b,c,d,e,f,g,h]=this.h;for(let i=0;i<64;i++){const t1=(h+(ror(e,6)^ror(e,11)^ror(e,25))+((e&f)^(~e&g))+SHA_K[i]+w[i])>>>0;const t2=((ror(a0,2)^ror(a0,13)^ror(a0,22))+((a0&b)^(a0&c)^(b&c)))>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a0;a0=(t1+t2)>>>0;}const state=[a0,b,c,d,e,f,g,h];for(let i=0;i<8;i++)this.h[i]=(this.h[i]+state[i])>>>0;}
+  block(a,p){const w=this.w;for(let i=0;i<16;i++){const j=p+i*4;w[i]=((a[j]<<24)|(a[j+1]<<16)|(a[j+2]<<8)|a[j+3])>>>0;}for(let i=16;i<64;i++){const x=w[i-15],y=w[i-2];w[i]=(w[i-16]+(ror(x,7)^ror(x,18)^(x>>>3))+w[i-7]+(ror(y,17)^ror(y,19)^(y>>>10)))>>>0;}const H=this.h;let a0=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];for(let i=0;i<64;i++){const t1=(h+(ror(e,6)^ror(e,11)^ror(e,25))+((e&f)^(~e&g))+SHA_K[i]+w[i])>>>0;const t2=((ror(a0,2)^ror(a0,13)^ror(a0,22))+((a0&b)^(a0&c)^(b&c)))>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a0;a0=(t1+t2)>>>0;}H[0]=(H[0]+a0)>>>0;H[1]=(H[1]+b)>>>0;H[2]=(H[2]+c)>>>0;H[3]=(H[3]+d)>>>0;H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;}
   digest(){if(this.finished)return this.result;const tail=new Uint8Array(this.len<56?64:128);tail.set(this.buf.subarray(0,this.len));tail[this.len]=0x80;const view=new DataView(tail.buffer);view.setUint32(tail.length-8,Math.floor(this.total/0x20000000));view.setUint32(tail.length-4,(this.total*8)>>>0);this.block(tail,0);if(tail.length===128)this.block(tail,64);this.finished=true;return this.result=[...this.h].map(x=>x.toString(16).padStart(8,'0')).join('');}
 }
 
@@ -1698,10 +1705,10 @@ function createConnection({id,remote,outgoing,mode,localOnly=false}){
   c.connectTimer=setTimeout(()=>{if(!c.dc||c.dc.readyState!=='open')closeConnection(c,'连接超时：对方可能未在线，或当前网络不允许直连');},mode==='manual'?180000:40000);
   markDirty();return c;
 }
-function attachChannel(c,dc){c.dc=dc;dc.binaryType='arraybuffer';dc.bufferedAmountLowThreshold=128*1024;
-  const opened=()=>{if(c.closed)return;clearTimeout(c.connectTimer);c.handshakeAt=Date.now();sendControl(c,{t:'hello',app:'linchuan',name:myName,kind:deviceKind,instance:instanceId});if(c.localApproved)sendControl(c,{t:'approve'});fingerprint(c);markDirty();};
+function attachChannel(c,dc){c.dc=dc;dc.binaryType='arraybuffer';dc.bufferedAmountLowThreshold=SEND_LOW;dc.onbufferedamountlow=()=>wakeSenders(c);
+  const opened=()=>{if(c.closed)return;clearTimeout(c.connectTimer);c.handshakeAt=Date.now();sendControl(c,{t:'hello',app:'linchuan',name:myName,kind:deviceKind,instance:instanceId,build:'3.1',fastIO:1});if(c.localApproved)sendControl(c,{t:'approve'});fingerprint(c);markDirty();};
   dc.onopen=opened;dc.onclose=()=>closeConnection(c,'对方已断开连接');dc.onerror=()=>closeConnection(c,'数据通道发生错误');
-  dc.onmessage=e=>{if(c.closed)return;const size=typeof e.data==='string'?e.data.length:e.data.byteLength??e.data.size??0;c.queuedBytes+=size;if(c.queuedBytes>4*1024*1024){closeConnection(c,'接收队列超出安全限制');return;}c.chain=c.chain.then(()=>receiveMessage(c,e.data)).catch(err=>{log('数据处理失败：'+cleanName(err.message,160));if(c.incoming)failTransfer(c.incoming,err.message,true);else closeConnection(c,'数据协议错误：'+err.message);}).finally(()=>{c.queuedBytes-=size;});};
+  dc.onmessage=e=>{if(c.closed)return;const size=typeof e.data==='string'?e.data.length:e.data.byteLength??e.data.size??0;c.queuedBytes+=size;if(c.queuedBytes>RECEIVE_QUEUE_LIMIT){closeConnection(c,'接收队列超出安全限制');return;}c.chain=c.chain.then(()=>receiveMessage(c,e.data)).catch(err=>{log('数据处理失败：'+cleanName(err.message,160));if(c.incoming)failTransfer(c.incoming,err.message,true);else closeConnection(c,'数据协议错误：'+err.message);}).finally(()=>{c.queuedBytes-=size;});};
   if(dc.readyState==='open')opened();
 }
 function sendControl(c,message){if(c.closed||!c.dc||c.dc.readyState!=='open')throw new Error('设备连接已断开');const data=JSON.stringify({v:VERSION,...message});if(data.length>12000)throw new Error('控制消息过长');c.dc.send(data);}
@@ -1709,29 +1716,44 @@ function tryControl(c,message){try{sendControl(c,message);return true;}catch{ret
 function approveConnection(c){if(c.closed||!c.hello)return;c.localApproved=true;tryControl(c,{t:'approve'});maybeReady(c);}
 function maybeReady(c){if(c.closed||c.ready||!c.hello||!c.localApproved||!c.remoteApproved)return;c.ready=true;c.route='正在检测链路';if(!selected)selected=c.id;log('设备已通过双方确认，可以传输文件。');toast('已连接到 '+c.name);if(manualSession===c){$('manualState').textContent='连接已建立。双方确认后即可传输文件。';}detectRoute(c);markDirty();}
 async function fingerprint(c){try{const fps=[c.pc.localDescription?.sdp,c.pc.remoteDescription?.sdp].map(s=>(s?.match(/a=fingerprint:sha-256 ([^\r\n]+)/i)||[])[1]);if(fps.some(x=>!x))return;const hash=new Sha256().update(enc.encode(fps.sort().join('|'))).digest();c.verification=(parseInt(hash.slice(0,10),16)%100000000).toString().padStart(8,'0').replace(/(.{4})(.{4})/,'$1 $2');markDirty();}catch{}}
-async function detectRoute(c){if(c.closed)return;try{const stats=await c.pc.getStats();let pair;stats.forEach(s=>{if(s.type==='transport'&&s.selectedCandidatePairId)pair=stats.get(s.selectedCandidatePairId);});if(!pair)stats.forEach(s=>{if(s.type==='candidate-pair'&&s.state==='succeeded'&&(s.nominated||s.selected))pair=s;});if(pair){const l=stats.get(pair.localCandidateId),r=stats.get(pair.remoteCandidateId);const relay=l?.candidateType==='relay'||r?.candidateType==='relay';c.route=relay?'TURN 加密中继':'浏览器直连';if(pair.currentRoundTripTime!==undefined)c.rtt=Math.round(pair.currentRoundTripTime*1000);markDirty();}}catch{}}
+async function detectRoute(c){
+  if(c.closed)return;
+  try{
+    const stats=await c.pc.getStats();let pair;
+    stats.forEach(s=>{if(s.type==='transport'&&s.selectedCandidatePairId)pair=stats.get(s.selectedCandidatePairId);});
+    if(!pair)stats.forEach(s=>{if(s.type==='candidate-pair'&&s.state==='succeeded'&&(s.nominated||s.selected))pair=s;});
+    if(pair){
+      const l=stats.get(pair.localCandidateId),r=stats.get(pair.remoteCandidateId);
+      const relay=l?.candidateType==='relay'||r?.candidateType==='relay';
+      c.route=relay?'TURN 加密中继':'浏览器直连';
+      c.routeDetail=(l?.candidateType||'未知')+' ↔ '+(r?.candidateType||'未知')+' · '+(l?.protocol||r?.protocol||'未知');
+      if(pair.currentRoundTripTime!==undefined)c.rtt=Math.round(pair.currentRoundTripTime*1000);
+      markDirty();
+    }
+  }catch{}
+}
 function retire(c,stream){c.retired.add(stream);if(c.retired.size>256)c.retired.delete(c.retired.values().next().value);}
-function closeConnection(c,reason='连接已断开'){if(c.closed)return;c.closed=true;c.ready=false;clearTimeout(c.connectTimer);try{c.dc?.close();c.pc.close();}catch{}for(const t of transfers)if(t.connection===c&&!TERMINAL.has(t.status))failTransfer(t,reason,false);if(selected===c.id)selected=liveConnections().find(x=>x.ready)?.id||'';if(manualSession===c){manualSession=null;$('manualState').textContent=reason;$('manualOutput').value='';$('copyManualBtn').disabled=true;}log(reason);toast(reason,true);setTimeout(()=>{if(connections.get(c.id)===c)connections.delete(c.id);},1000);markDirty();}
+function closeConnection(c,reason='连接已断开'){if(c.closed)return;c.closed=true;c.ready=false;wakeSenders(c);clearTimeout(c.connectTimer);try{c.dc?.close();c.pc.close();}catch{}for(const t of transfers)if(t.connection===c&&!TERMINAL.has(t.status))failTransfer(t,reason,false);if(selected===c.id)selected=liveConnections().find(x=>x.ready)?.id||'';if(manualSession===c){manualSession=null;$('manualState').textContent=reason;$('manualOutput').value='';$('copyManualBtn').disabled=true;}log(reason);toast(reason,true);setTimeout(()=>{if(connections.get(c.id)===c)connections.delete(c.id);},1000);markDirty();}
 
 // ---- File protocol: offer -> accept -> offset-framed chunks -> hash/end -> done ----
 async function receiveMessage(c,data){if(c.closed)return;c.lastSeen=Date.now();if(data instanceof Blob)data=await data.arrayBuffer();if(typeof data!=='string'){if(!(data instanceof ArrayBuffer))throw new Error('无法识别的数据');return receiveChunk(c,data);}if(data.length>12000)throw new Error('控制信息超出限制');let m;try{m=JSON.parse(data);}catch{throw new Error('不是合法的协议消息');}if(!m||m.v!==VERSION||typeof m.t!=='string')throw new Error('文件传输协议版本不匹配');
-  if(m.t==='hello'){if(m.app!=='linchuan'||typeof m.name!=='string'||typeof m.instance!=='string'||m.instance===instanceId)throw new Error('设备握手信息无效');c.name=cleanName(m.name,40);c.kind=m.kind==='phone'?'phone':'laptop';c.hello=true;maybeReady(c);markDirty();return;}
+  if(m.t==='hello'){if(m.app!=='linchuan'||typeof m.name!=='string'||typeof m.instance!=='string'||m.instance===instanceId)throw new Error('设备握手信息无效');c.name=cleanName(m.name,40);c.kind=m.kind==='phone'?'phone':'laptop';c.peerBuild=m.build==='3.1'?'3.1':'3.0';c.fastIO=m.fastIO===1;c.hello=true;maybeReady(c);markDirty();return;}
   if(m.t==='approve'){c.remoteApproved=true;maybeReady(c);return;}
   if(m.t==='bye'){closeConnection(c,'对方已拒绝或断开连接');return;}
   if(m.t==='ping'){tryControl(c,{t:'pong'});return;}if(m.t==='pong')return;
   if(!c.ready)throw new Error('设备未通过双方确认');
   if(m.t==='name'){if(typeof m.name==='string'){c.name=cleanName(m.name,40);markDirty();}return;}
   if(m.t==='offer'){return receiveOffer(c,m);}
-  if(m.t==='accept'){const t=c.out;if(!t||t.id!==m.id||t.status!=='waiting')return;t.accepted=true;t.saveMode=m.mode==='disk'?'disk':'memory';t.lastActivity=Date.now();return;}
+  if(m.t==='accept'){const t=c.out;if(!t||t.id!==m.id||t.status!=='waiting')return;t.accepted=true;t.saveMode=m.mode==='disk'?'disk':'memory';t.flowWindow=Number.isSafeInteger(m.window)&&m.window>=LEGACY_WINDOW?Math.min(m.window,FLOW_WINDOW):LEGACY_WINDOW;t.lastActivity=Date.now();wakeSenders(c);return;}
   if(m.t==='reject'){const t=c.out;if(t&&t.id===m.id)failTransfer(t,cleanName(m.reason||'对方拒绝接收',160),false,'rejected');return;}
-  if(m.t==='ack'){const t=c.out;if(!t||m.id!==t.id||TERMINAL.has(t.status))return;if(!Number.isSafeInteger(m.offset)||m.offset<t.acked||m.offset>t.sent)throw new Error('无效的接收进度');t.acked=m.offset;t.offset=m.offset;t.lastActivity=Date.now();return;}
+  if(m.t==='ack'){const t=c.out;if(!t||m.id!==t.id||TERMINAL.has(t.status))return;if(!Number.isSafeInteger(m.offset)||m.offset<t.acked||m.offset>t.sent)throw new Error('无效的接收进度');t.acked=m.offset;t.offset=m.offset;t.lastActivity=Date.now();wakeSenders(c);return;}
   if(m.t==='pause'){const t=c.incoming;if(t&&t.id===m.id&&['receiving','paused'].includes(t.status)){t.status=m.paused?'paused':'receiving';t.lastActivity=Date.now();markDirty();}return;}
   if(m.t==='cancel'){for(const t of [c.out,c.incoming])if(t&&t.id===m.id&&!TERMINAL.has(t.status))failTransfer(t,cleanName(m.reason||'对方取消传输',160),false,'cancelled');return;}
   if(m.t==='end'){return finishIncoming(c,m);}
-  if(m.t==='done'){const t=c.out;if(!t||t.id!==m.id||t.status!=='verifying')return;if(m.hash!==t.hash||m.bytes!==t.size)throw new Error('接收方确认信息不一致');t.acked=t.offset=t.size;t.status='done';t.savedByReceiver=m.saved===true;t.file=null;t.completedAt=Date.now();t.lastActivity=Date.now();toast('已送达：'+t.name);markDirty();return;}
+  if(m.t==='done'){const t=c.out;if(!t||t.id!==m.id||t.status!=='verifying')return;if(m.hash!==t.hash||m.bytes!==t.size)throw new Error('接收方确认信息不一致');t.acked=t.offset=t.size;t.status='done';t.savedByReceiver=m.saved===true;t.file=null;t.completedAt=Date.now();t.lastActivity=Date.now();toast('已送达：'+t.name);wakeSenders(c);markDirty();return;}
   throw new Error('未知的传输消息');
 }
-function receiveOffer(c,m){if(c.incoming&&!TERMINAL.has(c.incoming.status)){tryControl(c,{t:'reject',id:m.id,reason:'接收方正在处理另一个文件'});return;}if(typeof m.id!=='string'||!/^[a-f0-9]{24}$/.test(m.id)||!Number.isInteger(m.stream)||m.stream<1||m.stream>0xffffffff||!Number.isSafeInteger(m.size)||m.size<0||typeof m.name!=='string'||m.name.length>1024||c.retired.has(m.stream))throw new Error('文件元数据不合法');if(transfers.some(t=>t.connection===c&&t.id===m.id))throw new Error('重复的文件 ID');const t={id:m.id,stream:m.stream,direction:'in',connection:c,name:cleanName(m.name),size:m.size,status:'offered',offset:0,acked:0,createdAt:Date.now(),lastActivity:Date.now(),rate:0,parts:[],hashState:null};c.incoming=t;transfers.push(t);if(currentTab==='out')switchTab('all');toast(c.name+' 发来文件，请确认接收');markDirty();}
+function receiveOffer(c,m){if(c.incoming&&!TERMINAL.has(c.incoming.status)){tryControl(c,{t:'reject',id:m.id,reason:'接收方正在处理另一个文件'});return;}if(typeof m.id!=='string'||!/^[a-f0-9]{24}$/.test(m.id)||!Number.isInteger(m.stream)||m.stream<1||m.stream>0xffffffff||!Number.isSafeInteger(m.size)||m.size<0||typeof m.name!=='string'||m.name.length>1024||c.retired.has(m.stream))throw new Error('文件元数据不合法');if(transfers.some(t=>t.connection===c&&t.id===m.id))throw new Error('重复的文件 ID');const t={id:m.id,stream:m.stream,direction:'in',connection:c,name:cleanName(m.name),size:m.size,status:'offered',offset:0,acked:0,createdAt:Date.now(),lastActivity:Date.now(),rate:0,parts:[],hashState:null,fastIO:m.fastIO===1};c.incoming=t;transfers.push(t);if(currentTab==='out')switchTab('all');toast(c.name+' 发来文件，请确认接收');markDirty();}
 async function acceptIncoming(t,mode){if(t.status!=='offered'||t.connection.closed)return;const c=t.connection;t.status='choosing';t.lastActivity=Date.now();markDirty();let handle=null,writer=null;
   try{
     if(mode==='disk'){
@@ -1745,28 +1767,138 @@ async function acceptIncoming(t,mode){if(t.status!=='offered'||t.connection.clos
       if(t.size>MEMORY_LIMIT-memoryReserved)throw new Error('内存接收预算不足。请先下载并移除已有文件，或选择保存位置 / 使用支持直接保存的浏览器。');
       memoryReserved+=t.size;t.reserved=t.size;t.parts=[];
     }
-    t.mode=mode;t.hashState=new Sha256();t.status='receiving';t.lastAckOffset=0;t.lastAckAt=Date.now();t.lastActivity=Date.now();sendControl(c,{t:'accept',id:t.id,mode});requestWake();markDirty();
+    t.mode=mode;t.metrics=newMetrics();t.hashState=new Sha256();t.committed=0;t.diskUsed=0;t.diskBuffer=mode==='disk'?new Uint8Array(t.fastIO?WRITE_BATCH:256*1024):null;t.startedAt=Date.now();t.status='receiving';t.lastAckOffset=0;t.lastAckAt=Date.now();t.lastActivity=Date.now();sendControl(c,{t:'accept',id:t.id,mode,window:FLOW_WINDOW});requestWake();markDirty();
   }catch(e){if(writer&&t.writer!==writer)try{await writer.abort();}catch{}if(t.status==='choosing'){t.status='offered';if(e.name!=='AbortError')toast(e.message,true);}else if(!TERMINAL.has(t.status))failTransfer(t,e.message,true);markDirty();}
 }
 function rejectIncoming(t){if(t.status!=='offered')return;tryControl(t.connection,{t:'reject',id:t.id,reason:'对方拒绝接收'});failTransfer(t,'已拒绝接收',false,'rejected');}
-async function receiveChunk(c,buffer){if(!c.ready)throw new Error('收到未确认设备的数据');if(buffer.byteLength<16||buffer.byteLength>16384)throw new Error('文件分块长度无效');const view=new DataView(buffer);if(view.getUint32(0)!==0x4c443033)throw new Error('文件分块标记错误');const stream=view.getUint32(4),offset=view.getFloat64(8);if(c.retired.has(stream))return;const t=c.incoming;if(!t||t.stream!==stream||!['receiving','paused'].includes(t.status))throw new Error('没有已同意接收的对应文件');if(!Number.isSafeInteger(offset)||offset!==t.offset||offset+(buffer.byteLength-16)>t.size||buffer.byteLength===16)throw new Error('文件分块偏移或长度不一致');const payload=new Uint8Array(buffer,16);if(t.writer){try{await t.writer.write(payload);}catch(e){if(TERMINAL.has(t.status))return;throw e;}}if(TERMINAL.has(t.status))return;t.hashState.update(payload);if(t.mode==='memory')t.parts.push(payload.slice());t.offset+=payload.byteLength;t.lastActivity=Date.now();if(t.offset-t.lastAckOffset>=ACK_EVERY||Date.now()-t.lastAckAt>=100||t.offset===t.size){sendControl(c,{t:'ack',id:t.id,offset:t.offset});t.lastAckOffset=t.offset;t.lastAckAt=Date.now();}}
+// Disk writes are coalesced independently of the interoperable 16 KiB network frame.
+// ACKs for disk mode advance only after write() resolves. Staged bytes alone do not
+// release receive credits; the final completion also requires close() to succeed.
+function newMetrics(){return {readMs:0,hashMs:0,writeMs:0,ackWaitMs:0,bufferWaitMs:0,readCalls:0,writeCalls:0};}
+function hashMeasured(t,data){const at=performance.now();t.hashState.update(data);t.metrics.hashMs+=performance.now()-at;}
+async function flushDisk(t){
+  if(!t.diskUsed||TERMINAL.has(t.status))return;
+  const count=t.diskUsed, data=t.diskBuffer.subarray(0,count), writer=t.writer;
+  hashMeasured(t,data);
+  const at=performance.now();t.ioPhase='等待文件写入';
+  try{await writer.write(data);}catch(e){if(TERMINAL.has(t.status))return;throw e;}
+  finally{t.metrics.writeMs+=performance.now()-at;t.metrics.writeCalls++;t.ioPhase='';}
+  if(TERMINAL.has(t.status))return;
+  t.committed+=count;t.diskUsed=0;t.lastActivity=Date.now();
+}
+function ackIncoming(t,force=false){
+  if(TERMINAL.has(t.status))return;
+  const offset=t.mode==='disk'?t.committed:t.offset;
+  if(offset>t.lastAckOffset&&(force||offset-t.lastAckOffset>=ACK_EVERY||Date.now()-t.lastAckAt>=100||offset===t.size)){
+    sendControl(t.connection,{t:'ack',id:t.id,offset});t.lastAckOffset=offset;t.lastAckAt=Date.now();
+  }
+}
+async function receiveChunk(c,buffer){
+  if(!c.ready)throw new Error('收到未确认设备的数据');
+  if(buffer.byteLength<16||buffer.byteLength>16384)throw new Error('文件分块长度无效');
+  const view=new DataView(buffer);
+  if(view.getUint32(0)!==0x4c443033)throw new Error('文件分块标记错误');
+  const stream=view.getUint32(4),offset=view.getFloat64(8);
+  if(c.retired.has(stream))return;
+  const t=c.incoming;
+  if(!t||t.stream!==stream||!['receiving','paused'].includes(t.status))throw new Error('没有已同意接收的对应文件');
+  if(!Number.isSafeInteger(offset)||offset!==t.offset||offset+(buffer.byteLength-16)>t.size||buffer.byteLength===16)throw new Error('文件分块偏移或长度不一致');
+  const payload=new Uint8Array(buffer,16);
+  if(t.mode==='disk'){
+    let pos=0;
+    while(pos<payload.byteLength){
+      const count=Math.min(payload.byteLength-pos,t.diskBuffer.length-t.diskUsed);
+      t.diskBuffer.set(payload.subarray(pos,pos+count),t.diskUsed);t.diskUsed+=count;pos+=count;
+      if(t.diskUsed===t.diskBuffer.length){await flushDisk(t);if(TERMINAL.has(t.status))return;}
+    }
+  }else{hashMeasured(t,payload);t.parts.push(payload.slice());}
+  if(TERMINAL.has(t.status))return;
+  t.offset+=payload.byteLength;t.lastActivity=Date.now();
+  if(t.mode==='disk'&&t.offset===t.size){await flushDisk(t);if(TERMINAL.has(t.status))return;}
+  ackIncoming(t);
+}
 async function finishIncoming(c,m){const t=c.incoming;if(!t||m.id!==t.id||TERMINAL.has(t.status))return;if(!['receiving','paused'].includes(t.status)||t.offset!==t.size||m.bytes!==t.size||typeof m.hash!=='string'||!/^[a-f0-9]{64}$/.test(m.hash))throw new Error('文件尚未完整接收');t.status='verifying';markDirty();const hash=t.hashState.digest();if(hash!==m.hash)throw new Error('SHA-256 校验失败，已丢弃接收的文件');t.hash=hash;
   if(t.writer){try{await t.writer.close();}catch(e){if(TERMINAL.has(t.status))return;throw e;}t.writer=null;if(TERMINAL.has(t.status))return;t.status='saved';}
   else {const blob=new Blob(t.parts,{type:'application/octet-stream'});t.parts=[];t.url=URL.createObjectURL(blob);t.status='done';}
-  t.hashState=null;t.completedAt=Date.now();retire(c,t.stream);c.incoming=null;tryControl(c,{t:'done',id:t.id,hash,bytes:t.size,saved:t.mode==='disk'});toast(t.mode==='disk'?'已保存并校验：'+t.name:'接收完成，请点击下载：'+t.name);markDirty();releaseWakeIfIdle();
+  t.hashState=null;t.diskBuffer=null;t.diskUsed=0;t.completedAt=Date.now();retire(c,t.stream);c.incoming=null;tryControl(c,{t:'done',id:t.id,hash,bytes:t.size,saved:t.mode==='disk'});toast(t.mode==='disk'?'已保存并校验：'+t.name:'接收完成，请点击下载：'+t.name);markDirty();releaseWakeIfIdle();
 }
-function failTransfer(t,reason,notify=true,status='error'){if(TERMINAL.has(t.status))return;t.status=status;t.error=cleanName(reason,220);t.completedAt=Date.now();if(notify)tryControl(t.connection,{t:'cancel',id:t.id,reason:t.error});if(t.direction==='in'){retire(t.connection,t.stream);if(t.connection.incoming===t)t.connection.incoming=null;if(t.writer){const writer=t.writer;t.writer=null;writer.abort().catch(()=>{});}t.parts=[];t.hashState=null;if(t.reserved){memoryReserved-=t.reserved;t.reserved=0;}}if(t.direction==='out'&&status==='cancelled')t.file=null;markDirty();releaseWakeIfIdle();}
+function failTransfer(t,reason,notify=true,status='error'){if(TERMINAL.has(t.status))return;t.status=status;t.error=cleanName(reason,220);t.completedAt=Date.now();if(notify)tryControl(t.connection,{t:'cancel',id:t.id,reason:t.error});if(t.direction==='in'){retire(t.connection,t.stream);if(t.connection.incoming===t)t.connection.incoming=null;if(t.writer){const writer=t.writer;t.writer=null;writer.abort().catch(()=>{});}t.parts=[];t.diskBuffer=null;t.diskUsed=0;t.hashState=null;if(t.reserved){memoryReserved-=t.reserved;t.reserved=0;}}if(t.direction==='out'){t.hashState=null;if(status==='cancelled')t.file=null;}wakeSenders(t.connection);markDirty();releaseWakeIfIdle();}
 function cancelTransfer(t){failTransfer(t,'已取消传输',true,'cancelled');}
-function pauseTransfer(t){if(t.status==='sending'){t.status='paused';t.pauseAt=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:true});}else if(t.status==='paused'&&t.direction==='out'){t.status='sending';t.lastActivity=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:false});}markDirty();}
+function pauseTransfer(t){if(t.status==='sending'){t.status='paused';t.pauseAt=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:true});}else if(t.status==='paused'&&t.direction==='out'){t.status='sending';t.lastActivity=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:false});}wakeSenders(t.connection);markDirty();}
 function stage(files){let added=0;for(const file of files){if(stagedFiles.length>=1000){toast('待发送列表最多 1000 个文件',true);break;}if(!(file instanceof File))continue;if(stagedFiles.some(x=>x.file.name===file.name&&x.file.size===file.size&&x.file.lastModified===file.lastModified))continue;stagedFiles.push({key:randomHex(6),file});added++;}if(added)markDirty();}
 function sendStaged(){const c=connections.get(selected);if(!c?.ready||c.closed){toast('请先连接并选择接收设备',true);return;}if(!stagedFiles.length)return;for(const item of stagedFiles){let stream;do{stream=crypto.getRandomValues(new Uint32Array(1))[0];}while(!stream||transfers.some(t=>t.connection===c&&t.stream===stream));const t={id:randomHex(12),stream,direction:'out',connection:c,name:item.file.name,size:item.file.size,file:item.file,status:'queued',offset:0,acked:0,sent:0,createdAt:Date.now(),lastActivity:Date.now(),rate:0};c.queue.push(t);transfers.push(t);}stagedFiles.length=0;switchTab('all');markDirty();requestWake();pump(c);}
 async function pump(c){if(c.processing||c.closed)return;c.processing=true;try{while(c.queue.length&&!c.closed){const t=c.queue.shift();if(TERMINAL.has(t.status))continue;c.out=t;try{await sendOne(t);}catch(e){if(!TERMINAL.has(t.status))failTransfer(t,e.message,true);}finally{if(c.out===t)c.out=null;}}}finally{c.processing=false;markDirty();releaseWakeIfIdle();}}
 function checkOutgoing(t){if(TERMINAL.has(t.status))throw new Error(t.error||'传输已结束');if(t.connection.closed||t.connection.dc?.readyState!=='open')throw new Error('设备连接已断开');}
-async function waitFor(t,predicate,limit){const started=Date.now();while(!predicate()){checkOutgoing(t);if(Date.now()-started>limit)throw new Error('等待对方响应超时，请重试');await sleep(40);}}
-async function sendOne(t){const c=t.connection;t.status='waiting';t.lastActivity=Date.now();sendControl(c,{t:'offer',id:t.id,stream:t.stream,name:t.name,size:t.size});markDirty();await waitFor(t,()=>t.accepted,300000);checkOutgoing(t);t.status='sending';t.startedAt=Date.now();t.lastActivity=Date.now();t.hashState=new Sha256();markDirty();const max=c.pc.sctp?.maxMessageSize;const block=Math.min(CHUNK_SIZE,max&&Number.isFinite(max)?max-16:CHUNK_SIZE);if(block<1024)throw new Error('浏览器的数据通道消息容量太小');
-  while(t.sent<t.size){checkOutgoing(t);if(t.status==='paused'){await sleep(80);continue;}if(Date.now()-t.lastActivity>STALL_MS)throw new Error('接收方长时间没有响应，传输已停止');if(t.sent-t.acked>=FLOW_WINDOW||c.dc.bufferedAmount>FLOW_WINDOW){await sleep(12);continue;}const chunk=await t.file.slice(t.sent,t.sent+block).arrayBuffer();checkOutgoing(t);if(t.status==='paused')continue;if(!chunk.byteLength)throw new Error('无法继续读取本地文件');const packet=new ArrayBuffer(16+chunk.byteLength);const view=new DataView(packet);view.setUint32(0,0x4c443033);view.setUint32(4,t.stream);view.setFloat64(8,t.sent);new Uint8Array(packet,16).set(new Uint8Array(chunk));t.hashState.update(chunk);c.dc.send(packet);t.sent+=chunk.byteLength;
+// One-shot timeout guards only. There is no polling timer in the data send path.
+function wakeSenders(c){for(const check of [...(c.sendWaiters||[])])check();}
+function waitFor(t,predicate,limit,message='等待对方响应超时，请重试'){
+  if(predicate())return Promise.resolve();
+  checkOutgoing(t);
+  const c=t.connection;c.sendWaiters??=new Set();
+  return new Promise((resolve,reject)=>{
+    let timer,settled=false;
+    const cleanup=()=>{settled=true;clearTimeout(timer);c.sendWaiters.delete(check);};
+    const check=()=>{if(settled)return;try{if(predicate()){cleanup();resolve();return;}checkOutgoing(t);}catch(e){cleanup();reject(e);}};
+    c.sendWaiters.add(check);
+    timer=setTimeout(()=>{if(settled)return;cleanup();reject(new Error(message));},limit);
+    check();
+  });
+}
+async function awaitSendRoom(t,count){
+  const c=t.connection;
+  for(;;){
+    checkOutgoing(t);
+    if(t.status==='paused'){
+      await waitFor(t,()=>t.status!=='paused',24*60*60*1000,'暂停时间过长，请重新发送');continue;
+    }
+    const windowSize=t.flowWindow||LEGACY_WINDOW;
+    if(t.sent-t.acked+count>windowSize){
+      const at=performance.now();t.ioPhase='等待接收确认';
+      try{await waitFor(t,()=>t.status==='paused'||t.sent-t.acked+count<=windowSize,STALL_MS,'接收方长时间没有确认进度');}
+      finally{t.metrics.ackWaitMs+=performance.now()-at;t.ioPhase='';}
+      continue;
+    }
+    if(c.dc.bufferedAmount+16+count>SEND_HIGH){
+      const at=performance.now();t.ioPhase='等待网络发送缓冲';
+      try{await waitFor(t,()=>t.status==='paused'||c.dc.bufferedAmount<=SEND_LOW,STALL_MS,'数据通道发送缓冲长时间未排空');}
+      finally{t.metrics.bufferWaitMs+=performance.now()-at;t.ioPhase='';}
+      continue;
+    }
+    return;
   }
-  while(t.status==='paused'){checkOutgoing(t);await sleep(80);}checkOutgoing(t);t.hash=t.hashState.digest();t.hashState=null;t.status='verifying';sendControl(c,{t:'end',id:t.id,bytes:t.size,hash:t.hash});markDirty();await waitFor(t,()=>t.status==='done',STALL_MS);}
+}
+async function sendOne(t){
+  const c=t.connection;t.status='waiting';t.metrics=newMetrics();t.lastActivity=Date.now();
+  sendControl(c,{t:'offer',id:t.id,stream:t.stream,name:t.name,size:t.size,fastIO:1});markDirty();
+  await waitFor(t,()=>t.accepted,300000);checkOutgoing(t);
+  t.status='sending';t.startedAt=Date.now();t.lastActivity=Date.now();t.hashState=new Sha256();markDirty();
+  const max=c.pc.sctp?.maxMessageSize;
+  const block=Math.min(CHUNK_SIZE,max&&Number.isFinite(max)?max-16:CHUNK_SIZE);
+  if(block<1024)throw new Error('浏览器的数据通道消息容量太小');
+  while(t.sent<t.size){
+    await awaitSendRoom(t,Math.min(block,t.size-t.sent));
+    const at=performance.now();t.ioPhase='读取本地文件';
+    let data;
+    try{data=new Uint8Array(await t.file.slice(t.sent,t.sent+READ_BATCH).arrayBuffer());}
+    finally{t.metrics.readMs+=performance.now()-at;t.metrics.readCalls++;t.ioPhase='';}
+    checkOutgoing(t);
+    if(!data.byteLength)throw new Error('无法继续读取本地文件');
+    hashMeasured(t,data);
+    let pos=0;
+    while(pos<data.length){
+      const count=Math.min(block,data.length-pos);
+      await awaitSendRoom(t,count);checkOutgoing(t);
+      const packet=new ArrayBuffer(16+count),view=new DataView(packet);
+      view.setUint32(0,0x4c443033);view.setUint32(4,t.stream);view.setFloat64(8,t.sent);
+      new Uint8Array(packet,16).set(data.subarray(pos,pos+count));
+      c.dc.send(packet);t.sent+=count;pos+=count;
+    }
+  }
+  if(t.status==='paused')await waitFor(t,()=>t.status!=='paused',24*60*60*1000,'暂停时间过长，请重新发送');
+  checkOutgoing(t);t.hash=t.hashState.digest();t.hashState=null;t.status='verifying';
+  sendControl(c,{t:'end',id:t.id,bytes:t.size,hash:t.hash});markDirty();
+  await waitFor(t,()=>t.status==='done',STALL_MS,'等待接收方校验和保存超时');
+}
 function retryTransfer(t){if(!t.file||!t.connection.ready||t.connection.closed){toast('请重新连接设备并选择文件',true);return;}stagedFiles.push({key:randomHex(6),file:t.file});selected=t.connection.id;markDirty();toast('已重新加入待发送列表，将从头发送');}
 function removeTransfer(t){if(!TERMINAL.has(t.status))return;if(t.url){URL.revokeObjectURL(t.url);t.url=null;}if(t.reserved){memoryReserved-=t.reserved;t.reserved=0;}t.file=null;t.parts=[];const i=transfers.indexOf(t);if(i!==-1)transfers.splice(i,1);markDirty();}
 function downloadTransfer(t){if(!t.url)return;const a=document.createElement('a');a.href=t.url;a.download=safeFilename(t.name);a.style.display='none';document.body.append(a);a.click();a.remove();t.downloadStarted=true;toast('已发起下载。确认保存成功后可移除记录以释放缓存。');markDirty();}
@@ -1783,8 +1915,8 @@ async function applyManual(){let p;try{p=decodeSignal($('manualInput').value);}c
 }catch(e){if(c&&c===manualSession&&!c.ready&&p.sdp.type==='offer')closeConnection(c,e.message);$('manualState').textContent=e.message;toast(e.message,true);}finally{$('applyManualBtn').disabled=false;}}
 
 // ---- Rendering: filenames and peer-supplied names are always text, never HTML. ----
-function renderDevices(){const list=liveConnections(),ready=list.filter(c=>c.ready);if(!ready.some(c=>c.id===selected))selected=ready[0]?.id||'';const sig=JSON.stringify(list.map(c=>[c.id,c.ready,c.name,c.localApproved,c.remoteApproved,c.hello,c.route,c.verification,c.disconnectAt]),null,0)+selected;if(sig===lastDeviceSignature)return;lastDeviceSignature=sig;$('deviceCount').textContent=ready.length;$('deviceEmpty').hidden=ready.length>0;$('deviceList').replaceChildren();$('pairRequests').replaceChildren();
-  for(const c of list){if(c.ready){const row=el('div','device'+(selected===c.id?' selected':''));row.dataset.connection=c.id;const choose=el('button','device-select');choose.type='button';choose.setAttribute('aria-pressed',String(selected===c.id));choose.addEventListener('click',()=>{selected=c.id;markDirty();});const avatar=el('span','avatar');avatar.append(icon(c.kind));const copy=el('span','grow');copy.append(el('div','name',c.name));const info=el('div','device-info',(c.disconnectAt?'网络恢复中':c.route)+' · '+(c.mode==='manual'?'手动配对':'在线配对'));copy.append(info);if(c.verification)copy.append(el('div','device-info verify','校验码 '+c.verification));choose.append(avatar,copy);row.append(choose,iconButton('close','断开与 '+c.name+' 的连接',()=>{const active=transfers.some(t=>t.connection===c&&!TERMINAL.has(t.status));if(active&&!confirm('这会中断正在传输的文件，确定断开吗？'))return;tryControl(c,{t:'bye'});closeConnection(c,'已断开与 '+c.name+' 的连接');}));$('deviceList').append(row);
+function renderDevices(){const list=liveConnections(),ready=list.filter(c=>c.ready);if(!ready.some(c=>c.id===selected))selected=ready[0]?.id||'';const sig=JSON.stringify(list.map(c=>[c.id,c.ready,c.name,c.localApproved,c.remoteApproved,c.hello,c.route,c.verification,c.disconnectAt,c.rtt,c.peerBuild]),null,0)+selected;if(sig===lastDeviceSignature)return;lastDeviceSignature=sig;$('deviceCount').textContent=ready.length;$('deviceEmpty').hidden=ready.length>0;$('deviceList').replaceChildren();$('pairRequests').replaceChildren();
+  for(const c of list){if(c.ready){const row=el('div','device'+(selected===c.id?' selected':''));row.dataset.connection=c.id;const choose=el('button','device-select');choose.type='button';choose.setAttribute('aria-pressed',String(selected===c.id));choose.addEventListener('click',()=>{selected=c.id;markDirty();});const avatar=el('span','avatar');avatar.append(icon(c.kind));const copy=el('span','grow');copy.append(el('div','name',c.name));const info=el('div','device-info',(c.disconnectAt?'网络恢复中':c.route)+(c.rtt!==undefined?' · '+c.rtt+' ms':'')+' · '+(c.fastIO?'批量传输':'兼容旧版'));copy.append(info);if(c.verification)copy.append(el('div','device-info verify','校验码 '+c.verification));choose.append(avatar,copy);row.append(choose,iconButton('close','断开与 '+c.name+' 的连接',()=>{const active=transfers.some(t=>t.connection===c&&!TERMINAL.has(t.status));if(active&&!confirm('这会中断正在传输的文件，确定断开吗？'))return;tryControl(c,{t:'bye'});closeConnection(c,'已断开与 '+c.name+' 的连接');}));$('deviceList').append(row);
     }else{const request=el('div','request');request.append(el('h3','',c.hello?c.name+' 请求连接':'正在建立连接…'));request.append(el('p','',!c.hello?'请保持对方页面打开。':c.localApproved?'等待对方确认。连接前不会发送文件。':'确认这是你的设备。名称未经认证，请勿接受陌生请求。'));const actions=el('div','actions');if(c.hello&&!c.localApproved)actions.append(action('允许连接',()=>approveConnection(c),'btn small','check'));actions.append(action('取消',()=>{tryControl(c,{t:'bye'});closeConnection(c,'已取消连接');},'btn secondary small'));request.append(actions);$('pairRequests').append(request);}}
   const c=connections.get(selected);$('recipientLabel').textContent=c?.ready?'发送给：'+c.name:'请先连接接收设备';}
 function renderStaged(){$('queuePanel').hidden=!stagedFiles.length;$('queueSummary').textContent=`待发送 ${stagedFiles.length} 个文件 · ${bytes(stagedFiles.reduce((n,x)=>n+x.file.size,0))}`;const signature=stagedFiles.map(x=>x.key).join(',');if($('queueList').dataset.signature!==signature){$('queueList').dataset.signature=signature;$('queueList').replaceChildren();for(const item of stagedFiles){const row=el('div','queue-file');row.append(fileIcon(item.file.name));const copy=el('div','grow');const name=el('div','filename',item.file.name);name.title=item.file.name;copy.append(name,el('div','file-meta',bytes(item.file.size)));row.append(copy,iconButton('close','移除 '+item.file.name,()=>{stagedFiles.splice(stagedFiles.indexOf(item),1);markDirty();}));$('queueList').append(row);}}const ready=connections.get(selected)?.ready;$('sendBtn').disabled=!ready||!stagedFiles.length;$('sendBtnText').textContent=stagedFiles.length?`发送 ${stagedFiles.length} 个文件`:'开始发送';}
@@ -1806,7 +1938,36 @@ function renderTransfers(){for(const type of ['all','in','out'])$(type+'Count').
   $('transferList').replaceChildren(fragment);$('transferList').scrollTop=scroll;if(focused){const target=[...$('transferList').querySelectorAll('[data-action-key]')].find(x=>x.dataset.actionKey===focused);target?.focus({preventScroll:true});}
 }
 function updateProgressRows(items){for(const t of items){if(!['sending','receiving','paused','verifying'].includes(t.status))continue;const row=$('transferList').querySelector('[data-id="'+t.id+'"]');if(!row)continue;const percent=t.size?Math.min(100,t.offset/t.size*100):t.status==='verifying'?100:0;const desc=row.querySelector('.progress-description');if(desc)desc.textContent=`${percent.toFixed(1)}% · ${bytes(t.offset)} / ${bytes(t.size)}${t.status==='paused'?'':` · ${bytes(t.rate||0)}/s`}`;const track=row.querySelector('.progress-track');if(track)track.setAttribute('aria-valuenow',percent.toFixed(1));const fill=row.querySelector('.progress-fill');if(fill)fill.style.width=percent+'%';}}
-function renderDiagnostics(){$('diagnosticInfo').textContent=`WebRTC：${typeof RTCPeerConnection!=='undefined'?'支持':'不支持'}；安全上下文：${isSecureContext?'是':'否'}；直接保存：${'showSaveFilePicker' in window?'支持':'不支持'}；内存接收占用 ${bytes(memoryReserved)} / ${bytes(MEMORY_LIMIT)}。信令与文件传输是独立的连接。`;$('diagnosticLog').textContent=logs.join('\n')||'暂无日志';}
+function performanceReport(){
+  const lines=['邻传 v3.1 · 批量传输','页面状态：'+(document.visibilityState==='visible'?'前台':'后台（系统仍可能限速或挂起）'),'网络帧约 16 KiB；新版本间读取/写入批次 1 MiB；最大未确认数据 4 MiB。'];
+  for(const c of liveConnections().filter(x=>x.ready)){
+    lines.push('\n设备：'+c.name+' · 对端 '+(c.peerBuild||'未知版本'),
+      '链路：'+c.route+' · '+(c.routeDetail||'尚未获取')+(c.rtt!==undefined?' · RTT '+c.rtt+' ms':''),
+      '发送缓冲：'+bytes(c.dc?.bufferedAmount||0)+'；应用接收排队：'+bytes(c.queuedBytes||0));
+    if(!c.fastIO)lines.push('提示：对端仍为旧版，双方都更新才能启用完整优化。');
+  }
+  const recent=transfers.filter(t=>t.metrics).slice(-6);
+  for(const t of recent){
+    const m=t.metrics, secs=ms=>(ms/1000).toFixed(2)+' s',doneAt=t.completedAt||Date.now();
+    const avg=t.startedAt?Math.max(0,t.offset*1000/Math.max(1,doneAt-t.startedAt)):0;
+    lines.push('\n'+(t.direction==='out'?'发送：':'接收：')+t.name+' · '+statusText(t),
+      '进度：'+bytes(t.offset)+' / '+bytes(t.size)+' · 当前 '+bytes(t.rate||0)+'/s · 全程平均 '+bytes(avg)+'/s');
+    if(t.direction==='out')lines.push('本地读取 '+m.readCalls+' 次 / '+secs(m.readMs)+'；SHA-256 '+secs(m.hashMs),
+      '累计等网络缓冲 '+secs(m.bufferWaitMs)+'；累计等接收确认 '+secs(m.ackWaitMs),
+      '未确认：'+bytes(t.sent-t.acked)+' / '+bytes(t.flowWindow||LEGACY_WINDOW));
+    else lines.push('接收方式：'+(t.mode==='disk'?'批量写入文件':'内存缓存')+'；SHA-256 '+secs(m.hashMs),
+      '文件写入 '+m.writeCalls+' 次 / '+secs(m.writeMs)+(t.mode==='disk'?'；已写入流 '+bytes(t.committed||0):''));
+    if(t.ioPhase)lines.push('当前阶段：'+t.ioPhase);
+  }
+  lines.push('\n指标是应用层耗时，不等于纯网络带宽，也不能单凭等待确认时间判断网络慢。',
+    '请比较两端诊断：读取耗时看发送端；写入耗时看接收端；等待缓冲还可能包含浏览器调度。',
+    'host 候选不保证实际物理路径不经过 VPN；写入流成功不代表每次都强制刷盘。');
+  return lines.join('\n');
+}
+function renderDiagnostics(){
+  $('diagnosticInfo').textContent=`WebRTC：${typeof RTCPeerConnection!=='undefined'?'支持':'不支持'}；安全上下文：${isSecureContext?'是':'否'}；直接保存：${'showSaveFilePicker' in window?'支持':'不支持'}；内存接收占用 ${bytes(memoryReserved)} / ${bytes(MEMORY_LIMIT)}。信令与文件传输是独立的连接。`;
+  $('performanceInfo').textContent=performanceReport();$('diagnosticLog').textContent=logs.join('\n')||'暂无日志';
+}
 async function requestWake(){if(wakeLock||!navigator.wakeLock||document.visibilityState!=='visible')return;try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;});}catch{}}
 function releaseWakeIfIdle(){if(transfers.some(t=>['sending','receiving','paused','verifying','waiting'].includes(t.status)))return;if(wakeLock){wakeLock.release().catch(()=>{});wakeLock=null;}}
 
@@ -1832,8 +1993,8 @@ let dragDepth=0;const drop=$('dropzone');drop.addEventListener('dragenter',e=>{e
 $('clearQueueBtn').addEventListener('click',()=>{stagedFiles.length=0;markDirty();});$('sendBtn').addEventListener('click',sendStaged);
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>switchTab(b.dataset.tab));$('searchInput').addEventListener('input',markDirty);
 $('clearHistoryBtn').addEventListener('click',()=>{const finished=transfers.filter(t=>TERMINAL.has(t.status));if(finished.some(t=>t.direction==='in'&&t.url&&!t.downloadStarted)&&!confirm('部分收到的文件尚未下载。清理会永久释放本页缓存，确定继续吗？'))return;finished.forEach(removeTransfer);});
-$('helpBtn').addEventListener('click',()=>showDialog('helpDialog'));$('diagnosticsBtn').addEventListener('click',()=>{renderDiagnostics();showDialog('diagnosticsDialog');});$('diagnosticRetry').addEventListener('click',()=>startSignal());$('diagnosticManual').addEventListener('click',()=>{$('diagnosticsDialog').close();showDialog('manualDialog');});
-$('saveCapability').textContent='showSaveFilePicker' in window?'本机支持直接写入磁盘；接收时可选择保存位置。':'本机兼容接收总预算 256 MiB；文件夹请先压缩。';
+$('helpBtn').addEventListener('click',()=>showDialog('helpDialog'));$('diagnosticsBtn').addEventListener('click',()=>{renderDiagnostics();showDialog('diagnosticsDialog');});$('copyDiagnosticsBtn').addEventListener('click',()=>copy(performanceReport()+'\n\n'+logs.join('\n')));$('diagnosticRetry').addEventListener('click',()=>startSignal());$('diagnosticManual').addEventListener('click',()=>{$('diagnosticsDialog').close();showDialog('manualDialog');});
+$('saveCapability').textContent='showSaveFilePicker' in window?'本机支持批量写入磁盘；大文件请选择保存位置，双方保持页面在前台。':'本机兼容接收总预算 256 MiB；文件夹请先压缩。';
 window.addEventListener('beforeunload',e=>{if(transfers.some(t=>!TERMINAL.has(t.status)||(t.direction==='in'&&t.url&&!t.downloadStarted))){e.preventDefault();e.returnValue='';}});
 window.addEventListener('pagehide',()=>{shuttingDown=true;stopSignal();for(const c of liveConnections())try{c.dc?.close();c.pc.close();}catch{}for(const t of transfers)if(t.url)URL.revokeObjectURL(t.url);});
 window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
@@ -1841,6 +2002,7 @@ window.addEventListener('online',()=>{if(!signalReady&&!settings.manualOnly)star
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&transfers.some(t=>!TERMINAL.has(t.status)))requestWake();});
 setInterval(()=>{const now=Date.now();let dirty=false;for(const t of transfers){if(['sending','receiving','paused','verifying'].includes(t.status)){const prev=t.sampleAt||now;const elapsed=now-prev;if(elapsed>=700){t.rate=t.status==='paused'?0:Math.max(0,(t.offset-(t.sampleOffset||0))*1000/elapsed);t.sampleAt=now;t.sampleOffset=t.offset;}else if(!t.sampleAt){t.sampleAt=now;t.sampleOffset=t.offset;}dirty=true;}if(t.direction==='in'&&t.status==='receiving'&&now-t.lastActivity>STALL_MS)failTransfer(t,'接收超时，请让对方重新发送',true);if(t.direction==='in'&&t.status==='offered'&&now-t.lastActivity>300000)failTransfer(t,'接收请求已过期',true,'rejected');}if(dirty)markDirty();for(const c of liveConnections()){if(c.disconnectAt&&now-c.disconnectAt>20000)closeConnection(c,'网络中断，文件需要重新发送');else if(c.dc?.readyState==='open'&&!c.ready&&now-c.handshakeAt>180000)closeConnection(c,'等待连接确认超时');}for(const [k,v] of orphanCandidates)if(now-v.at>45000)orphanCandidates.delete(k);},250);
 setInterval(()=>{for(const c of liveConnections())if(c.ready){tryControl(c,{t:'ping'});detectRoute(c);}},15000);
+setInterval(()=>{if($('diagnosticsDialog').open){renderDiagnostics();for(const c of liveConnections())if(c.ready)detectRoute(c);}},1500);
 try{const invite=new URLSearchParams(location.hash.slice(1)).get('to');if(invite){requestedInvite=getCode(invite);$('remoteCode').value=formatCode(requestedInvite);history.replaceState(null,'',location.pathname+location.search);}}catch{toast('邀请链接中的配对码无效',true);}
 markDirty();
 if(typeof RTCPeerConnection==='undefined'){signalUI('浏览器不支持 WebRTC');setBanner('当前浏览器不支持 WebRTC，请改用支持 WebRTC 的浏览器打开页面。',true);}
