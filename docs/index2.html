@@ -1,0 +1,2117 @@
+<!doctype html>
+<!--
+THIRD-PARTY NOTICES
+
+QRCode for JavaScript
+Copyright (c) 2009 Kazuhiko Arase
+Original QR implementation: MIT license (full text retained in index.html).
+Source distribution used: qrcode-terminal/vendor/QRCode from the locally installed npm package.
+The distribution includes Node adaptation / refactoring; qrcode-terminal is licensed under Apache-2.0.
+The application's browser wrapper does not load any remote scripts.
+
+qrcode-terminal Apache-2.0 license follows:
+
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+==============================================================
+This product also include the following software:
+==============================================================
+
+ QRCode for JavaScript
+
+ Copyright (c) 2009 Kazuhiko Arase
+
+ URL: http://www.d-project.com/
+
+ Licensed under the MIT license:
+   http://www.opensource.org/licenses/mit-license.php
+
+ The word "QR Code" is registered trademark of 
+ DENSO WAVE INCORPORATED
+   http://www.denso-wave.com/qrcode/faqpatent-e.html
+
+Located in ./vendor/QRCode
+- project has been modified to work in Node and some refactoring was done for code cleanup
+
+-->
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="referrer" content="no-referrer"><meta name="description" content="邻传：可部署到 GitHub Pages 的单文件网页。通过 WebRTC 在浏览器间互传任意格式文件，无需运行文件服务器。"><title>邻传 · 浏览器点对点文件传输</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23267c5b'/%3E%3Cpath d='M15 23h34l-8-8M49 41H15l8 8' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"><style>:root{--bg:#f5f7f3;--card:#fff;--alt:#f8faf7;--ink:#193a30;--muted:#708278;--line:#e1e9e1;--accent:#267c5b;--accent-hover:#1d674a;--soft:#edf5ed;--danger:#b44848;--warn:#9c742f;--shadow:0 6px 28px #193a3005;--radius:20px}
+:root[data-theme=dark]{--bg:#111c17;--card:#192920;--alt:#1d2f25;--ink:#e1eee5;--muted:#97ad9e;--line:#304739;--accent:#88d0a4;--accent-hover:#a5dfba;--soft:#263f2f;--danger:#f39494;--warn:#dcba78;--shadow:none}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}button:disabled{opacity:.45;cursor:not-allowed}button,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button{border:0;background:none}a{color:var(--accent)}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}[hidden]{display:none!important}h1,h2,h3,p{margin:0}button,input,textarea{min-width:0}input,textarea{width:100%;border:1px solid var(--line);background:var(--alt);color:var(--ink);border-radius:10px;padding:10px 12px}textarea{resize:vertical}input::placeholder,textarea::placeholder{color:var(--muted)}label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}.icon{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}.icon.sm{width:15px;height:15px}.shell{max-width:1220px;margin:auto;padding:0 40px}.topbar{height:92px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:40px;height:40px;border-radius:13px;background:var(--accent);color:var(--card);display:grid;place-items:center}.brand-name{font-size:24px;line-height:1.2;font-weight:760;letter-spacing:2px}.brand-sub{font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px}.nav-title{font-size:12px;color:var(--muted);margin-right:auto;margin-left:32px}.nav-title b{color:var(--ink);font-weight:600}.top-actions{display:flex;align-items:center;gap:12px}.icon-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--card);border-radius:10px;flex:none}.icon-btn:hover{background:var(--soft)}.status{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}.dot{width:7px;height:7px;background:var(--muted);border-radius:50%;flex:none}.status.online{color:var(--accent)}.status.online .dot{background:var(--accent);box-shadow:0 0 0 4px var(--soft)}.hero{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:40px 0 30px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--accent);font-weight:650;display:flex;align-items:center;gap:8px}.eyebrow:before{content:"";width:19px;height:1px;background:var(--accent)}h1{font-size:40px;line-height:1.4;letter-spacing:-1.4px;font-weight:740;margin:11px 0 9px}h1 span{color:var(--accent)}.hero p{font-size:12px;color:var(--muted);line-height:1.9}.hero-steps{display:flex;gap:23px}.hero-step{display:grid;gap:6px;font-size:11px;color:var(--muted);white-space:nowrap}.hero-step+.hero-step{border-left:1px solid var(--line);padding-left:23px}.hero-step b{font:12px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent)}.workspace{display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;align-items:start}.column{display:flex;flex-direction:column;gap:20px;min-width:0}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}.heading{display:flex;align-items:center;justify-content:space-between;gap:10px}.heading-title{display:flex;align-items:center;gap:8px}.heading-title>.icon{color:var(--accent);width:18px;height:18px}h2{font-size:15px;font-weight:650;letter-spacing:.2px}h3{font-size:14px;font-weight:650}.kicker{font:10px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);letter-spacing:1px}.tiny{font-size:10px;color:var(--muted)}.muted{color:var(--muted);font-size:12px}.pair-self{display:flex;align-items:center;gap:11px;padding:18px 0 15px}.avatar{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--soft);color:var(--accent);flex:none}.avatar.me{background:var(--ink);color:var(--card)}.name{font-size:12px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.grow{flex:1;min-width:0}.code-box{position:relative;background:var(--alt);border:1px solid var(--line);border-radius:12px;padding:13px 10px;text-align:center}.code-box .tiny{font-size:10px;margin-bottom:5px}.pair-code{font:600 20px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.5px;user-select:all}.code-box.offline .pair-code{color:var(--muted)}.share-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:12px;font-weight:600;border-radius:10px;min-height:38px;padding:9px 15px;background:var(--accent);color:var(--card);border:1px solid transparent;white-space:nowrap}.btn:hover:not(:disabled){background:var(--accent-hover)}.btn.secondary{background:var(--card);color:var(--ink);border-color:var(--line)}.btn.secondary:hover:not(:disabled){background:var(--soft)}.btn.ghost{background:var(--soft);color:var(--accent)}.btn.danger{background:transparent;color:var(--danger);border-color:var(--line)}.btn.small{font-size:11px;min-height:31px;padding:6px 10px}.divider{height:1px;background:var(--line);margin:20px 0 17px}.input-row{display:flex;gap:7px}.input-row input{font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;padding:11px 9px}.input-row .btn{padding:9px 12px}.pair-hint{font-size:10px;color:var(--muted);margin:9px 0;line-height:1.8}.text-btn{color:var(--accent);font-size:11px;padding:3px 0;text-decoration:none}.text-btn:hover{text-decoration:underline}.text-btn.danger{color:var(--danger)}.manual-link{display:flex;align-items:center;justify-content:space-between;margin-top:12px;border-top:1px solid var(--line);padding-top:12px}.count{font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--soft);color:var(--accent);border-radius:6px;min-width:23px;text-align:center;padding:2px 6px}.device-list{margin-top:13px}.device{display:flex;align-items:center;gap:9px;padding:11px 8px;border-radius:12px;border:1px solid var(--line);margin-top:8px}.device.selected{background:var(--soft);border-color:var(--accent)}.device-select{display:flex;align-items:center;gap:9px;text-align:left;padding:0;flex:1;min-width:0}.device .icon-btn{width:27px;height:27px;border-radius:8px;background:transparent}.device .avatar{width:32px;height:32px}.device-info{font-size:10px;color:var(--muted);line-height:1.8}.device-info .verify{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.request{padding:12px;background:var(--soft);border:1px solid var(--line);border-radius:12px;margin-top:10px}.request p{font-size:11px;color:var(--muted);margin:5px 0 9px}.request .actions{display:flex;gap:6px}.empty-devices{font-size:11px;color:var(--muted);text-align:center;padding:19px 0 3px;line-height:1.9}.privacy-card{padding:18px 20px;background:var(--soft);border:1px solid var(--line);border-radius:16px}.privacy-card .heading-title{font-size:12px;font-weight:600}.privacy-card p{font-size:10px;color:var(--muted);line-height:1.9;margin-top:7px}.recipient{font-size:10px;color:var(--muted);max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px dashed #c9d9ca;background:var(--alt);border-radius:15px;margin-top:18px;min-height:257px;padding:26px 12px;text-align:center;transition:background .15s,border-color .15s}.dropzone.dragging{background:var(--soft);border-color:var(--accent)}.file-art{width:83px;height:66px;position:relative;margin:0 auto 15px}.paper{position:absolute;display:grid;place-items:center;width:40px;height:52px;border:1px solid var(--line);background:var(--card);border-radius:8px;top:8px;color:var(--muted)}.paper.left{left:2px;transform:rotate(-16deg)}.paper.right{right:2px;transform:rotate(16deg)}.paper.center{left:21px;top:0;height:58px;z-index:1;color:var(--accent);border-color:#b5ccb9}.dropzone h3{font-size:18px;margin-bottom:3px}.dropzone p{font-size:11px;color:var(--muted)}.dropzone>.btn{margin-top:17px;min-width:127px}.drop-hints{display:flex;justify-content:center;gap:21px;font-size:10px;color:var(--muted);margin-top:18px}.drop-hints span{display:flex;align-items:center;gap:5px}.drop-hints .icon{width:12px;height:12px}.queue{margin-top:17px}.queue .heading{margin-bottom:9px}.queue-list{max-height:246px;overflow:auto}.queue-file{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--line)}.file-icon{width:32px;height:38px;background:var(--soft);color:var(--accent);border-radius:7px;display:grid;place-items:center;flex:none}.filename{font-size:12px;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.file-meta{font-size:10px;color:var(--muted);line-height:1.85;overflow-wrap:anywhere}.send-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);margin-top:18px;padding-top:16px}.send-footer p{font-size:10px;color:var(--muted);max-width:64%}.tabbar{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);margin-top:15px}.tabs{display:flex;gap:19px}.tab{position:relative;padding:10px 0;font-size:11px;color:var(--muted)}.tab.active{color:var(--accent);font-weight:650}.tab.active:after{position:absolute;content:"";height:2px;background:var(--accent);bottom:-1px;left:0;right:0;border-radius:2px}.tab span{font:10px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;margin-left:3px}.search{max-width:132px;font-size:10px;border:0;background:transparent;padding:5px}.transfer-list{max-height:600px;overflow:auto}.empty-state{padding:35px 16px 32px;text-align:center}.empty-art{width:43px;height:43px;border-radius:13px;background:var(--alt);color:var(--muted);display:grid;place-items:center;margin:auto auto 10px}.empty-state h3{font-size:12px;font-weight:500;margin-bottom:3px}.empty-state p{font-size:10px;color:var(--muted)}.transfer{display:flex;align-items:flex-start;gap:11px;padding:16px 0;border-bottom:1px solid var(--line)}.transfer:last-child{border-bottom:0}.transfer-main{min-width:0;flex:1}.transfer .file-icon{margin-top:2px}.transfer-head{display:flex;justify-content:space-between;gap:8px}.state-label{font-size:10px;color:var(--accent);flex:none;text-align:right}.state-label.error{color:var(--danger)}.progress-track{height:4px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:9px}.progress-fill{height:100%;background:var(--accent);transition:width .15s}.transfer-actions{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:9px}.checksum{font:9px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere;margin-top:5px}.banner{background:var(--soft);border:1px solid var(--line);padding:11px 15px;border-radius:12px;font-size:11px;color:var(--muted);margin-bottom:20px}.banner strong{color:var(--ink)}.banner.error{color:var(--danger)}.footer{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);margin-top:33px;padding:21px 0 28px;font-size:10px;color:var(--muted)}.footer-left{display:flex;align-items:center;gap:6px}.footer-right{display:flex;align-items:center;gap:14px}.footer-right button{font-size:10px;color:var(--muted);padding:0}.toasts{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);z-index:100;max-width:calc(100vw - 30px);width:max-content;pointer-events:none;display:grid;gap:8px}.toast{background:var(--ink);color:var(--card);box-shadow:0 5px 25px #0002;padding:11px 17px;border-radius:11px;font-size:12px;max-width:580px;overflow-wrap:anywhere}.toast.error{background:var(--danger);color:#fff}dialog{width:min(560px,calc(100vw - 28px));border:1px solid var(--line);border-radius:20px;padding:25px;background:var(--card);color:var(--ink);box-shadow:0 20px 100px #0003;max-height:88vh;overflow:auto}dialog::backdrop{background:#11251c66;backdrop-filter:blur(3px)}.modal-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:16px}.modal-heading h2{font-size:18px}.modal-copy{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 17px}.field{margin:16px 0}.field .tiny{margin-top:6px;line-height:1.85}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.check-label{display:flex;align-items:flex-start;gap:8px;color:var(--muted);font-size:11px;font-weight:400}.check-label input{width:15px;min-width:15px;height:15px;accent-color:var(--accent);margin-top:3px}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.manual-section{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:13px}.manual-section h3{font-size:12px;margin-bottom:7px}.manual-section p{font-size:11px;color:var(--muted);line-height:1.9;margin-bottom:11px}.manual-section textarea{font:10px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;margin-bottom:8px;min-height:80px}.manual-section .btn{white-space:normal}.manual-state{font-size:11px;color:var(--accent);margin-top:12px;overflow-wrap:anywhere}.qr-wrap{display:grid;place-items:center;padding:7px}.qr-wrap canvas{width:236px;max-width:100%;height:auto;border-radius:12px}.share-code{text-align:center;font:600 19px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;margin:12px 0;color:var(--accent);letter-spacing:2px}.share-url{font-size:11px}.help-item{margin:15px 0}.help-item h3{font-size:13px;margin-bottom:5px}.help-item p{font-size:12px;line-height:1.85;color:var(--muted)}.log{white-space:pre-wrap;word-break:break-word;background:var(--alt);padding:12px;border-radius:12px;max-height:290px;overflow:auto;font:10px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace}.cap{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--accent);background:var(--soft);padding:3px 8px;border-radius:6px}
+@media(max-width:960px){.shell{padding:0 24px}.workspace{grid-template-columns:285px minmax(0,1fr);gap:18px}.card{padding:19px}.hero-steps{gap:14px}.hero-step+.hero-step{padding-left:14px}h1{font-size:34px}.nav-title{display:none}.pair-code{font-size:18px}}
+@media(max-width:720px){.shell{padding:0 18px}.topbar{height:75px}.brand-name{font-size:22px}.brand-mark{height:36px;width:36px}.brand-sub{font-size:8px}.top-actions{gap:8px}.status{font-size:10px;gap:6px}.top-actions>.icon-btn{height:30px;width:30px}.hero{padding:29px 0 23px;display:block}.hero-steps{display:none}h1{font-size:31px;letter-spacing:-.8px;margin:9px 0 8px}.hero p{font-size:11px}.eyebrow{font-size:9px}.workspace{grid-template-columns:1fr;gap:18px}.column{gap:18px}.privacy-card{display:none}.card{padding:19px;border-radius:17px}.pair-self{padding-top:14px}.pair-card .pair-code{font-size:23px;letter-spacing:3px}.share-actions{margin-top:9px}.divider{margin:17px 0 14px}.pair-card .share-actions .btn{min-height:36px}.pair-card .pair-hint{margin-bottom:0}.dropzone{min-height:243px}.device-card{padding-top:17px;padding-bottom:17px}.empty-devices{padding:11px 0 0}.device-list{margin-top:9px}.footer{align-items:flex-start;font-size:9px;margin-top:24px;padding:18px 0 25px;gap:10px}.footer-left{align-items:flex-start}.footer-right{gap:10px;flex:none}.send-footer p{max-width:58%;font-size:9px}.tabbar{gap:7px}.tabs{gap:14px}.search{max-width:101px}.drop-hints{gap:15px;font-size:9px}.transfer-head{align-items:flex-start}.state-label{max-width:100px;font-size:9px}.transfer-actions .btn{font-size:10px}.transfer-list{max-height:none}dialog{padding:20px}.modal-heading h2{font-size:17px}.brand-sub{letter-spacing:1.5px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+/* Connection consent has its own modal; never stack it on the QR dialog. */
+.connection-request-dialog{width:min(460px,calc(100vw - 28px))}
+.connection-request-dialog .modal-heading{margin-bottom:14px}
+.connection-request-dialog .modal-heading h2{font-size:19px}
+.request-badge{display:inline-flex;align-items:center;gap:6px;color:var(--accent);background:var(--soft);border-radius:7px;padding:4px 8px;font-size:10px;font-weight:650;margin-bottom:13px}
+.request-device{display:flex;align-items:center;gap:14px;background:var(--alt);border:1px solid var(--line);border-radius:14px;padding:17px;margin:16px 0}
+.request-device .avatar{width:48px;height:48px;border-radius:14px}
+.request-device .avatar .icon{width:25px;height:25px}
+.request-device-name{font-size:18px;font-weight:700;line-height:1.5;overflow-wrap:anywhere;word-break:break-word}
+.request-device-code{font:11px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+.request-verification{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted);padding:0 2px 14px}
+.request-verification strong{font:600 14px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1px;color:var(--ink)}
+.request-trust-note{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--muted);line-height:1.9}
+.request-trust-note .icon{margin-top:3px;color:var(--accent)}
+.request-modal-actions{display:grid;grid-template-columns:1fr 1.45fr;gap:10px;margin-top:22px}
+.request-modal-actions .btn{width:100%;min-height:44px;font-size:13px}
+.request-queue-note{text-align:center;font-size:11px;color:var(--muted);margin-top:12px}
+.connection-request-dialog #connectionRequestTitle:focus{outline:none}
+</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><defs>
+<symbol id="i-transfer" viewBox="0 0 24 24"><path d="M4 7h15m-4-4 4 4-4 4M20 17H5m4-4-4 4 4 4"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="m10 13 4-4M8.5 15.5l-1 1a4.24 4.24 0 0 1-6-6l4-4a4.24 4.24 0 0 1 6 0m1 2 1-1a4.24 4.24 0 0 1 6 6l-4 4a4.24 4.24 0 0 1-6 0" transform="translate(1 1)"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h4"/></symbol>
+<symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><path d="M15 15h3v3h3m-6 3h3m3-9v3M3 12h3m6-9v3m0 6h3m-3 6v3"/></symbol>
+<symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="m4 16-2 4h20l-2-4M10 19h4"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4m-3 14h2"/></symbol>
+<symbol id="i-devices" viewBox="0 0 24 24"><path d="M12 17H3V4h17v5M7 21h5m-3-4v4"/><rect x="15" y="11" width="7" height="11" rx="1"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H5a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8Zm0 0v6h6M8 13h8m-8 4h5"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m21 16-5-5-8 10M3 16l4-4 4 4"/></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M11 3v3h2v3h-2v3h2v3h-2v3h2"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="m3 10 18-7-7 18-3-8-8-3Zm8 3L21 3"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V4h7l3 3h8v13H3Zm0 3h18"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 13A8.7 8.7 0 1 1 11 3.5 7 7 0 0 0 20.5 13Z"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="8" cy="6" r="2" fill="var(--card)"/><circle cx="16" cy="12" r="2" fill="var(--card)"/><circle cx="9" cy="18" r="2" fill="var(--card)"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7a9 9 0 1 0 1 9M20 3v5h-5"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8Z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4m-4 5v2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
+</defs></svg>
+<div class="shell">
+<header class="topbar"><div class="brand"><div class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-transfer"/></svg></div><div><div class="brand-name">邻传</div><div class="brand-sub">BROWSER TO BROWSER</div></div></div><div class="nav-title"><b>文件传输</b> &nbsp; / &nbsp; 静态网页版</div><div class="top-actions"><div class="status" id="signalStatus" role="status"><span class="dot"></span><span id="signalText">正在连接配对服务</span></div><button class="icon-btn" id="themeBtn" aria-label="切换深浅色" title="切换深浅色"><svg class="icon"><use href="#i-moon"/></svg></button><button class="icon-btn" id="settingsBtn" aria-label="设置" title="设置"><svg class="icon"><use href="#i-settings"/></svg></button></div></header>
+<section class="hero"><div><div class="eyebrow">NO INSTALL. JUST SEND.</div><h1>文件，<span>直接到你手里。</span></h1><p>打开同一个网页，连接彼此的设备。照片、视频、压缩包，原样传递。<br>无需启动服务 · GitHub Pages 可托管 · 文件通过 WebRTC 加密传输</p></div><div class="hero-steps"><div class="hero-step"><b>01 / OPEN</b><span>打开网页</span></div><div class="hero-step"><b>02 / CONNECT</b><span>配对设备</span></div><div class="hero-step"><b>03 / SEND</b><span>开始互传</span></div></div></section>
+<div class="banner" id="connectionBanner" hidden></div>
+<main class="workspace">
+<aside class="column">
+<section class="card pair-card"><div class="heading"><div class="heading-title"><svg class="icon"><use href="#i-link"/></svg><h2>连接设备</h2></div><span class="kicker">PAIRING</span></div>
+<div class="pair-self"><span class="avatar me" id="myAvatar"><svg class="icon"><use href="#i-laptop"/></svg></span><div class="grow"><div class="name" id="myName">我的设备</div><div class="tiny">本机 · 此页面关闭后配对码失效</div></div><button class="text-btn" id="renameBtn">改名</button></div>
+<div class="code-box offline" id="codeBox"><div class="tiny" id="codeLabel">正在注册本机配对码</div><div class="pair-code" id="myCode">---- ---- ----</div></div>
+<div class="share-actions"><button class="btn secondary" id="copyCodeBtn" disabled><svg class="icon sm"><use href="#i-copy"/></svg>复制配对码</button><button class="btn secondary" id="shareBtn" disabled><svg class="icon sm"><use href="#i-qr"/></svg>邀请 / 二维码</button></div>
+<div class="divider"></div><form id="connectForm"><label for="remoteCode">输入对方的配对码或邀请链接</label><div class="input-row"><input id="remoteCode" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="如 A2BC D3EF G4HJ" maxlength="2048" aria-describedby="pairHint"><button class="btn" id="connectBtn" type="submit" disabled>连接</button></div></form><p class="pair-hint" id="pairHint">两台设备都保持网页打开，一方发起连接，另一方确认。无需在同一账号登录。</p>
+<div id="pairRequests" aria-live="polite"></div><div class="manual-link"><button class="text-btn" id="manualBtn">无法在线配对？手动连接</button><button class="text-btn" id="retrySignalBtn" hidden>重连服务</button></div></section>
+<section class="card device-card"><div class="heading"><div class="heading-title"><svg class="icon"><use href="#i-devices"/></svg><h2>已连接设备</h2></div><span class="count" id="deviceCount">0</span></div><div class="device-list" id="deviceList"></div><div class="empty-devices" id="deviceEmpty">还没有连接到其他设备<br>分享上方配对码，即可开始。</div></section>
+<section class="privacy-card"><div class="heading-title"><svg class="icon"><use href="#i-shield"/></svg>文件不会上传到 GitHub</div><p>默认使用公共信令服务交换连接信息，文件正文不经过该服务。直连成功后，由两个浏览器传输；可在设置中选配 TURN 加密中继。</p></section>
+</aside>
+<div class="column">
+<section class="card"><div class="heading"><div class="heading-title"><svg class="icon"><use href="#i-upload"/></svg><h2>发送文件</h2></div><span class="recipient" id="recipientLabel">请先连接接收设备</span></div>
+<div class="dropzone" id="dropzone"><div class="file-art" aria-hidden="true"><span class="paper left"><svg class="icon"><use href="#i-image"/></svg></span><span class="paper right"><svg class="icon"><use href="#i-archive"/></svg></span><span class="paper center"><svg class="icon"><use href="#i-upload"/></svg></span></div><h3>把文件拖到这里</h3><p>不限制文件格式，支持多文件、空文件与无后缀文件</p><button class="btn" id="chooseBtn"><svg class="icon sm"><use href="#i-folder"/></svg>选择文件</button><input type="file" id="fileInput" multiple hidden><div class="drop-hints"><span><svg class="icon"><use href="#i-lock"/></svg>加密传输</span><span><svg class="icon"><use href="#i-check"/></svg>SHA-256 校验</span><span><svg class="icon"><use href="#i-transfer"/></svg>双向互传</span></div></div>
+<div class="queue" id="queuePanel" hidden><div class="heading"><span class="tiny" id="queueSummary"></span><button class="text-btn" id="clearQueueBtn">清空待发送</button></div><div class="queue-list" id="queueList"></div></div>
+<div class="send-footer"><p id="saveCapability">传输时请保持两端页面打开。文件夹请先压缩。</p><button class="btn" id="sendBtn" disabled><svg class="icon sm"><use href="#i-send"/></svg><span id="sendBtnText">开始发送</span></button></div></section>
+<section class="card" id="historyCard"><div class="heading"><div class="heading-title"><svg class="icon"><use href="#i-transfer"/></svg><h2>传输记录</h2></div><button class="text-btn" id="clearHistoryBtn">清理已结束</button></div><div class="tabbar"><div class="tabs" role="tablist" aria-label="传输记录分类"><button class="tab active" id="allTab" role="tab" aria-selected="true" data-tab="all">全部 <span id="allCount">0</span></button><button class="tab" id="inTab" role="tab" aria-selected="false" data-tab="in">收到的 <span id="inCount">0</span></button><button class="tab" id="outTab" role="tab" aria-selected="false" data-tab="out">发出的 <span id="outCount">0</span></button></div><input class="search" id="searchInput" type="search" placeholder="搜索文件名" aria-label="搜索文件名"></div><div class="transfer-list" id="transferList" role="tabpanel"></div></section>
+</div>
+</main><footer class="footer"><div class="footer-left"><svg class="icon sm"><use href="#i-globe"/></svg><span>静态网页 · 无文件服务器 · 请保持双方在线</span></div><div class="footer-right"><button id="helpBtn">使用说明</button><button id="diagnosticsBtn">连接 / 速度诊断</button><span>v3.2 · 连接弹窗</span></div></footer>
+</div>
+<dialog id="shareDialog"><div class="modal-heading"><h2>让另一台设备加入</h2><button class="icon-btn" data-close="shareDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy">用系统相机扫描二维码，或分享下方链接。收到对方的连接请求后，此二维码会自动关闭，并弹出确认窗口。</p><div class="qr-wrap"><canvas id="qrCanvas" aria-label="本机邀请链接二维码" role="img"></canvas></div><div class="share-code" id="shareCode"></div><label for="shareUrl">邀请链接</label><input id="shareUrl" class="share-url" readonly><div class="modal-actions"><button class="btn secondary" id="nativeShareBtn" hidden>系统分享</button><button class="btn" id="copyLinkBtn"><svg class="icon sm"><use href="#i-copy"/></svg>复制邀请链接</button></div></dialog>
+<dialog id="connectionRequestDialog" class="connection-request-dialog" role="alertdialog" aria-modal="true" aria-labelledby="connectionRequestTitle" aria-describedby="connectionRequestIntro connectionRequestTrust">
+<div class="modal-heading"><h2 id="connectionRequestTitle" tabindex="-1">收到连接请求</h2><button type="button" class="icon-btn" id="connectionRequestClose" aria-label="拒绝并关闭连接请求" title="拒绝连接"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+<div class="request-badge"><svg class="icon sm" aria-hidden="true"><use href="#i-link"/></svg>设备配对 · 等待你的确认</div>
+<p class="modal-copy" id="connectionRequestIntro">另一台设备希望与你连接。允许后，双方即可选择文件互传。</p>
+<div class="request-device"><span class="avatar" id="connectionRequestAvatar" aria-hidden="true"></span><div class="grow"><div class="request-device-name" id="connectionRequestName"></div><div class="tiny" id="connectionRequestKind"></div><div class="request-device-code" id="connectionRequestCode"></div></div></div>
+<div class="request-verification" id="connectionRequestVerificationRow" hidden><span>连接校验码 · 可与对方核对</span><strong id="connectionRequestVerification"></strong></div>
+<p class="request-trust-note" id="connectionRequestTrust"><svg class="icon sm" aria-hidden="true"><use href="#i-shield"/></svg><span>设备名称由对方填写，请只允许你认识的设备。允许连接不会自动接收文件，每次接收仍需确认。</span></p>
+<div class="request-modal-actions"><button type="button" class="btn secondary" id="connectionRequestReject">拒绝</button><button type="button" class="btn" id="connectionRequestAllow"><svg class="icon sm" aria-hidden="true"><use href="#i-check"/></svg>允许连接</button></div>
+<p class="request-queue-note" id="connectionRequestQueue" role="status" hidden></p>
+</dialog>
+<dialog id="manualDialog"><div class="modal-heading"><h2>手动连接</h2><button class="icon-btn" data-close="manualDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy">不经过在线配对服务。A 生成连接信息交给 B，B 生成回复交还 A。双方必须保持本页打开，且网络允许 WebRTC 通信。</p><label class="check-label"><input type="checkbox" id="manualLocal" checked><span>仅使用局域网候选地址，不访问 STUN / TURN。跨网络时可取消勾选，使用设置中的 ICE 服务。</span></label><section class="manual-section"><h3>① 发起方 A</h3><p>点击生成后，将下方输出完整复制给另一台设备。</p><button class="btn secondary" id="createOfferBtn">生成连接信息</button></section><section class="manual-section"><h3>② 粘贴对方的信息</h3><label for="manualInput" class="tiny">B 粘贴 A 的连接信息；A 粘贴 B 的回复。</label><textarea id="manualInput" spellcheck="false" placeholder="LC3.…"></textarea><button class="btn" id="applyManualBtn">读取信息 / 生成回复</button></section><section class="manual-section"><h3>③ 本机输出</h3><textarea id="manualOutput" readonly spellcheck="false" aria-label="本机连接信息输出" placeholder="生成的连接信息或回复会出现在这里"></textarea><button class="btn secondary small" id="copyManualBtn" disabled>复制本机输出</button><button class="text-btn danger" id="cancelManualBtn" style="margin-left:12px">取消本次手动连接</button></section><p class="manual-state" id="manualState" role="status">提示：连接信息含网络候选地址，请只交给可信的接收方。</p></dialog>
+<dialog id="settingsDialog"><div class="modal-heading"><h2>设置</h2><button class="icon-btn" data-close="settingsDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><form id="settingsForm"><div class="field"><label for="deviceNameInput">设备名称</label><input id="deviceNameInput" maxlength="40" required><p class="tiny">名称由设备自行填写，不是经过认证的身份。</p></div><div class="field"><label for="signalUrlInput">信令 WebSocket 地址</label><input id="signalUrlInput" type="url" spellcheck="false" required><p class="tiny">默认使用公共 PeerServer；无需你部署后端。可填写兼容 PeerServer 协议的地址，HTTPS 页面只接受 wss://。</p></div><div class="field"><label for="signalKeyInput">PeerServer key</label><input id="signalKeyInput" spellcheck="false" maxlength="100"></div><div class="field"><label for="iceInput">ICE 服务（JSON，可选 STUN / TURN）</label><textarea id="iceInput" class="mono" rows="5" spellcheck="false"></textarea><p class="tiny">默认只有 STUN，不保证穿透所有网络。填写 [] 可停用。TURN 凭据仅保存在当前浏览器，不要将私人凭据写入公开仓库。</p></div><label class="check-label"><input id="manualOnlyInput" type="checkbox"><span>停用在线配对，仅使用手动连接</span></label><p class="tiny" style="margin-top:12px">设置保存在此浏览器。网络设置仅影响新建连接；已有文件传输不因重连信令而主动中断。</p><div class="modal-actions"><button class="btn secondary" id="resetSettingsBtn" type="button">恢复默认网络设置</button><button class="btn" type="submit">保存设置</button></div></form></dialog>
+<dialog id="helpDialog"><div class="modal-heading"><h2>使用说明</h2><button class="icon-btn" data-close="helpDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="help-item"><h3>怎样在 GitHub Pages 使用？</h3><p>将此 index.html 上传到仓库的 Pages 发布目录，在仓库 Settings → Pages 中选择发布分支。打开发布后的 HTTPS 地址即可使用，不要运行旧版 server.js。</p></div><div class="help-item"><h3>怎样互传？</h3><p>两端打开网页，一方输入对方的配对码或打开邀请链接，另一方确认连接。选择已连接设备与文件，点击发送。对方确认接收后开始传输。双方都可以发文件。</p></div><div class="help-item"><h3>大文件怎么保存？</h3><p>支持“选择位置接收”的浏览器可边接收边写入磁盘，不设应用层文件大小上限，仍受磁盘、浏览器及网络条件限制。其他浏览器采用内存接收，本页文件数据总预算 256 MiB，实际内存占用更高且可能更早耗尽，收到后须点击下载。超出预算请分卷压缩，或换用支持直接保存的浏览器。</p></div><div class="help-item"><h3>v3.1 传输优化</h3><p>双方刷新到 v3.1 后，以 1 MiB 读取和合并写入；网络帧保持约 16 KiB，并通过发送缓冲事件和接收确认推进传输。与旧版配对时自动兼容。连接 / 速度诊断显示链路、延迟、读写次数和等待时间。优化不保证固定速度；不要关闭校验或无限扩大缓存。</p></div><div class="help-item"><h3>离线与隐私</h3><p>自动配对需要能访问公共信令服务，它会获知配对 ID、连接协商信息和连接 IP，但文件正文通过加密数据通道传输，不上传到 GitHub。网页加载后可通过手动交换连接信息，在允许设备互访的局域网内尝试不依赖外部服务的直连。手动模式不是绕过防火墙。</p></div><div class="help-item"><h3>为什么连接失败？</h3><p>先确认双方没有关闭网页、配对码填写正确。信令不可达时尝试手动连接。连接协商失败时，检查访客 Wi-Fi / AP 隔离、VPN 和防火墙；跨网络可能需要可用的 TURN 服务。手机请保持浏览器前台且屏幕亮着。</p></div><div class="help-item"><h3>边界与安全</h3><p>不会自动扫描整个局域网。文件夹先压缩，不限制文件后缀但浏览器或安全软件仍可能阻止某些下载。不打开或执行收到的文件；不要接受陌生连接。重要文件可通过另一个可信渠道核对双方显示的连接校验码。刷新、关闭页面或断线后不支持续传；需重新发送。未点击下载的内存文件会在关闭页面后丢失。</p></div></dialog>
+<dialog id="diagnosticsDialog"><div class="modal-heading"><h2>连接与速度诊断</h2><button class="icon-btn" data-close="diagnosticsDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy" id="diagnosticInfo"></p><pre class="log" id="performanceInfo" style="max-height:360px;white-space:pre-wrap;overflow-wrap:anywhere"></pre><pre class="log" id="diagnosticLog"></pre><div class="modal-actions"><button class="btn secondary" id="copyDiagnosticsBtn">复制诊断</button><button class="btn secondary" id="diagnosticRetry">重连配对服务</button><button class="btn" id="diagnosticManual">使用手动连接</button></div></dialog>
+<div class="toasts" id="toastStack" role="status" aria-live="polite"></div>
+<noscript><div style="padding:24px;text-align:center">本工具需要启用 JavaScript 才能传输文件。</div></noscript>
+<script>
+/* QRCode for JavaScript — Copyright (c) 2009 Kazuhiko Arase, MIT.
+Browser wrapper for the QRCode implementation bundled in qrcode-terminal.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions: The above copyright notice and this
+permission notice shall be included in all copies or substantial portions of
+the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+*/
+(()=>{const modules={
+'QR8bitByte':function(module,exports,require){
+var QRMode = require('./QRMode');
+
+function QR8bitByte(data) {
+	this.mode = QRMode.MODE_8BIT_BYTE;
+	this.data = data;
+}
+
+QR8bitByte.prototype = {
+
+	getLength : function() {
+		return this.data.length;
+	},
+	
+	write : function(buffer) {
+		for (var i = 0; i < this.data.length; i++) {
+			// not JIS ...
+			buffer.put(this.data.charCodeAt(i), 8);
+		}
+	}
+};
+
+module.exports = QR8bitByte;
+
+},
+'QRBitBuffer':function(module,exports,require){
+function QRBitBuffer() {
+	this.buffer = [];
+	this.length = 0;
+}
+
+QRBitBuffer.prototype = {
+
+	get : function(index) {
+		var bufIndex = Math.floor(index / 8);
+		return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+	},
+	
+	put : function(num, length) {
+		for (var i = 0; i < length; i++) {
+			this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+		}
+	},
+	
+	getLengthInBits : function() {
+		return this.length;
+	},
+	
+	putBit : function(bit) {
+	
+		var bufIndex = Math.floor(this.length / 8);
+		if (this.buffer.length <= bufIndex) {
+			this.buffer.push(0);
+		}
+	
+		if (bit) {
+			this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
+		}
+	
+		this.length++;
+	}
+};
+
+module.exports = QRBitBuffer;
+
+},
+'QRErrorCorrectLevel':function(module,exports,require){
+module.exports = {
+	L : 1,
+	M : 0,
+	Q : 3,
+	H : 2
+};
+
+
+},
+'QRMaskPattern':function(module,exports,require){
+module.exports = {
+	PATTERN000 : 0,
+	PATTERN001 : 1,
+	PATTERN010 : 2,
+	PATTERN011 : 3,
+	PATTERN100 : 4,
+	PATTERN101 : 5,
+	PATTERN110 : 6,
+	PATTERN111 : 7
+};
+
+},
+'QRMath':function(module,exports,require){
+var QRMath = {
+
+	glog : function(n) {
+	
+		if (n < 1) {
+			throw new Error("glog(" + n + ")");
+		}
+		
+		return QRMath.LOG_TABLE[n];
+	},
+	
+	gexp : function(n) {
+	
+		while (n < 0) {
+			n += 255;
+		}
+	
+		while (n >= 256) {
+			n -= 255;
+		}
+	
+		return QRMath.EXP_TABLE[n];
+	},
+	
+	EXP_TABLE : new Array(256),
+	
+	LOG_TABLE : new Array(256)
+
+};
+	
+for (var i = 0; i < 8; i++) {
+	QRMath.EXP_TABLE[i] = 1 << i;
+}
+for (var i = 8; i < 256; i++) {
+	QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4]
+		^ QRMath.EXP_TABLE[i - 5]
+		^ QRMath.EXP_TABLE[i - 6]
+		^ QRMath.EXP_TABLE[i - 8];
+}
+for (var i = 0; i < 255; i++) {
+	QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
+}
+
+module.exports = QRMath;
+
+},
+'QRMode':function(module,exports,require){
+module.exports = {
+    MODE_NUMBER :       1 << 0,
+    MODE_ALPHA_NUM :    1 << 1,
+    MODE_8BIT_BYTE :    1 << 2,
+    MODE_KANJI :        1 << 3
+};
+
+},
+'QRPolynomial':function(module,exports,require){
+var QRMath = require('./QRMath');
+
+function QRPolynomial(num, shift) {
+	if (num.length === undefined) {
+		throw new Error(num.length + "/" + shift);
+	}
+
+	var offset = 0;
+
+	while (offset < num.length && num[offset] === 0) {
+		offset++;
+	}
+
+	this.num = new Array(num.length - offset + shift);
+	for (var i = 0; i < num.length - offset; i++) {
+		this.num[i] = num[i + offset];
+	}
+}
+
+QRPolynomial.prototype = {
+
+	get : function(index) {
+		return this.num[index];
+	},
+	
+	getLength : function() {
+		return this.num.length;
+	},
+	
+	multiply : function(e) {
+	
+		var num = new Array(this.getLength() + e.getLength() - 1);
+	
+		for (var i = 0; i < this.getLength(); i++) {
+			for (var j = 0; j < e.getLength(); j++) {
+				num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
+			}
+		}
+	
+		return new QRPolynomial(num, 0);
+	},
+	
+	mod : function(e) {
+	
+		if (this.getLength() - e.getLength() < 0) {
+			return this;
+		}
+	
+		var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
+	
+		var num = new Array(this.getLength() );
+		
+		for (var i = 0; i < this.getLength(); i++) {
+			num[i] = this.get(i);
+		}
+		
+		for (var x = 0; x < e.getLength(); x++) {
+			num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
+		}
+	
+		// recursive call
+		return new QRPolynomial(num, 0).mod(e);
+	}
+};
+
+module.exports = QRPolynomial;
+
+},
+'QRRSBlock':function(module,exports,require){
+var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
+
+function QRRSBlock(totalCount, dataCount) {
+	this.totalCount = totalCount;
+	this.dataCount  = dataCount;
+}
+
+QRRSBlock.RS_BLOCK_TABLE = [
+
+	// L
+	// M
+	// Q
+	// H
+
+	// 1
+	[1, 26, 19],
+	[1, 26, 16],
+	[1, 26, 13],
+	[1, 26, 9],
+	
+	// 2
+	[1, 44, 34],
+	[1, 44, 28],
+	[1, 44, 22],
+	[1, 44, 16],
+
+	// 3
+	[1, 70, 55],
+	[1, 70, 44],
+	[2, 35, 17],
+	[2, 35, 13],
+
+	// 4		
+	[1, 100, 80],
+	[2, 50, 32],
+	[2, 50, 24],
+	[4, 25, 9],
+	
+	// 5
+	[1, 134, 108],
+	[2, 67, 43],
+	[2, 33, 15, 2, 34, 16],
+	[2, 33, 11, 2, 34, 12],
+	
+	// 6
+	[2, 86, 68],
+	[4, 43, 27],
+	[4, 43, 19],
+	[4, 43, 15],
+	
+	// 7		
+	[2, 98, 78],
+	[4, 49, 31],
+	[2, 32, 14, 4, 33, 15],
+	[4, 39, 13, 1, 40, 14],
+	
+	// 8
+	[2, 121, 97],
+	[2, 60, 38, 2, 61, 39],
+	[4, 40, 18, 2, 41, 19],
+	[4, 40, 14, 2, 41, 15],
+	
+	// 9
+	[2, 146, 116],
+	[3, 58, 36, 2, 59, 37],
+	[4, 36, 16, 4, 37, 17],
+	[4, 36, 12, 4, 37, 13],
+	
+	// 10		
+	[2, 86, 68, 2, 87, 69],
+	[4, 69, 43, 1, 70, 44],
+	[6, 43, 19, 2, 44, 20],
+	[6, 43, 15, 2, 44, 16],
+
+	// 11
+	[4, 101, 81],
+	[1, 80, 50, 4, 81, 51],
+	[4, 50, 22, 4, 51, 23],
+	[3, 36, 12, 8, 37, 13],
+
+	// 12
+	[2, 116, 92, 2, 117, 93],
+	[6, 58, 36, 2, 59, 37],
+	[4, 46, 20, 6, 47, 21],
+	[7, 42, 14, 4, 43, 15],
+
+	// 13
+	[4, 133, 107],
+	[8, 59, 37, 1, 60, 38],
+	[8, 44, 20, 4, 45, 21],
+	[12, 33, 11, 4, 34, 12],
+
+	// 14
+	[3, 145, 115, 1, 146, 116],
+	[4, 64, 40, 5, 65, 41],
+	[11, 36, 16, 5, 37, 17],
+	[11, 36, 12, 5, 37, 13],
+
+	// 15
+	[5, 109, 87, 1, 110, 88],
+	[5, 65, 41, 5, 66, 42],
+	[5, 54, 24, 7, 55, 25],
+	[11, 36, 12],
+
+	// 16
+	[5, 122, 98, 1, 123, 99],
+	[7, 73, 45, 3, 74, 46],
+	[15, 43, 19, 2, 44, 20],
+	[3, 45, 15, 13, 46, 16],
+
+	// 17
+	[1, 135, 107, 5, 136, 108],
+	[10, 74, 46, 1, 75, 47],
+	[1, 50, 22, 15, 51, 23],
+	[2, 42, 14, 17, 43, 15],
+
+	// 18
+	[5, 150, 120, 1, 151, 121],
+	[9, 69, 43, 4, 70, 44],
+	[17, 50, 22, 1, 51, 23],
+	[2, 42, 14, 19, 43, 15],
+
+	// 19
+	[3, 141, 113, 4, 142, 114],
+	[3, 70, 44, 11, 71, 45],
+	[17, 47, 21, 4, 48, 22],
+	[9, 39, 13, 16, 40, 14],
+
+	// 20
+	[3, 135, 107, 5, 136, 108],
+	[3, 67, 41, 13, 68, 42],
+	[15, 54, 24, 5, 55, 25],
+	[15, 43, 15, 10, 44, 16],
+
+	// 21
+	[4, 144, 116, 4, 145, 117],
+	[17, 68, 42],
+	[17, 50, 22, 6, 51, 23],
+	[19, 46, 16, 6, 47, 17],
+
+	// 22
+	[2, 139, 111, 7, 140, 112],
+	[17, 74, 46],
+	[7, 54, 24, 16, 55, 25],
+	[34, 37, 13],
+
+	// 23
+	[4, 151, 121, 5, 152, 122],
+	[4, 75, 47, 14, 76, 48],
+	[11, 54, 24, 14, 55, 25],
+	[16, 45, 15, 14, 46, 16],
+
+	// 24
+	[6, 147, 117, 4, 148, 118],
+	[6, 73, 45, 14, 74, 46],
+	[11, 54, 24, 16, 55, 25],
+	[30, 46, 16, 2, 47, 17],
+
+	// 25
+	[8, 132, 106, 4, 133, 107],
+	[8, 75, 47, 13, 76, 48],
+	[7, 54, 24, 22, 55, 25],
+	[22, 45, 15, 13, 46, 16],
+
+	// 26
+	[10, 142, 114, 2, 143, 115],
+	[19, 74, 46, 4, 75, 47],
+	[28, 50, 22, 6, 51, 23],
+	[33, 46, 16, 4, 47, 17],
+
+	// 27
+	[8, 152, 122, 4, 153, 123],
+	[22, 73, 45, 3, 74, 46],
+	[8, 53, 23, 26, 54, 24],
+	[12, 45, 15, 28, 46, 16],
+
+	// 28
+	[3, 147, 117, 10, 148, 118],
+	[3, 73, 45, 23, 74, 46],
+	[4, 54, 24, 31, 55, 25],
+	[11, 45, 15, 31, 46, 16],
+
+	// 29
+	[7, 146, 116, 7, 147, 117],
+	[21, 73, 45, 7, 74, 46],
+	[1, 53, 23, 37, 54, 24],
+	[19, 45, 15, 26, 46, 16],
+
+	// 30
+	[5, 145, 115, 10, 146, 116],
+	[19, 75, 47, 10, 76, 48],
+	[15, 54, 24, 25, 55, 25],
+	[23, 45, 15, 25, 46, 16],
+
+	// 31
+	[13, 145, 115, 3, 146, 116],
+	[2, 74, 46, 29, 75, 47],
+	[42, 54, 24, 1, 55, 25],
+	[23, 45, 15, 28, 46, 16],
+
+	// 32
+	[17, 145, 115],
+	[10, 74, 46, 23, 75, 47],
+	[10, 54, 24, 35, 55, 25],
+	[19, 45, 15, 35, 46, 16],
+
+	// 33
+	[17, 145, 115, 1, 146, 116],
+	[14, 74, 46, 21, 75, 47],
+	[29, 54, 24, 19, 55, 25],
+	[11, 45, 15, 46, 46, 16],
+
+	// 34
+	[13, 145, 115, 6, 146, 116],
+	[14, 74, 46, 23, 75, 47],
+	[44, 54, 24, 7, 55, 25],
+	[59, 46, 16, 1, 47, 17],
+
+	// 35
+	[12, 151, 121, 7, 152, 122],
+	[12, 75, 47, 26, 76, 48],
+	[39, 54, 24, 14, 55, 25],
+	[22, 45, 15, 41, 46, 16],
+
+	// 36
+	[6, 151, 121, 14, 152, 122],
+	[6, 75, 47, 34, 76, 48],
+	[46, 54, 24, 10, 55, 25],
+	[2, 45, 15, 64, 46, 16],
+
+	// 37
+	[17, 152, 122, 4, 153, 123],
+	[29, 74, 46, 14, 75, 47],
+	[49, 54, 24, 10, 55, 25],
+	[24, 45, 15, 46, 46, 16],
+
+	// 38
+	[4, 152, 122, 18, 153, 123],
+	[13, 74, 46, 32, 75, 47],
+	[48, 54, 24, 14, 55, 25],
+	[42, 45, 15, 32, 46, 16],
+
+	// 39
+	[20, 147, 117, 4, 148, 118],
+	[40, 75, 47, 7, 76, 48],
+	[43, 54, 24, 22, 55, 25],
+	[10, 45, 15, 67, 46, 16],
+
+	// 40
+	[19, 148, 118, 6, 149, 119],
+	[18, 75, 47, 31, 76, 48],
+	[34, 54, 24, 34, 55, 25],
+	[20, 45, 15, 61, 46, 16]
+];
+
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+	
+	var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+	
+	if (rsBlock === undefined) {
+		throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+	}
+
+	var length = rsBlock.length / 3;
+	
+	var list = [];
+	
+	for (var i = 0; i < length; i++) {
+
+		var count = rsBlock[i * 3 + 0];
+		var totalCount = rsBlock[i * 3 + 1];
+		var dataCount  = rsBlock[i * 3 + 2];
+
+		for (var j = 0; j < count; j++) {
+			list.push(new QRRSBlock(totalCount, dataCount) );	
+		}
+	}
+	
+	return list;
+};
+
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+
+	switch(errorCorrectLevel) {
+	case QRErrorCorrectLevel.L :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+	case QRErrorCorrectLevel.M :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+	case QRErrorCorrectLevel.Q :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+	case QRErrorCorrectLevel.H :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+	default :
+		return undefined;
+	}
+};
+
+module.exports = QRRSBlock;
+
+},
+'QRUtil':function(module,exports,require){
+var QRMode = require('./QRMode');
+var QRPolynomial = require('./QRPolynomial');
+var QRMath = require('./QRMath');
+var QRMaskPattern = require('./QRMaskPattern');
+
+var QRUtil = {
+
+    PATTERN_POSITION_TABLE : [
+        [],
+        [6, 18],
+        [6, 22],
+        [6, 26],
+        [6, 30],
+        [6, 34],
+        [6, 22, 38],
+        [6, 24, 42],
+        [6, 26, 46],
+        [6, 28, 50],
+        [6, 30, 54],        
+        [6, 32, 58],
+        [6, 34, 62],
+        [6, 26, 46, 66],
+        [6, 26, 48, 70],
+        [6, 26, 50, 74],
+        [6, 30, 54, 78],
+        [6, 30, 56, 82],
+        [6, 30, 58, 86],
+        [6, 34, 62, 90],
+        [6, 28, 50, 72, 94],
+        [6, 26, 50, 74, 98],
+        [6, 30, 54, 78, 102],
+        [6, 28, 54, 80, 106],
+        [6, 32, 58, 84, 110],
+        [6, 30, 58, 86, 114],
+        [6, 34, 62, 90, 118],
+        [6, 26, 50, 74, 98, 122],
+        [6, 30, 54, 78, 102, 126],
+        [6, 26, 52, 78, 104, 130],
+        [6, 30, 56, 82, 108, 134],
+        [6, 34, 60, 86, 112, 138],
+        [6, 30, 58, 86, 114, 142],
+        [6, 34, 62, 90, 118, 146],
+        [6, 30, 54, 78, 102, 126, 150],
+        [6, 24, 50, 76, 102, 128, 154],
+        [6, 28, 54, 80, 106, 132, 158],
+        [6, 32, 58, 84, 110, 136, 162],
+        [6, 26, 54, 82, 110, 138, 166],
+        [6, 30, 58, 86, 114, 142, 170]
+    ],
+
+    G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+    G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+    G15_MASK : (1 << 14) | (1 << 12) | (1 << 10)    | (1 << 4) | (1 << 1),
+
+    getBCHTypeInfo : function(data) {
+        var d = data << 10;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+            d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );    
+        }
+        return ( (data << 10) | d) ^ QRUtil.G15_MASK;
+    },
+
+    getBCHTypeNumber : function(data) {
+        var d = data << 12;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+            d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );    
+        }
+        return (data << 12) | d;
+    },
+
+    getBCHDigit : function(data) {
+
+        var digit = 0;
+
+        while (data !== 0) {
+            digit++;
+            data >>>= 1;
+        }
+
+        return digit;
+    },
+
+    getPatternPosition : function(typeNumber) {
+        return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+
+    getMask : function(maskPattern, i, j) {
+        
+        switch (maskPattern) {
+            
+        case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
+        case QRMaskPattern.PATTERN001 : return i % 2 === 0;
+        case QRMaskPattern.PATTERN010 : return j % 3 === 0;
+        case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
+        case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
+        case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
+        case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
+        case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
+
+        default :
+            throw new Error("bad maskPattern:" + maskPattern);
+        }
+    },
+
+    getErrorCorrectPolynomial : function(errorCorrectLength) {
+
+        var a = new QRPolynomial([1], 0);
+
+        for (var i = 0; i < errorCorrectLength; i++) {
+            a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
+        }
+
+        return a;
+    },
+
+    getLengthInBits : function(mode, type) {
+
+        if (1 <= type && type < 10) {
+
+            // 1 - 9
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 10;
+            case QRMode.MODE_ALPHA_NUM  : return 9;
+            case QRMode.MODE_8BIT_BYTE  : return 8;
+            case QRMode.MODE_KANJI      : return 8;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 27) {
+
+            // 10 - 26
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 12;
+            case QRMode.MODE_ALPHA_NUM  : return 11;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 10;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 41) {
+
+            // 27 - 40
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 14;
+            case QRMode.MODE_ALPHA_NUM  : return 13;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 12;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else {
+            throw new Error("type:" + type);
+        }
+    },
+
+    getLostPoint : function(qrCode) {
+        
+        var moduleCount = qrCode.getModuleCount();
+        var lostPoint = 0;
+        var row = 0; 
+        var col = 0;
+
+        
+        // LEVEL1
+        
+        for (row = 0; row < moduleCount; row++) {
+
+            for (col = 0; col < moduleCount; col++) {
+
+                var sameCount = 0;
+                var dark = qrCode.isDark(row, col);
+
+                for (var r = -1; r <= 1; r++) {
+
+                    if (row + r < 0 || moduleCount <= row + r) {
+                        continue;
+                    }
+
+                    for (var c = -1; c <= 1; c++) {
+
+                        if (col + c < 0 || moduleCount <= col + c) {
+                            continue;
+                        }
+
+                        if (r === 0 && c === 0) {
+                            continue;
+                        }
+
+                        if (dark === qrCode.isDark(row + r, col + c) ) {
+                            sameCount++;
+                        }
+                    }
+                }
+
+                if (sameCount > 5) {
+                    lostPoint += (3 + sameCount - 5);
+                }
+            }
+        }
+
+        // LEVEL2
+
+        for (row = 0; row < moduleCount - 1; row++) {
+            for (col = 0; col < moduleCount - 1; col++) {
+                var count = 0;
+                if (qrCode.isDark(row,     col    ) ) count++;
+                if (qrCode.isDark(row + 1, col    ) ) count++;
+                if (qrCode.isDark(row,     col + 1) ) count++;
+                if (qrCode.isDark(row + 1, col + 1) ) count++;
+                if (count === 0 || count === 4) {
+                    lostPoint += 3;
+                }
+            }
+        }
+
+        // LEVEL3
+
+        for (row = 0; row < moduleCount; row++) {
+            for (col = 0; col < moduleCount - 6; col++) {
+                if (qrCode.isDark(row, col) && 
+                        !qrCode.isDark(row, col + 1) && 
+                         qrCode.isDark(row, col + 2) && 
+                         qrCode.isDark(row, col + 3) && 
+                         qrCode.isDark(row, col + 4) && 
+                        !qrCode.isDark(row, col + 5) && 
+                         qrCode.isDark(row, col + 6) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount - 6; row++) {
+                if (qrCode.isDark(row, col) &&
+                        !qrCode.isDark(row + 1, col) &&
+                         qrCode.isDark(row + 2, col) &&
+                         qrCode.isDark(row + 3, col) &&
+                         qrCode.isDark(row + 4, col) &&
+                        !qrCode.isDark(row + 5, col) &&
+                         qrCode.isDark(row + 6, col) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        // LEVEL4
+        
+        var darkCount = 0;
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount; row++) {
+                if (qrCode.isDark(row, col) ) {
+                    darkCount++;
+                }
+            }
+        }
+        
+        var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+        lostPoint += ratio * 10;
+
+        return lostPoint;       
+    }
+
+};
+
+module.exports = QRUtil;
+
+},
+'index':function(module,exports,require){
+//---------------------------------------------------------------------
+// QRCode for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//   http://www.opensource.org/licenses/mit-license.php
+//
+// The word "QR Code" is registered trademark of 
+// DENSO WAVE INCORPORATED
+//   http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+// Modified to work in node for this project (and some refactoring)
+//---------------------------------------------------------------------
+
+var QR8bitByte = require('./QR8bitByte');
+var QRUtil = require('./QRUtil');
+var QRPolynomial = require('./QRPolynomial');
+var QRRSBlock = require('./QRRSBlock');
+var QRBitBuffer = require('./QRBitBuffer');
+
+function QRCode(typeNumber, errorCorrectLevel) {
+	this.typeNumber = typeNumber;
+	this.errorCorrectLevel = errorCorrectLevel;
+	this.modules = null;
+	this.moduleCount = 0;
+	this.dataCache = null;
+	this.dataList = [];
+}
+
+QRCode.prototype = {
+	
+	addData : function(data) {
+		var newData = new QR8bitByte(data);
+		this.dataList.push(newData);
+		this.dataCache = null;
+	},
+	
+	isDark : function(row, col) {
+		if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+			throw new Error(row + "," + col);
+		}
+		return this.modules[row][col];
+	},
+
+	getModuleCount : function() {
+		return this.moduleCount;
+	},
+	
+	make : function() {
+		// Calculate automatically typeNumber if provided is < 1
+		if (this.typeNumber < 1 ){
+			var typeNumber = 1;
+			for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+				var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+
+				var buffer = new QRBitBuffer();
+				var totalDataCount = 0;
+				for (var i = 0; i < rsBlocks.length; i++) {
+					totalDataCount += rsBlocks[i].dataCount;
+				}
+
+				for (var x = 0; x < this.dataList.length; x++) {
+					var data = this.dataList[x];
+					buffer.put(data.mode, 4);
+					buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+					data.write(buffer);
+				}
+				if (buffer.getLengthInBits() <= totalDataCount * 8)
+					break;
+			}
+			this.typeNumber = typeNumber;
+		}
+		this.makeImpl(false, this.getBestMaskPattern() );
+	},
+	
+	makeImpl : function(test, maskPattern) {
+		
+		this.moduleCount = this.typeNumber * 4 + 17;
+		this.modules = new Array(this.moduleCount);
+		
+		for (var row = 0; row < this.moduleCount; row++) {
+			
+			this.modules[row] = new Array(this.moduleCount);
+			
+			for (var col = 0; col < this.moduleCount; col++) {
+				this.modules[row][col] = null;//(col + row) % 3;
+			}
+		}
+	
+		this.setupPositionProbePattern(0, 0);
+		this.setupPositionProbePattern(this.moduleCount - 7, 0);
+		this.setupPositionProbePattern(0, this.moduleCount - 7);
+		this.setupPositionAdjustPattern();
+		this.setupTimingPattern();
+		this.setupTypeInfo(test, maskPattern);
+		
+		if (this.typeNumber >= 7) {
+			this.setupTypeNumber(test);
+		}
+	
+		if (this.dataCache === null) {
+			this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+		}
+	
+		this.mapData(this.dataCache, maskPattern);
+	},
+
+	setupPositionProbePattern : function(row, col)  {
+		
+		for (var r = -1; r <= 7; r++) {
+			
+			if (row + r <= -1 || this.moduleCount <= row + r) continue;
+			
+			for (var c = -1; c <= 7; c++) {
+				
+				if (col + c <= -1 || this.moduleCount <= col + c) continue;
+				
+				if ( (0 <= r && r <= 6 && (c === 0 || c === 6) ) || 
+                     (0 <= c && c <= 6 && (r === 0 || r === 6) ) || 
+                     (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+					this.modules[row + r][col + c] = true;
+				} else {
+					this.modules[row + r][col + c] = false;
+				}
+			}		
+		}		
+	},
+	
+	getBestMaskPattern : function() {
+	
+		var minLostPoint = 0;
+		var pattern = 0;
+	
+		for (var i = 0; i < 8; i++) {
+			
+			this.makeImpl(true, i);
+	
+			var lostPoint = QRUtil.getLostPoint(this);
+	
+			if (i === 0 || minLostPoint >  lostPoint) {
+				minLostPoint = lostPoint;
+				pattern = i;
+			}
+		}
+	
+		return pattern;
+	},
+	
+	createMovieClip : function(target_mc, instance_name, depth) {
+	
+		var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+		var cs = 1;
+	
+		this.make();
+
+		for (var row = 0; row < this.modules.length; row++) {
+			
+			var y = row * cs;
+			
+			for (var col = 0; col < this.modules[row].length; col++) {
+	
+				var x = col * cs;
+				var dark = this.modules[row][col];
+			
+				if (dark) {
+					qr_mc.beginFill(0, 100);
+					qr_mc.moveTo(x, y);
+					qr_mc.lineTo(x + cs, y);
+					qr_mc.lineTo(x + cs, y + cs);
+					qr_mc.lineTo(x, y + cs);
+					qr_mc.endFill();
+				}
+			}
+		}
+		
+		return qr_mc;
+	},
+
+	setupTimingPattern : function() {
+		
+		for (var r = 8; r < this.moduleCount - 8; r++) {
+			if (this.modules[r][6] !== null) {
+				continue;
+			}
+			this.modules[r][6] = (r % 2 === 0);
+		}
+	
+		for (var c = 8; c < this.moduleCount - 8; c++) {
+			if (this.modules[6][c] !== null) {
+				continue;
+			}
+			this.modules[6][c] = (c % 2 === 0);
+		}
+	},
+	
+	setupPositionAdjustPattern : function() {
+	
+		var pos = QRUtil.getPatternPosition(this.typeNumber);
+		
+		for (var i = 0; i < pos.length; i++) {
+		
+			for (var j = 0; j < pos.length; j++) {
+			
+				var row = pos[i];
+				var col = pos[j];
+				
+				if (this.modules[row][col] !== null) {
+					continue;
+				}
+				
+				for (var r = -2; r <= 2; r++) {
+				
+					for (var c = -2; c <= 2; c++) {
+					
+						if (Math.abs(r) === 2 || 
+                            Math.abs(c) === 2 ||
+                            (r === 0 && c === 0) ) {
+							this.modules[row + r][col + c] = true;
+						} else {
+							this.modules[row + r][col + c] = false;
+						}
+					}
+				}
+			}
+		}
+	},
+	
+	setupTypeNumber : function(test) {
+	
+		var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+        var mod;
+	
+		for (var i = 0; i < 18; i++) {
+			mod = (!test && ( (bits >> i) & 1) === 1);
+			this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+		}
+	
+		for (var x = 0; x < 18; x++) {
+			mod = (!test && ( (bits >> x) & 1) === 1);
+			this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod;
+		}
+	},
+	
+	setupTypeInfo : function(test, maskPattern) {
+	
+		var data = (this.errorCorrectLevel << 3) | maskPattern;
+		var bits = QRUtil.getBCHTypeInfo(data);
+        var mod;
+	
+		// vertical		
+		for (var v = 0; v < 15; v++) {
+	
+			mod = (!test && ( (bits >> v) & 1) === 1);
+	
+			if (v < 6) {
+				this.modules[v][8] = mod;
+			} else if (v < 8) {
+				this.modules[v + 1][8] = mod;
+			} else {
+				this.modules[this.moduleCount - 15 + v][8] = mod;
+			}
+		}
+	
+		// horizontal
+		for (var h = 0; h < 15; h++) {
+	
+			mod = (!test && ( (bits >> h) & 1) === 1);
+			
+			if (h < 8) {
+				this.modules[8][this.moduleCount - h - 1] = mod;
+			} else if (h < 9) {
+				this.modules[8][15 - h - 1 + 1] = mod;
+			} else {
+				this.modules[8][15 - h - 1] = mod;
+			}
+		}
+	
+		// fixed module
+		this.modules[this.moduleCount - 8][8] = (!test);
+	
+	},
+	
+	mapData : function(data, maskPattern) {
+		
+		var inc = -1;
+		var row = this.moduleCount - 1;
+		var bitIndex = 7;
+		var byteIndex = 0;
+		
+		for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+	
+			if (col === 6) col--;
+	
+			while (true) {
+	
+				for (var c = 0; c < 2; c++) {
+					
+					if (this.modules[row][col - c] === null) {
+						
+						var dark = false;
+	
+						if (byteIndex < data.length) {
+							dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
+						}
+	
+						var mask = QRUtil.getMask(maskPattern, row, col - c);
+	
+						if (mask) {
+							dark = !dark;
+						}
+						
+						this.modules[row][col - c] = dark;
+						bitIndex--;
+	
+						if (bitIndex === -1) {
+							byteIndex++;
+							bitIndex = 7;
+						}
+					}
+				}
+								
+				row += inc;
+	
+				if (row < 0 || this.moduleCount <= row) {
+					row -= inc;
+					inc = -inc;
+					break;
+				}
+			}
+		}
+		
+	}
+
+};
+
+QRCode.PAD0 = 0xEC;
+QRCode.PAD1 = 0x11;
+
+QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
+	
+	var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+	
+	var buffer = new QRBitBuffer();
+	
+	for (var i = 0; i < dataList.length; i++) {
+		var data = dataList[i];
+		buffer.put(data.mode, 4);
+		buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+		data.write(buffer);
+	}
+
+	// calc num max data.
+	var totalDataCount = 0;
+	for (var x = 0; x < rsBlocks.length; x++) {
+		totalDataCount += rsBlocks[x].dataCount;
+	}
+
+	if (buffer.getLengthInBits() > totalDataCount * 8) {
+		throw new Error("code length overflow. (" + 
+            buffer.getLengthInBits() + 
+            ">" +  
+            totalDataCount * 8 + 
+            ")");
+	}
+
+	// end code
+	if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+		buffer.put(0, 4);
+	}
+
+	// padding
+	while (buffer.getLengthInBits() % 8 !== 0) {
+		buffer.putBit(false);
+	}
+
+	// padding
+	while (true) {
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD0, 8);
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD1, 8);
+	}
+
+	return QRCode.createBytes(buffer, rsBlocks);
+};
+
+QRCode.createBytes = function(buffer, rsBlocks) {
+
+	var offset = 0;
+	
+	var maxDcCount = 0;
+	var maxEcCount = 0;
+	
+	var dcdata = new Array(rsBlocks.length);
+	var ecdata = new Array(rsBlocks.length);
+	
+	for (var r = 0; r < rsBlocks.length; r++) {
+
+		var dcCount = rsBlocks[r].dataCount;
+		var ecCount = rsBlocks[r].totalCount - dcCount;
+
+		maxDcCount = Math.max(maxDcCount, dcCount);
+		maxEcCount = Math.max(maxEcCount, ecCount);
+		
+		dcdata[r] = new Array(dcCount);
+		
+		for (var i = 0; i < dcdata[r].length; i++) {
+			dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+		}
+		offset += dcCount;
+		
+		var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+		var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+		var modPoly = rawPoly.mod(rsPoly);
+		ecdata[r] = new Array(rsPoly.getLength() - 1);
+		for (var x = 0; x < ecdata[r].length; x++) {
+            var modIndex = x + modPoly.getLength() - ecdata[r].length;
+			ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0;
+		}
+
+	}
+	
+	var totalCodeCount = 0;
+	for (var y = 0; y < rsBlocks.length; y++) {
+		totalCodeCount += rsBlocks[y].totalCount;
+	}
+
+	var data = new Array(totalCodeCount);
+	var index = 0;
+
+	for (var z = 0; z < maxDcCount; z++) {
+		for (var s = 0; s < rsBlocks.length; s++) {
+			if (z < dcdata[s].length) {
+				data[index++] = dcdata[s][z];
+			}
+		}
+	}
+
+	for (var xx = 0; xx < maxEcCount; xx++) {
+		for (var t = 0; t < rsBlocks.length; t++) {
+			if (xx < ecdata[t].length) {
+				data[index++] = ecdata[t][xx];
+			}
+		}
+	}
+
+	return data;
+
+};
+
+module.exports = QRCode;
+
+}
+};const cache={};function req(name){name=name.replace(/^\.\//,'');if(cache[name])return cache[name].exports;const module={exports:{}};cache[name]=module;modules[name](module,module.exports,req);return module.exports;}window.LocalQRCode=req('index');})();
+
+</script><script>
+/* 邻传 Pages v3.1 — Single-file, native WebRTC file transfer.
+ * No application backend, build system, CDN script, or file upload endpoint.
+ * Online signaling implements PeerServer's OFFER / ANSWER / CANDIDATE protocol.
+ * Protocol reference: peers/peerjs v1.5.5 lib/socket.ts and lib/negotiator.ts.
+ * Public signaling is a third-party dependency, not a GitHub Pages capability.
+ */
+(() => {
+'use strict';
+const VERSION = 3;
+const BUILD = '3.2';
+const PREFIX = 'linchuan3-';
+const ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+const MEMORY_LIMIT = 256 * 1024 * 1024;
+const CHUNK_SIZE = 16384 - 16;
+// Wire protocol remains v3. Old peers use the original 512 KiB receive window.
+const LEGACY_WINDOW = 512 * 1024;
+const FLOW_WINDOW = 4 * 1024 * 1024;
+const READ_BATCH = 1024 * 1024;
+const WRITE_BATCH = 1024 * 1024;
+const SEND_HIGH = 1024 * 1024;
+const SEND_LOW = 256 * 1024;
+const RECEIVE_QUEUE_LIMIT = 6 * 1024 * 1024;
+const ACK_EVERY = 128 * 1024;
+const STALL_MS = 90000;
+const MAX_CONNECTIONS = 6;
+const TERMINAL = new Set(['done','saved','cancelled','rejected','error']);
+const DEFAULTS = { signalURL: 'wss://0.peerjs.com/peerjs', signalKey: 'peerjs',
+  iceServers: [{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}], manualOnly: false };
+const $ = id => document.getElementById(id);
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v) { try { localStorage.setItem(k,v); } catch {} } };
+const sleep = ms => new Promise(resolve => setTimeout(resolve,ms));
+const enc = new TextEncoder();
+const decoder = new TextDecoder('utf-8', {fatal:true});
+let settings;
+try { settings = {...DEFAULTS, ...JSON.parse(store.get('linchuan3-settings') || '{}')}; validateSettings(settings); }
+catch { settings = structuredClone(DEFAULTS); }
+const deviceKind = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ? 'phone' : 'laptop';
+let myName = cleanName(store.get('linchuan3-name') || (deviceKind === 'phone' ? '我的手机' : '我的电脑'),40);
+let myCode = makeCode(), instanceId = randomHex(12), signalToken = randomHex(16);
+let socket = null, signalReady = false, heartbeat = null, reconnectTimer = null, signalTimeout = null;
+let reconnectAttempt = 0, signalGeneration = 0, requestedInvite = '', shuttingDown = false;
+let selected = '', currentTab = 'all', memoryReserved = 0, manualSession = null, wakeLock = null;
+let renderPending = false, lastViewSignature = '', lastDeviceSignature = '';
+let requestDialogConnectionId = '', requestDialogSyncPending = false, requestSequence = 0;
+const connections = new Map(), orphanCandidates = new Map(), transfers = [], stagedFiles = [], logs = [];
+
+function randomHex(n) { return [...crypto.getRandomValues(new Uint8Array(n))].map(v=>v.toString(16).padStart(2,'0')).join(''); }
+function makeCode() { let s=''; while(s.length<12) { for(const n of crypto.getRandomValues(new Uint8Array(20))) { if(n<248 && s.length<12) s+=ALPHABET[n%31]; } } return s; }
+function formatCode(code) { return code.match(/.{1,4}/g)?.join(' ') || code; }
+function cleanName(s,max=240) { return String(s).replace(/[\u0000-\u001f\u007f\u202a-\u202e\u2066-\u2069]/g,'').trim().slice(0,max) || '未命名'; }
+function safeFilename(name) { let n=cleanName(name).replace(/[\\/:*?"<>|]/g,'_').replace(/[. ]+$/g,''); return n && n!=='.' && n!=='..' ? n : '未命名文件'; }
+function bytes(n) { if(!Number.isFinite(n)||n<=0)return '0 B'; const u=['B','KiB','MiB','GiB','TiB','PiB'];const i=Math.min(Math.floor(Math.log(n)/Math.log(1024)),u.length-1);return `${(n/1024**i).toFixed(i? n/1024**i>=10?1:2:0)} ${u[i]}`; }
+function el(tag,cls,text) { const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n; }
+function icon(name) { const n=document.createElementNS('http://www.w3.org/2000/svg','svg');n.setAttribute('class','icon');n.setAttribute('aria-hidden','true');const u=document.createElementNS(n.namespaceURI,'use');u.setAttribute('href','#i-'+name);n.append(u);return n; }
+function action(label,fn,cls='btn secondary small',symbol='') { const b=el('button',cls,label);b.type='button';if(symbol)b.prepend(icon(symbol));b.addEventListener('click',fn);return b; }
+function iconButton(symbol,label,fn) { const b=action('',fn,'icon-btn',symbol);b.title=label;b.setAttribute('aria-label',label);return b; }
+function fileIcon(name) { const e=name.split('.').pop().toLowerCase();const type=/^(png|jpg|jpeg|webp|heic|gif|svg)$/.test(e)?'image':/^(zip|rar|7z|tar|gz|iso)$/.test(e)?'archive':'file';const n=el('span','file-icon');n.append(icon(type));return n; }
+function toast(message,error=false) { const n=el('div','toast'+(error?' error':''),message);$('toastStack').append(n);setTimeout(()=>n.remove(),error?8500:4200);while($('toastStack').children.length>3)$('toastStack').firstChild.remove(); }
+function log(message) { logs.push(new Date().toLocaleTimeString()+'  '+message);if(logs.length>60)logs.shift();if($('diagnosticsDialog').open)renderDiagnostics(); }
+function showDialog(id) { if(id!=='connectionRequestDialog'&&$('connectionRequestDialog').open)return;if(!$(id).open)$(id).showModal(); }
+function setBanner(message='',error=false) { $('connectionBanner').textContent=message;$('connectionBanner').className='banner'+(error?' error':'');$('connectionBanner').hidden=!message; }
+function markDirty() { if(renderPending)return;renderPending=true;requestAnimationFrame(()=>{renderPending=false;syncConnectionRequestDialog();renderDevices();renderStaged();renderTransfers();}); }
+async function copy(text) { try { await navigator.clipboard.writeText(text);toast('已复制'); } catch { const t=el('textarea');t.value=text;t.style.cssText='position:fixed;top:0;left:0;opacity:0';const host=[...document.querySelectorAll('dialog[open]')].at(-1)||document.body;host.append(t);t.select();const ok=document.execCommand('copy');t.remove();toast(ok?'已复制':'复制失败，请长按或选中文字手动复制',!ok); } }
+function shareURL() { const url=new URL(location.href);url.hash='to='+myCode;return url.href; }
+function getCode(input) { let s=input.trim();if(/^https?:\/\//i.test(s)) { const u=new URL(s);if(u.origin!==location.origin||u.pathname.replace(/index\.html$/i,'')!==location.pathname.replace(/index\.html$/i,''))throw new Error('请使用同一个网页生成的邀请链接');s=new URLSearchParams(u.hash.slice(1)).get('to')||''; }s=s.replace(/[\s-]/g,'').toUpperCase();if(s.length!==12||[...s].some(ch=>!ALPHABET.includes(ch)))throw new Error('请输入完整的 12 位配对码，或本网页的邀请链接');return s; }
+
+/* Incremental SHA-256. Memory use is constant regardless of file length.
+ * The implementation is independently verified against node:crypto in tests.
+ */
+const SHA_K=new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+const ror=(n,b)=>(n>>>b)|(n<<(32-b));
+class Sha256 {
+  constructor(){this.h=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);this.buf=new Uint8Array(64);this.w=new Uint32Array(64);this.len=0;this.total=0;this.finished=false;}
+  update(input){if(this.finished)throw new Error('SHA-256 already finalized');const a=input instanceof Uint8Array?input:new Uint8Array(input);this.total+=a.byteLength;let p=0;if(this.len){const n=Math.min(64-this.len,a.length);this.buf.set(a.subarray(0,n),this.len);this.len+=n;p=n;if(this.len===64){this.block(this.buf,0);this.len=0;}}while(p+64<=a.length){this.block(a,p);p+=64;}if(p<a.length){this.buf.set(a.subarray(p));this.len=a.length-p;}return this;}
+  block(a,p){const w=this.w;for(let i=0;i<16;i++){const j=p+i*4;w[i]=((a[j]<<24)|(a[j+1]<<16)|(a[j+2]<<8)|a[j+3])>>>0;}for(let i=16;i<64;i++){const x=w[i-15],y=w[i-2];w[i]=(w[i-16]+(ror(x,7)^ror(x,18)^(x>>>3))+w[i-7]+(ror(y,17)^ror(y,19)^(y>>>10)))>>>0;}const H=this.h;let a0=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];for(let i=0;i<64;i++){const t1=(h+(ror(e,6)^ror(e,11)^ror(e,25))+((e&f)^(~e&g))+SHA_K[i]+w[i])>>>0;const t2=((ror(a0,2)^ror(a0,13)^ror(a0,22))+((a0&b)^(a0&c)^(b&c)))>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a0;a0=(t1+t2)>>>0;}H[0]=(H[0]+a0)>>>0;H[1]=(H[1]+b)>>>0;H[2]=(H[2]+c)>>>0;H[3]=(H[3]+d)>>>0;H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;}
+  digest(){if(this.finished)return this.result;const tail=new Uint8Array(this.len<56?64:128);tail.set(this.buf.subarray(0,this.len));tail[this.len]=0x80;const view=new DataView(tail.buffer);view.setUint32(tail.length-8,Math.floor(this.total/0x20000000));view.setUint32(tail.length-4,(this.total*8)>>>0);this.block(tail,0);if(tail.length===128)this.block(tail,64);this.finished=true;return this.result=[...this.h].map(x=>x.toString(16).padStart(8,'0')).join('');}
+}
+
+// ---- Public PeerServer signaling. Only SDP and ICE messages go to the server. ----
+function validateSettings(s) { const u=new URL(s.signalURL);if(!['wss:','ws:'].includes(u.protocol)||u.username||u.password||u.search||u.hash)throw new Error('信令地址须为不带查询参数的 wss:// WebSocket 地址');if(location.protocol==='https:'&&u.protocol!=='wss:')throw new Error('HTTPS 网页只能使用 wss:// 信令地址');if(typeof s.signalKey!=='string'||s.signalKey.length>100)throw new Error('PeerServer key 格式不正确');if(!Array.isArray(s.iceServers)||s.iceServers.length>12)throw new Error('ICE 服务必须是最多 12 项的 JSON 数组');for(const server of s.iceServers){if(!server||typeof server!=='object')throw new Error('ICE 配置不是对象');const urls=typeof server.urls==='string'?[server.urls]:server.urls;if(!Array.isArray(urls)||!urls.length||urls.some(u=>typeof u!=='string'||!/^stuns?:|^turns?:/.test(u)||u.length>1024))throw new Error('每项 ICE 服务必须有合法的 stun: 或 turn: urls');if(server.username!==undefined&&typeof server.username!=='string')throw new Error('TURN username 必须是字符串');if(server.credential!==undefined&&typeof server.credential!=='string')throw new Error('TURN credential 必须是字符串');} }
+function signalUI(text,ready=false) { signalReady=ready;$('signalText').textContent=text;$('signalStatus').classList.toggle('online',ready);$('codeBox').classList.toggle('offline',!ready);$('myCode').textContent=formatCode(myCode);$('copyCodeBtn').disabled=!ready;$('shareBtn').disabled=!ready;$('connectBtn').disabled=!ready;$('retrySignalBtn').hidden=ready||settings.manualOnly;$('codeLabel').textContent=ready?'本机配对码 · 分享给另一台设备':settings.manualOnly?'手动模式 · 在线配对已停用':'本机配对码尚未在线注册'; }
+function stopSignal(){signalGeneration++;clearTimeout(reconnectTimer);reconnectTimer=null;clearTimeout(signalTimeout);clearInterval(heartbeat);if(socket){const old=socket;socket=null;old.onclose=old.onmessage=old.onerror=null;old.close();}signalReady=false;}
+function startSignal(reset=true){if(shuttingDown)return;stopSignal();if(reset)reconnectAttempt=0;if(settings.manualOnly){signalUI('手动连接模式');setBanner('在线配对已停用。点击“手动连接”，交换连接信息即可尝试局域网直连。');return;}signalUI('正在连接配对服务');const generation=signalGeneration;const u=new URL(settings.signalURL);u.searchParams.set('key',settings.signalKey||'peerjs');u.searchParams.set('id',PREFIX+myCode);u.searchParams.set('token',signalToken);u.searchParams.set('version','1.5.5');try{socket=new WebSocket(u.href);}catch(e){signalUnavailable(generation);return;}const ws=socket;let signalChain=Promise.resolve();signalTimeout=setTimeout(()=>{if(generation===signalGeneration&&!signalReady){ws.close();signalUnavailable(generation);}},12000);
+  ws.onopen=()=>{if(generation!==signalGeneration)return;heartbeat=setInterval(()=>{if(ws.readyState===WebSocket.OPEN)ws.send('{"type":"HEARTBEAT"}');},5000);};
+  ws.onmessage=e=>{if(generation!==signalGeneration||typeof e.data!=='string'||e.data.length>300000)return;let m;try{m=JSON.parse(e.data);}catch{return;}signalChain=signalChain.then(()=>handleSignal(m,generation)).catch(err=>{log('连接协商错误：'+cleanName(err.message,160));});};
+  ws.onerror=()=>{if(generation===signalGeneration&&!signalReady)signalUI('配对服务暂不可达');};
+  ws.onclose=()=>signalUnavailable(generation);
+}
+function signalUnavailable(generation){if(generation!==signalGeneration||shuttingDown)return;clearTimeout(signalTimeout);clearInterval(heartbeat);if(reconnectTimer)return;signalUI('配对服务未连接');setBanner('在线配对服务暂不可达；已建立的直连可继续传输。可点击“手动连接”，或检查网络后重连。');log('信令连接断开，已建立的数据通道保持不变。');const delay=Math.min(30000,2000*2**Math.min(reconnectAttempt++,4));reconnectTimer=setTimeout(()=>{reconnectTimer=null;startSignal(false);},delay);}
+function sendSignal(type,c,payload){if(!signalReady||!socket||socket.readyState!==WebSocket.OPEN)throw new Error('配对服务未连接，请重连或改用手动连接');socket.send(JSON.stringify({type,dst:c.remote,payload:{type:'data',connectionId:c.id,...payload}}));}
+async function handleSignal(m,generation){if(generation!==signalGeneration||!m||typeof m.type!=='string')return;
+  if(m.type==='OPEN'){clearTimeout(signalTimeout);reconnectAttempt=0;signalUI('在线配对就绪',true);setBanner();log('在线配对服务已连接。');if(requestedInvite){const code=requestedInvite;requestedInvite='';connectCode(code).catch(e=>toast(e.message,true));}return;}
+  if(m.type==='ID-TAKEN'){log('配对码冲突，重新分配。');myCode=makeCode();signalToken=randomHex(16);startSignal();return;}
+  if(m.type==='ERROR'||m.type==='INVALID-KEY'){log('信令服务拒绝连接：'+cleanName(m.payload?.msg||m.type,140));socket?.close();return;}
+  if(m.type==='EXPIRE'||m.type==='LEAVE'){for(const c of connections.values())if(c.remote===m.src&&!c.ready)closeConnection(c,m.type==='EXPIRE'?'对方未在线，请核对配对码并保持网页打开':'对方已离开');return;}
+  if(!['OFFER','ANSWER','CANDIDATE'].includes(m.type))return;
+  const p=m.payload;if(!p||p.type!=='data'||typeof p.connectionId!=='string'||p.connectionId.length>80||typeof m.src!=='string'||!new RegExp('^'+PREFIX+'[A-Z2-9]{12}$').test(m.src))return;
+  let c=connections.get(p.connectionId);
+  if(c&&c.remote!==m.src)return;
+  if(m.type==='OFFER'){
+    if(c||p.metadata?.app!=='linchuan'||p.metadata?.version!==VERSION||p.serialization!=='raw'||p.label!=='linchuan-v3'||!validSDP(p.sdp,'offer'))return;
+    if(liveConnections().length>=MAX_CONNECTIONS){log('已达连接数量上限，忽略新的配对请求。');return;}
+    c=createConnection({id:p.connectionId,remote:m.src,outgoing:false,mode:'online'});
+    try{await c.pc.setRemoteDescription(p.sdp);await drainCandidates(c);const answer=await c.pc.createAnswer();await c.pc.setLocalDescription(answer);sendSignal('ANSWER',c,{sdp:answer});c.signalSent=true;flushLocalCandidates(c);}catch(e){closeConnection(c,'无法处理连接请求：'+e.message);}
+  }else if(m.type==='ANSWER'){
+    if(!c||!c.outgoing||c.pc.signalingState!=='have-local-offer'||!validSDP(p.sdp,'answer'))return;
+    try{await c.pc.setRemoteDescription(p.sdp);await drainCandidates(c);}catch(e){closeConnection(c,'对方的连接回复无效：'+e.message);}
+  }else if(m.type==='CANDIDATE'){
+    if(!p.candidate||typeof p.candidate.candidate!=='string'||p.candidate.candidate.length>4096)return;
+    if(c){if(c.pc.remoteDescription)try{await c.pc.addIceCandidate(p.candidate);}catch{log('忽略一个不可用的 ICE 候选。');}else if(c.pendingRemote.length<100)c.pendingRemote.push(p.candidate);}
+    else{const key=m.src+'|'+p.connectionId;if(!orphanCandidates.has(key)&&orphanCandidates.size<20)orphanCandidates.set(key,{at:Date.now(),items:[]});const entry=orphanCandidates.get(key);if(entry&&entry.items.length<100)entry.items.push(p.candidate);}
+  }
+}
+function validSDP(s,type){return s&&s.type===type&&typeof s.sdp==='string'&&s.sdp.length<200000&&s.sdp.startsWith('v=0')&&s.sdp.includes('m=application')&&!/^m=(audio|video)\s/m.test(s.sdp);}
+async function drainCandidates(c){const key=c.remote+'|'+c.id;const cached=orphanCandidates.get(key);orphanCandidates.delete(key);const list=[...(cached?.items||[]),...c.pendingRemote];c.pendingRemote=[];for(const candidate of list){if(c.closed)return;try{await c.pc.addIceCandidate(candidate);}catch{}}}
+function flushLocalCandidates(c){for(const candidate of c.pendingLocal.splice(0))try{sendSignal('CANDIDATE',c,{candidate});}catch{}}
+async function connectCode(code){if(!signalReady)throw new Error('请先连接配对服务，或使用手动连接');if(code===myCode)throw new Error('这是本机配对码，请填写另一台设备的配对码');if(liveConnections().some(c=>c.remote===PREFIX+code))throw new Error('已经在连接这台设备，请先查看连接请求或设备列表');if(liveConnections().length>=MAX_CONNECTIONS)throw new Error('最多同时连接 6 台设备，请先断开一个连接');const c=createConnection({id:'lc_'+randomHex(12),remote:PREFIX+code,outgoing:true,mode:'online'});try{attachChannel(c,c.pc.createDataChannel('linchuan-v3',{ordered:true}));const offer=await c.pc.createOffer();await c.pc.setLocalDescription(offer);sendSignal('OFFER',c,{sdp:offer,label:'linchuan-v3',reliable:true,serialization:'raw',metadata:{app:'linchuan',version:VERSION}});c.signalSent=true;flushLocalCandidates(c);log('已发起配对，等待对方确认。');}catch(e){closeConnection(c,e.message);throw e;}markDirty();}
+
+// ---- Incoming consent: one foreground dialog, FIFO by first valid hello. ----
+function needsConnectionConsent(c){
+  return !!c&&!c.closed&&!c.ready&&c.hello&&!c.localApproved&&c.dc?.readyState==='open';
+}
+function scheduleConnectionRequestDialog(){
+  if(requestDialogSyncPending||shuttingDown)return;
+  requestDialogSyncPending=true;
+  // Do not depend on requestAnimationFrame, which may stop in a hidden tab.
+  queueMicrotask(()=>{requestDialogSyncPending=false;if(!shuttingDown)syncConnectionRequestDialog();});
+}
+function syncConnectionRequestDialog(){
+  if(shuttingDown)return;
+  const dialog=$('connectionRequestDialog');
+  const pending=liveConnections().filter(needsConnectionConsent).sort((a,b)=>(a.requestOrder||0)-(b.requestOrder||0));
+  const c=pending.find(item=>item.id===requestDialogConnectionId)||pending[0];
+  if(!c){
+    requestDialogConnectionId='';
+    if(dialog.open)dialog.close();
+    return;
+  }
+  const changed=c.id!==requestDialogConnectionId;
+  requestDialogConnectionId=c.id;
+  if(changed){
+    // Peer-controlled values are always text, never HTML.
+    $('connectionRequestName').textContent=c.name;
+    $('connectionRequestAvatar').replaceChildren(icon(c.kind));
+    $('connectionRequestKind').textContent=(c.kind==='phone'?'手机 / 平板':'电脑')+' · '+(c.mode==='manual'?'手动配对':'在线配对');
+    const code=c.remote.startsWith(PREFIX)?c.remote.slice(PREFIX.length):'';
+    $('connectionRequestCode').textContent=/^[A-Z2-9]{12}$/.test(code)?'对方配对码 '+formatCode(code):'等待本机确认';
+    for(const id of ['connectionRequestAllow','connectionRequestReject','connectionRequestClose']){
+      $(id).dataset.connection=c.id;
+    }
+  }
+  $('connectionRequestVerificationRow').hidden=!c.verification;
+  $('connectionRequestVerification').textContent=c.verification||'';
+  $('connectionRequestQueue').hidden=pending.length<2;
+  $('connectionRequestQueue').textContent=pending.length>1?'还有 '+(pending.length-1)+' 个连接请求等待处理':'';
+  // Close QR first, and avoid leaving another page modal above this prompt.
+  for(const other of document.querySelectorAll('dialog[open]'))if(other!==dialog)other.close();
+  const wasOpen=dialog.open;
+  if(!wasOpen)dialog.showModal();
+  // Focus the heading, not Allow: a stray Enter must not approve a new device.
+  if(changed||!wasOpen)$('connectionRequestTitle').focus({preventScroll:true});
+}
+function rejectConnection(c){
+  if(!needsConnectionConsent(c)){scheduleConnectionRequestDialog();return;}
+  tryControl(c,{t:'bye'});
+  closeConnection(c,'已拒绝 '+c.name+' 的连接请求');
+}
+function respondToConnectionRequest(event,allow){
+  // A double-click must not also approve the next device in the queue.
+  if(event.detail>1)return;
+  const id=event.currentTarget.dataset.connection;
+  const c=connections.get(id);
+  if(id!==requestDialogConnectionId||!needsConnectionConsent(c)){scheduleConnectionRequestDialog();return;}
+  if(allow)approveConnection(c);else rejectConnection(c);
+}
+
+// ---- RTCPeerConnection and pairing consent ----
+function liveConnections(){return [...connections.values()].filter(c=>!c.closed);}
+function createConnection({id,remote,outgoing,mode,localOnly=false}){
+  const pc=new RTCPeerConnection({iceServers:localOnly?[]:settings.iceServers,iceCandidatePoolSize:0});
+  const c={id,remote,pc,outgoing,mode,localOnly,dc:null,closed:false,ready:false,name:outgoing?'等待对方':'新设备',kind:'laptop',hello:false,localApproved:outgoing,remoteApproved:false,pendingLocal:[],pendingRemote:[],signalSent:false,queue:[],out:null,incoming:null,processing:false,chain:Promise.resolve(),queuedBytes:0,retired:new Set(),route:'正在检测链路',verification:'',lastSeen:Date.now(),handshakeAt:Date.now()};
+  connections.set(id,c);
+  pc.onicecandidate=e=>{if(c.mode!=='online'||!e.candidate||c.closed)return;const candidate=e.candidate.toJSON();if(c.signalSent)try{sendSignal('CANDIDATE',c,{candidate});}catch{log('信令中断，部分 ICE 候选未发送。');}else c.pendingLocal.push(candidate);};
+  pc.ondatachannel=e=>{if(c.dc||e.channel.label!=='linchuan-v3'){e.channel.close();return;}attachChannel(c,e.channel);};
+  pc.onconnectionstatechange=()=>{if(c.closed)return;const state=pc.connectionState;log('WebRTC 状态：'+state);if(state==='failed')closeConnection(c,'直连失败：检查网络隔离、防火墙，或配置 TURN');else if(state==='disconnected'){c.disconnectAt=Date.now();markDirty();}else if(state==='connected'){c.disconnectAt=0;detectRoute(c);}};
+  c.connectTimer=setTimeout(()=>{if(!c.dc||c.dc.readyState!=='open')closeConnection(c,'连接超时：对方可能未在线，或当前网络不允许直连');},mode==='manual'?180000:40000);
+  markDirty();return c;
+}
+function attachChannel(c,dc){c.dc=dc;dc.binaryType='arraybuffer';dc.bufferedAmountLowThreshold=SEND_LOW;dc.onbufferedamountlow=()=>wakeSenders(c);
+  const opened=()=>{if(c.closed)return;clearTimeout(c.connectTimer);c.handshakeAt=Date.now();sendControl(c,{t:'hello',app:'linchuan',name:myName,kind:deviceKind,instance:instanceId,build:BUILD,fastIO:1});if(c.localApproved)sendControl(c,{t:'approve'});fingerprint(c);markDirty();};
+  dc.onopen=opened;dc.onclose=()=>closeConnection(c,'对方已断开连接');dc.onerror=()=>closeConnection(c,'数据通道发生错误');
+  dc.onmessage=e=>{if(c.closed)return;const size=typeof e.data==='string'?e.data.length:e.data.byteLength??e.data.size??0;c.queuedBytes+=size;if(c.queuedBytes>RECEIVE_QUEUE_LIMIT){closeConnection(c,'接收队列超出安全限制');return;}c.chain=c.chain.then(()=>receiveMessage(c,e.data)).catch(err=>{log('数据处理失败：'+cleanName(err.message,160));if(c.incoming)failTransfer(c.incoming,err.message,true);else closeConnection(c,'数据协议错误：'+err.message);}).finally(()=>{c.queuedBytes-=size;});};
+  if(dc.readyState==='open')opened();
+}
+function sendControl(c,message){if(c.closed||!c.dc||c.dc.readyState!=='open')throw new Error('设备连接已断开');const data=JSON.stringify({v:VERSION,...message});if(data.length>12000)throw new Error('控制消息过长');c.dc.send(data);}
+function tryControl(c,message){try{sendControl(c,message);return true;}catch{return false;}}
+function approveConnection(c){
+  if(!needsConnectionConsent(c)){scheduleConnectionRequestDialog();return;}
+  if(!tryControl(c,{t:'approve'})){closeConnection(c,'连接已中断，请让对方重新发起连接');return;}
+  c.localApproved=true;
+  maybeReady(c);
+  scheduleConnectionRequestDialog();
+  markDirty();
+}
+function maybeReady(c){if(c.closed||c.ready||!c.hello||!c.localApproved||!c.remoteApproved)return;c.ready=true;scheduleConnectionRequestDialog();c.route='正在检测链路';if(!selected)selected=c.id;log('设备已通过双方确认，可以传输文件。');toast('已连接到 '+c.name);if(manualSession===c){$('manualState').textContent='连接已建立。双方确认后即可传输文件。';}detectRoute(c);markDirty();}
+async function fingerprint(c){try{const fps=[c.pc.localDescription?.sdp,c.pc.remoteDescription?.sdp].map(s=>(s?.match(/a=fingerprint:sha-256 ([^\r\n]+)/i)||[])[1]);if(fps.some(x=>!x))return;const hash=new Sha256().update(enc.encode(fps.sort().join('|'))).digest();c.verification=(parseInt(hash.slice(0,10),16)%100000000).toString().padStart(8,'0').replace(/(.{4})(.{4})/,'$1 $2');markDirty();}catch{}}
+async function detectRoute(c){
+  if(c.closed)return;
+  try{
+    const stats=await c.pc.getStats();let pair;
+    stats.forEach(s=>{if(s.type==='transport'&&s.selectedCandidatePairId)pair=stats.get(s.selectedCandidatePairId);});
+    if(!pair)stats.forEach(s=>{if(s.type==='candidate-pair'&&s.state==='succeeded'&&(s.nominated||s.selected))pair=s;});
+    if(pair){
+      const l=stats.get(pair.localCandidateId),r=stats.get(pair.remoteCandidateId);
+      const relay=l?.candidateType==='relay'||r?.candidateType==='relay';
+      c.route=relay?'TURN 加密中继':'浏览器直连';
+      c.routeDetail=(l?.candidateType||'未知')+' ↔ '+(r?.candidateType||'未知')+' · '+(l?.protocol||r?.protocol||'未知');
+      if(pair.currentRoundTripTime!==undefined)c.rtt=Math.round(pair.currentRoundTripTime*1000);
+      markDirty();
+    }
+  }catch{}
+}
+function retire(c,stream){c.retired.add(stream);if(c.retired.size>256)c.retired.delete(c.retired.values().next().value);}
+function closeConnection(c,reason='连接已断开'){if(c.closed)return;c.closed=true;c.ready=false;scheduleConnectionRequestDialog();wakeSenders(c);clearTimeout(c.connectTimer);try{c.dc?.close();c.pc.close();}catch{}for(const t of transfers)if(t.connection===c&&!TERMINAL.has(t.status))failTransfer(t,reason,false);if(selected===c.id)selected=liveConnections().find(x=>x.ready)?.id||'';if(manualSession===c){manualSession=null;$('manualState').textContent=reason;$('manualOutput').value='';$('copyManualBtn').disabled=true;}log(reason);toast(reason,true);setTimeout(()=>{if(connections.get(c.id)===c)connections.delete(c.id);},1000);markDirty();}
+
+// ---- File protocol: offer -> accept -> offset-framed chunks -> hash/end -> done ----
+async function receiveMessage(c,data){if(c.closed)return;c.lastSeen=Date.now();if(data instanceof Blob)data=await data.arrayBuffer();if(typeof data!=='string'){if(!(data instanceof ArrayBuffer))throw new Error('无法识别的数据');return receiveChunk(c,data);}if(data.length>12000)throw new Error('控制信息超出限制');let m;try{m=JSON.parse(data);}catch{throw new Error('不是合法的协议消息');}if(!m||m.v!==VERSION||typeof m.t!=='string')throw new Error('文件传输协议版本不匹配');
+  if(m.t==='hello'){if(m.app!=='linchuan'||typeof m.name!=='string'||typeof m.instance!=='string'||m.instance===instanceId)throw new Error('设备握手信息无效');if(c.hello)return;c.name=cleanName(m.name,40);c.kind=m.kind==='phone'?'phone':'laptop';c.peerBuild=typeof m.build==='string'&&/^3\.\d{1,3}(?:\.\d{1,3})?$/.test(m.build)?m.build:'3.0';c.fastIO=m.fastIO===1;c.hello=true;c.requestOrder=++requestSequence;maybeReady(c);scheduleConnectionRequestDialog();markDirty();return;}
+  if(m.t==='approve'){c.remoteApproved=true;maybeReady(c);markDirty();return;}
+  if(m.t==='bye'){closeConnection(c,'对方已拒绝或断开连接');return;}
+  if(m.t==='ping'){tryControl(c,{t:'pong'});return;}if(m.t==='pong')return;
+  if(!c.ready)throw new Error('设备未通过双方确认');
+  if(m.t==='name'){if(typeof m.name==='string'){c.name=cleanName(m.name,40);markDirty();}return;}
+  if(m.t==='offer'){return receiveOffer(c,m);}
+  if(m.t==='accept'){const t=c.out;if(!t||t.id!==m.id||t.status!=='waiting')return;t.accepted=true;t.saveMode=m.mode==='disk'?'disk':'memory';t.flowWindow=Number.isSafeInteger(m.window)&&m.window>=LEGACY_WINDOW?Math.min(m.window,FLOW_WINDOW):LEGACY_WINDOW;t.lastActivity=Date.now();wakeSenders(c);return;}
+  if(m.t==='reject'){const t=c.out;if(t&&t.id===m.id)failTransfer(t,cleanName(m.reason||'对方拒绝接收',160),false,'rejected');return;}
+  if(m.t==='ack'){const t=c.out;if(!t||m.id!==t.id||TERMINAL.has(t.status))return;if(!Number.isSafeInteger(m.offset)||m.offset<t.acked||m.offset>t.sent)throw new Error('无效的接收进度');t.acked=m.offset;t.offset=m.offset;t.lastActivity=Date.now();wakeSenders(c);return;}
+  if(m.t==='pause'){const t=c.incoming;if(t&&t.id===m.id&&['receiving','paused'].includes(t.status)){t.status=m.paused?'paused':'receiving';t.lastActivity=Date.now();markDirty();}return;}
+  if(m.t==='cancel'){for(const t of [c.out,c.incoming])if(t&&t.id===m.id&&!TERMINAL.has(t.status))failTransfer(t,cleanName(m.reason||'对方取消传输',160),false,'cancelled');return;}
+  if(m.t==='end'){return finishIncoming(c,m);}
+  if(m.t==='done'){const t=c.out;if(!t||t.id!==m.id||t.status!=='verifying')return;if(m.hash!==t.hash||m.bytes!==t.size)throw new Error('接收方确认信息不一致');t.acked=t.offset=t.size;t.status='done';t.savedByReceiver=m.saved===true;t.file=null;t.completedAt=Date.now();t.lastActivity=Date.now();toast('已送达：'+t.name);wakeSenders(c);markDirty();return;}
+  throw new Error('未知的传输消息');
+}
+function receiveOffer(c,m){if(c.incoming&&!TERMINAL.has(c.incoming.status)){tryControl(c,{t:'reject',id:m.id,reason:'接收方正在处理另一个文件'});return;}if(typeof m.id!=='string'||!/^[a-f0-9]{24}$/.test(m.id)||!Number.isInteger(m.stream)||m.stream<1||m.stream>0xffffffff||!Number.isSafeInteger(m.size)||m.size<0||typeof m.name!=='string'||m.name.length>1024||c.retired.has(m.stream))throw new Error('文件元数据不合法');if(transfers.some(t=>t.connection===c&&t.id===m.id))throw new Error('重复的文件 ID');const t={id:m.id,stream:m.stream,direction:'in',connection:c,name:cleanName(m.name),size:m.size,status:'offered',offset:0,acked:0,createdAt:Date.now(),lastActivity:Date.now(),rate:0,parts:[],hashState:null,fastIO:m.fastIO===1};c.incoming=t;transfers.push(t);if(currentTab==='out')switchTab('all');toast(c.name+' 发来文件，请确认接收');markDirty();}
+async function acceptIncoming(t,mode){if(t.status!=='offered'||t.connection.closed)return;const c=t.connection;t.status='choosing';t.lastActivity=Date.now();markDirty();let handle=null,writer=null;
+  try{
+    if(mode==='disk'){
+      // Called directly from a click; preserve transient user activation.
+      handle=await window.showSaveFilePicker({suggestedName:safeFilename(t.name)});
+      if(t.status!=='choosing'||c.closed)return;
+      writer=await handle.createWritable();
+      if(t.status!=='choosing'||c.closed){await writer.abort();return;}
+      t.writer=writer;t.handle=handle;
+    }else{
+      if(t.size>MEMORY_LIMIT-memoryReserved)throw new Error('内存接收预算不足。请先下载并移除已有文件，或选择保存位置 / 使用支持直接保存的浏览器。');
+      memoryReserved+=t.size;t.reserved=t.size;t.parts=[];
+    }
+    t.mode=mode;t.metrics=newMetrics();t.hashState=new Sha256();t.committed=0;t.diskUsed=0;t.diskBuffer=mode==='disk'?new Uint8Array(t.fastIO?WRITE_BATCH:256*1024):null;t.startedAt=Date.now();t.status='receiving';t.lastAckOffset=0;t.lastAckAt=Date.now();t.lastActivity=Date.now();sendControl(c,{t:'accept',id:t.id,mode,window:FLOW_WINDOW});requestWake();markDirty();
+  }catch(e){if(writer&&t.writer!==writer)try{await writer.abort();}catch{}if(t.status==='choosing'){t.status='offered';if(e.name!=='AbortError')toast(e.message,true);}else if(!TERMINAL.has(t.status))failTransfer(t,e.message,true);markDirty();}
+}
+function rejectIncoming(t){if(t.status!=='offered')return;tryControl(t.connection,{t:'reject',id:t.id,reason:'对方拒绝接收'});failTransfer(t,'已拒绝接收',false,'rejected');}
+// Disk writes are coalesced independently of the interoperable 16 KiB network frame.
+// ACKs for disk mode advance only after write() resolves. Staged bytes alone do not
+// release receive credits; the final completion also requires close() to succeed.
+function newMetrics(){return {readMs:0,hashMs:0,writeMs:0,ackWaitMs:0,bufferWaitMs:0,readCalls:0,writeCalls:0};}
+function hashMeasured(t,data){const at=performance.now();t.hashState.update(data);t.metrics.hashMs+=performance.now()-at;}
+async function flushDisk(t){
+  if(!t.diskUsed||TERMINAL.has(t.status))return;
+  const count=t.diskUsed, data=t.diskBuffer.subarray(0,count), writer=t.writer;
+  hashMeasured(t,data);
+  const at=performance.now();t.ioPhase='等待文件写入';
+  try{await writer.write(data);}catch(e){if(TERMINAL.has(t.status))return;throw e;}
+  finally{t.metrics.writeMs+=performance.now()-at;t.metrics.writeCalls++;t.ioPhase='';}
+  if(TERMINAL.has(t.status))return;
+  t.committed+=count;t.diskUsed=0;t.lastActivity=Date.now();
+}
+function ackIncoming(t,force=false){
+  if(TERMINAL.has(t.status))return;
+  const offset=t.mode==='disk'?t.committed:t.offset;
+  if(offset>t.lastAckOffset&&(force||offset-t.lastAckOffset>=ACK_EVERY||Date.now()-t.lastAckAt>=100||offset===t.size)){
+    sendControl(t.connection,{t:'ack',id:t.id,offset});t.lastAckOffset=offset;t.lastAckAt=Date.now();
+  }
+}
+async function receiveChunk(c,buffer){
+  if(!c.ready)throw new Error('收到未确认设备的数据');
+  if(buffer.byteLength<16||buffer.byteLength>16384)throw new Error('文件分块长度无效');
+  const view=new DataView(buffer);
+  if(view.getUint32(0)!==0x4c443033)throw new Error('文件分块标记错误');
+  const stream=view.getUint32(4),offset=view.getFloat64(8);
+  if(c.retired.has(stream))return;
+  const t=c.incoming;
+  if(!t||t.stream!==stream||!['receiving','paused'].includes(t.status))throw new Error('没有已同意接收的对应文件');
+  if(!Number.isSafeInteger(offset)||offset!==t.offset||offset+(buffer.byteLength-16)>t.size||buffer.byteLength===16)throw new Error('文件分块偏移或长度不一致');
+  const payload=new Uint8Array(buffer,16);
+  if(t.mode==='disk'){
+    let pos=0;
+    while(pos<payload.byteLength){
+      const count=Math.min(payload.byteLength-pos,t.diskBuffer.length-t.diskUsed);
+      t.diskBuffer.set(payload.subarray(pos,pos+count),t.diskUsed);t.diskUsed+=count;pos+=count;
+      if(t.diskUsed===t.diskBuffer.length){await flushDisk(t);if(TERMINAL.has(t.status))return;}
+    }
+  }else{hashMeasured(t,payload);t.parts.push(payload.slice());}
+  if(TERMINAL.has(t.status))return;
+  t.offset+=payload.byteLength;t.lastActivity=Date.now();
+  if(t.mode==='disk'&&t.offset===t.size){await flushDisk(t);if(TERMINAL.has(t.status))return;}
+  ackIncoming(t);
+}
+async function finishIncoming(c,m){const t=c.incoming;if(!t||m.id!==t.id||TERMINAL.has(t.status))return;if(!['receiving','paused'].includes(t.status)||t.offset!==t.size||m.bytes!==t.size||typeof m.hash!=='string'||!/^[a-f0-9]{64}$/.test(m.hash))throw new Error('文件尚未完整接收');t.status='verifying';markDirty();const hash=t.hashState.digest();if(hash!==m.hash)throw new Error('SHA-256 校验失败，已丢弃接收的文件');t.hash=hash;
+  if(t.writer){try{await t.writer.close();}catch(e){if(TERMINAL.has(t.status))return;throw e;}t.writer=null;if(TERMINAL.has(t.status))return;t.status='saved';}
+  else {const blob=new Blob(t.parts,{type:'application/octet-stream'});t.parts=[];t.url=URL.createObjectURL(blob);t.status='done';}
+  t.hashState=null;t.diskBuffer=null;t.diskUsed=0;t.completedAt=Date.now();retire(c,t.stream);c.incoming=null;tryControl(c,{t:'done',id:t.id,hash,bytes:t.size,saved:t.mode==='disk'});toast(t.mode==='disk'?'已保存并校验：'+t.name:'接收完成，请点击下载：'+t.name);markDirty();releaseWakeIfIdle();
+}
+function failTransfer(t,reason,notify=true,status='error'){if(TERMINAL.has(t.status))return;t.status=status;t.error=cleanName(reason,220);t.completedAt=Date.now();if(notify)tryControl(t.connection,{t:'cancel',id:t.id,reason:t.error});if(t.direction==='in'){retire(t.connection,t.stream);if(t.connection.incoming===t)t.connection.incoming=null;if(t.writer){const writer=t.writer;t.writer=null;writer.abort().catch(()=>{});}t.parts=[];t.diskBuffer=null;t.diskUsed=0;t.hashState=null;if(t.reserved){memoryReserved-=t.reserved;t.reserved=0;}}if(t.direction==='out'){t.hashState=null;if(status==='cancelled')t.file=null;}wakeSenders(t.connection);markDirty();releaseWakeIfIdle();}
+function cancelTransfer(t){failTransfer(t,'已取消传输',true,'cancelled');}
+function pauseTransfer(t){if(t.status==='sending'){t.status='paused';t.pauseAt=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:true});}else if(t.status==='paused'&&t.direction==='out'){t.status='sending';t.lastActivity=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:false});}wakeSenders(t.connection);markDirty();}
+function stage(files){let added=0;for(const file of files){if(stagedFiles.length>=1000){toast('待发送列表最多 1000 个文件',true);break;}if(!(file instanceof File))continue;if(stagedFiles.some(x=>x.file.name===file.name&&x.file.size===file.size&&x.file.lastModified===file.lastModified))continue;stagedFiles.push({key:randomHex(6),file});added++;}if(added)markDirty();}
+function sendStaged(){const c=connections.get(selected);if(!c?.ready||c.closed){toast('请先连接并选择接收设备',true);return;}if(!stagedFiles.length)return;for(const item of stagedFiles){let stream;do{stream=crypto.getRandomValues(new Uint32Array(1))[0];}while(!stream||transfers.some(t=>t.connection===c&&t.stream===stream));const t={id:randomHex(12),stream,direction:'out',connection:c,name:item.file.name,size:item.file.size,file:item.file,status:'queued',offset:0,acked:0,sent:0,createdAt:Date.now(),lastActivity:Date.now(),rate:0};c.queue.push(t);transfers.push(t);}stagedFiles.length=0;switchTab('all');markDirty();requestWake();pump(c);}
+async function pump(c){if(c.processing||c.closed)return;c.processing=true;try{while(c.queue.length&&!c.closed){const t=c.queue.shift();if(TERMINAL.has(t.status))continue;c.out=t;try{await sendOne(t);}catch(e){if(!TERMINAL.has(t.status))failTransfer(t,e.message,true);}finally{if(c.out===t)c.out=null;}}}finally{c.processing=false;markDirty();releaseWakeIfIdle();}}
+function checkOutgoing(t){if(TERMINAL.has(t.status))throw new Error(t.error||'传输已结束');if(t.connection.closed||t.connection.dc?.readyState!=='open')throw new Error('设备连接已断开');}
+// One-shot timeout guards only. There is no polling timer in the data send path.
+function wakeSenders(c){for(const check of [...(c.sendWaiters||[])])check();}
+function waitFor(t,predicate,limit,message='等待对方响应超时，请重试'){
+  if(predicate())return Promise.resolve();
+  checkOutgoing(t);
+  const c=t.connection;c.sendWaiters??=new Set();
+  return new Promise((resolve,reject)=>{
+    let timer,settled=false;
+    const cleanup=()=>{settled=true;clearTimeout(timer);c.sendWaiters.delete(check);};
+    const check=()=>{if(settled)return;try{if(predicate()){cleanup();resolve();return;}checkOutgoing(t);}catch(e){cleanup();reject(e);}};
+    c.sendWaiters.add(check);
+    timer=setTimeout(()=>{if(settled)return;cleanup();reject(new Error(message));},limit);
+    check();
+  });
+}
+async function awaitSendRoom(t,count){
+  const c=t.connection;
+  for(;;){
+    checkOutgoing(t);
+    if(t.status==='paused'){
+      await waitFor(t,()=>t.status!=='paused',24*60*60*1000,'暂停时间过长，请重新发送');continue;
+    }
+    const windowSize=t.flowWindow||LEGACY_WINDOW;
+    if(t.sent-t.acked+count>windowSize){
+      const at=performance.now();t.ioPhase='等待接收确认';
+      try{await waitFor(t,()=>t.status==='paused'||t.sent-t.acked+count<=windowSize,STALL_MS,'接收方长时间没有确认进度');}
+      finally{t.metrics.ackWaitMs+=performance.now()-at;t.ioPhase='';}
+      continue;
+    }
+    if(c.dc.bufferedAmount+16+count>SEND_HIGH){
+      const at=performance.now();t.ioPhase='等待网络发送缓冲';
+      try{await waitFor(t,()=>t.status==='paused'||c.dc.bufferedAmount<=SEND_LOW,STALL_MS,'数据通道发送缓冲长时间未排空');}
+      finally{t.metrics.bufferWaitMs+=performance.now()-at;t.ioPhase='';}
+      continue;
+    }
+    return;
+  }
+}
+async function sendOne(t){
+  const c=t.connection;t.status='waiting';t.metrics=newMetrics();t.lastActivity=Date.now();
+  sendControl(c,{t:'offer',id:t.id,stream:t.stream,name:t.name,size:t.size,fastIO:1});markDirty();
+  await waitFor(t,()=>t.accepted,300000);checkOutgoing(t);
+  t.status='sending';t.startedAt=Date.now();t.lastActivity=Date.now();t.hashState=new Sha256();markDirty();
+  const max=c.pc.sctp?.maxMessageSize;
+  const block=Math.min(CHUNK_SIZE,max&&Number.isFinite(max)?max-16:CHUNK_SIZE);
+  if(block<1024)throw new Error('浏览器的数据通道消息容量太小');
+  while(t.sent<t.size){
+    await awaitSendRoom(t,Math.min(block,t.size-t.sent));
+    const at=performance.now();t.ioPhase='读取本地文件';
+    let data;
+    try{data=new Uint8Array(await t.file.slice(t.sent,t.sent+READ_BATCH).arrayBuffer());}
+    finally{t.metrics.readMs+=performance.now()-at;t.metrics.readCalls++;t.ioPhase='';}
+    checkOutgoing(t);
+    if(!data.byteLength)throw new Error('无法继续读取本地文件');
+    hashMeasured(t,data);
+    let pos=0;
+    while(pos<data.length){
+      const count=Math.min(block,data.length-pos);
+      await awaitSendRoom(t,count);checkOutgoing(t);
+      const packet=new ArrayBuffer(16+count),view=new DataView(packet);
+      view.setUint32(0,0x4c443033);view.setUint32(4,t.stream);view.setFloat64(8,t.sent);
+      new Uint8Array(packet,16).set(data.subarray(pos,pos+count));
+      c.dc.send(packet);t.sent+=count;pos+=count;
+    }
+  }
+  if(t.status==='paused')await waitFor(t,()=>t.status!=='paused',24*60*60*1000,'暂停时间过长，请重新发送');
+  checkOutgoing(t);t.hash=t.hashState.digest();t.hashState=null;t.status='verifying';
+  sendControl(c,{t:'end',id:t.id,bytes:t.size,hash:t.hash});markDirty();
+  await waitFor(t,()=>t.status==='done',STALL_MS,'等待接收方校验和保存超时');
+}
+function retryTransfer(t){if(!t.file||!t.connection.ready||t.connection.closed){toast('请重新连接设备并选择文件',true);return;}stagedFiles.push({key:randomHex(6),file:t.file});selected=t.connection.id;markDirty();toast('已重新加入待发送列表，将从头发送');}
+function removeTransfer(t){if(!TERMINAL.has(t.status))return;if(t.url){URL.revokeObjectURL(t.url);t.url=null;}if(t.reserved){memoryReserved-=t.reserved;t.reserved=0;}t.file=null;t.parts=[];const i=transfers.indexOf(t);if(i!==-1)transfers.splice(i,1);markDirty();}
+function downloadTransfer(t){if(!t.url)return;const a=document.createElement('a');a.href=t.url;a.download=safeFilename(t.name);a.style.display='none';document.body.append(a);a.click();a.remove();t.downloadStarted=true;toast('已发起下载。确认保存成功后可移除记录以释放缓存。');markDirty();}
+
+// ---- Server-independent, non-trickle SDP exchange ----
+function encodeSignal(c){const payload={v:VERSION,id:c.id,from:myCode,to:c.remote.slice(PREFIX.length),localOnly:c.localOnly,sdp:c.pc.localDescription.toJSON()};const a=enc.encode(JSON.stringify(payload));let s='';for(const b of a)s+=String.fromCharCode(b);return 'LC3.'+btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function decodeSignal(text){const s=text.replace(/\s/g,'');if(!s.startsWith('LC3.')||s.length>300000)throw new Error('请粘贴完整的 LC3. 连接信息');const b64=s.slice(4).replace(/-/g,'+').replace(/_/g,'/');const raw=atob(b64);const a=Uint8Array.from(raw,x=>x.charCodeAt(0));const obj=JSON.parse(decoder.decode(a));if(obj.v!==VERSION||typeof obj.id!=='string'||!/^lc_[a-f0-9]{24}$/.test(obj.id)||typeof obj.from!=='string'||getCode(obj.from)!==obj.from||!obj.sdp||!['offer','answer'].includes(obj.sdp.type)||!validSDP(obj.sdp,obj.sdp.type))throw new Error('连接信息无效或不是此版本生成');return obj;}
+async function waitIce(c){if(c.pc.iceGatheringState==='complete')return;await new Promise((resolve,reject)=>{const timer=setTimeout(()=>finish(),10000);function finish(){clearTimeout(timer);c.pc.removeEventListener('icegatheringstatechange',changed);if(c.closed)reject(new Error('连接已关闭'));else resolve();}function changed(){if(c.pc.iceGatheringState==='complete')finish();}c.pc.addEventListener('icegatheringstatechange',changed);});if(!c.pc.localDescription?.sdp.includes('a=candidate:'))throw new Error('浏览器没有收集到可用网络地址。请检查 WebRTC 设置。');}
+function resetManual(){if(manualSession&&!manualSession.ready)closeConnection(manualSession,'已取消本次手动连接');manualSession=null;$('manualOutput').value='';$('manualInput').value='';$('copyManualBtn').disabled=true;}
+async function createManualOffer(){if(manualSession&&!manualSession.ready){toast('已有未完成的手动连接，请先取消或完成',true);return;}if(liveConnections().length>=MAX_CONNECTIONS){toast('连接数量已达上限',true);return;}$('createOfferBtn').disabled=true;$('manualState').textContent='正在收集本机网络连接信息…';let c;try{c=createConnection({id:'lc_'+randomHex(12),remote:PREFIX+'UNKNOWN',outgoing:true,mode:'manual',localOnly:$('manualLocal').checked});manualSession=c;attachChannel(c,c.pc.createDataChannel('linchuan-v3',{ordered:true}));await c.pc.setLocalDescription(await c.pc.createOffer());await waitIce(c);$('manualOutput').value=encodeSignal(c);$('copyManualBtn').disabled=false;$('manualState').textContent='请将本机输出交给 B，再将 B 的回复粘贴到第 ② 步。';}catch(e){if(c)closeConnection(c,e.message);$('manualState').textContent=e.message;toast(e.message,true);}finally{$('createOfferBtn').disabled=false;}}
+async function applyManual(){let p;try{p=decodeSignal($('manualInput').value);}catch(e){toast('无法读取连接信息：'+e.message,true);return;}$('applyManualBtn').disabled=true;let c;try{
+  if(p.sdp.type==='offer'){if(p.from===myCode)throw new Error('这是本机生成的信息，请交给另一台设备');if(manualSession&&!manualSession.ready)throw new Error('已有未完成的手动连接，请先取消');if(liveConnections().length>=MAX_CONNECTIONS)throw new Error('连接数量已达上限');c=createConnection({id:p.id,remote:PREFIX+p.from,outgoing:false,mode:'manual',localOnly:$('manualLocal').checked});manualSession=c;c.localApproved=true;await c.pc.setRemoteDescription(p.sdp);await c.pc.setLocalDescription(await c.pc.createAnswer());await waitIce(c);$('manualOutput').value=encodeSignal(c);$('copyManualBtn').disabled=false;$('manualState').textContent='回复已生成。将本机输出交还 A，请勿关闭网页。';}
+  else {c=manualSession;if(!c||c.closed||!c.outgoing||c.id!==p.id||c.pc.signalingState!=='have-local-offer'||p.to!==myCode)throw new Error('这份回复不属于当前连接，请重新配对');c.remote=PREFIX+p.from;await c.pc.setRemoteDescription(p.sdp);$('manualState').textContent='回复已应用，正在建立加密连接…';}
+}catch(e){if(c&&c===manualSession&&!c.ready&&p.sdp.type==='offer')closeConnection(c,e.message);$('manualState').textContent=e.message;toast(e.message,true);}finally{$('applyManualBtn').disabled=false;}}
+
+// ---- Rendering: filenames and peer-supplied names are always text, never HTML. ----
+function renderDevices(){const list=liveConnections(),ready=list.filter(c=>c.ready);if(!ready.some(c=>c.id===selected))selected=ready[0]?.id||'';const sig=JSON.stringify(list.map(c=>[c.id,c.ready,c.name,c.localApproved,c.remoteApproved,c.hello,c.route,c.verification,c.disconnectAt,c.rtt,c.peerBuild]),null,0)+selected;if(sig===lastDeviceSignature)return;lastDeviceSignature=sig;$('deviceCount').textContent=ready.length;$('deviceEmpty').hidden=ready.length>0;$('deviceList').replaceChildren();$('pairRequests').replaceChildren();
+  for(const c of list){if(c.ready){const row=el('div','device'+(selected===c.id?' selected':''));row.dataset.connection=c.id;const choose=el('button','device-select');choose.type='button';choose.setAttribute('aria-pressed',String(selected===c.id));choose.addEventListener('click',()=>{selected=c.id;markDirty();});const avatar=el('span','avatar');avatar.append(icon(c.kind));const copy=el('span','grow');copy.append(el('div','name',c.name));const info=el('div','device-info',(c.disconnectAt?'网络恢复中':c.route)+(c.rtt!==undefined?' · '+c.rtt+' ms':'')+' · '+(c.fastIO?'批量传输':'兼容旧版'));copy.append(info);if(c.verification)copy.append(el('div','device-info verify','校验码 '+c.verification));choose.append(avatar,copy);row.append(choose,iconButton('close','断开与 '+c.name+' 的连接',()=>{const active=transfers.some(t=>t.connection===c&&!TERMINAL.has(t.status));if(active&&!confirm('这会中断正在传输的文件，确定断开吗？'))return;tryControl(c,{t:'bye'});closeConnection(c,'已断开与 '+c.name+' 的连接');}));$('deviceList').append(row);
+    }else{const request=el('div','request');request.append(el('h3','',c.hello?c.name+' 请求连接':'正在建立连接…'));request.append(el('p','',!c.hello?'请保持对方页面打开。':c.localApproved?'等待对方确认。连接前不会发送文件。':'确认这是你的设备。名称未经认证，请勿接受陌生请求。'));const actions=el('div','actions');if(c.hello&&!c.localApproved)actions.append(action('允许连接',()=>approveConnection(c),'btn small','check'));actions.append(action('取消',()=>{tryControl(c,{t:'bye'});closeConnection(c,'已取消连接');},'btn secondary small'));request.append(actions);$('pairRequests').append(request);}}
+  const c=connections.get(selected);$('recipientLabel').textContent=c?.ready?'发送给：'+c.name:'请先连接接收设备';}
+function renderStaged(){$('queuePanel').hidden=!stagedFiles.length;$('queueSummary').textContent=`待发送 ${stagedFiles.length} 个文件 · ${bytes(stagedFiles.reduce((n,x)=>n+x.file.size,0))}`;const signature=stagedFiles.map(x=>x.key).join(',');if($('queueList').dataset.signature!==signature){$('queueList').dataset.signature=signature;$('queueList').replaceChildren();for(const item of stagedFiles){const row=el('div','queue-file');row.append(fileIcon(item.file.name));const copy=el('div','grow');const name=el('div','filename',item.file.name);name.title=item.file.name;copy.append(name,el('div','file-meta',bytes(item.file.size)));row.append(copy,iconButton('close','移除 '+item.file.name,()=>{stagedFiles.splice(stagedFiles.indexOf(item),1);markDirty();}));$('queueList').append(row);}}const ready=connections.get(selected)?.ready;$('sendBtn').disabled=!ready||!stagedFiles.length;$('sendBtnText').textContent=stagedFiles.length?`发送 ${stagedFiles.length} 个文件`:'开始发送';}
+function switchTab(tab){currentTab=tab;for(const t of ['all','in','out']){$(t+'Tab').classList.toggle('active',t===tab);$(t+'Tab').setAttribute('aria-selected',String(t===tab));}markDirty();}
+function statusText(t){if(t.status==='done')return t.direction==='in'?'已接收 · 待下载':t.savedByReceiver?'对方已保存':'对方已接收';if(t.status==='saved')return '已保存到磁盘';return({queued:'排队中',waiting:'等待对方接收',offered:'请确认接收',choosing:'正在选择保存位置',sending:'发送中',receiving:'接收中',paused:'已暂停',verifying:'校验并保存',cancelled:'已取消',rejected:'已拒绝',error:'传输失败'})[t.status]||t.status;}
+function renderTransfers(){for(const type of ['all','in','out'])$(type+'Count').textContent=transfers.filter(t=>type==='all'||t.direction===type).length;const query=$('searchInput').value.trim().toLowerCase();const items=transfers.filter(t=>(currentTab==='all'||t.direction===currentTab)&&t.name.toLowerCase().includes(query)).slice().reverse();const sig=currentTab+'|'+query+'|'+memoryReserved+'|'+items.map(t=>[t.id,t.status,t.error,t.downloadStarted,t.connection.name,t.connection.closed,t.hash].join(':')).join('|');if(sig===lastViewSignature){updateProgressRows(items);return;}lastViewSignature=sig;const focused=document.activeElement?.dataset.actionKey;const scroll=$('transferList').scrollTop;const fragment=document.createDocumentFragment();if(!items.length){const empty=el('div','empty-state');const art=el('div','empty-art');art.append(icon('folder'));empty.append(art,el('h3','',query?'没有匹配的文件':'好文件，值得分享。'),el('p','',query?'试试其他关键词':'连接设备后，发送和接收的文件会出现在这里。'));fragment.append(empty);}
+  for(const t of items){const row=el('article','transfer');row.dataset.id=t.id;row.dataset.direction=t.direction;row.dataset.status=t.status;row.append(fileIcon(t.name));const main=el('div','transfer-main');const head=el('div','transfer-head');const name=el('div','filename',t.name);name.title=t.name;head.append(name,el('span','state-label'+(['error','rejected'].includes(t.status)?' error':''),statusText(t)));main.append(head);const meta=(t.direction==='in'?'来自 ':'发给 ')+t.connection.name+' · '+bytes(t.size);main.append(el('div','file-meta',meta));if(t.error)main.append(el('div','file-meta',t.error));if(['sending','receiving','paused','verifying'].includes(t.status)){const percent=t.size?Math.min(100,t.offset/t.size*100):t.status==='verifying'?100:0;main.append(el('div','file-meta progress-description',`${percent.toFixed(1)}% · ${bytes(t.offset)} / ${bytes(t.size)}${t.status==='paused'?'':` · ${bytes(t.rate||0)}/s`}`));const track=el('div','progress-track');track.setAttribute('role','progressbar');track.setAttribute('aria-label',t.name);track.setAttribute('aria-valuenow',percent.toFixed(1));track.setAttribute('aria-valuemin','0');track.setAttribute('aria-valuemax','100');const fill=el('div','progress-fill');fill.style.width=percent+'%';track.append(fill);main.append(track);}
+    const actions=el('div','transfer-actions');const add=(label,fn,cls='btn secondary small',symbol='')=>{const b=action(label,fn,cls,symbol);b.dataset.actionKey=t.id+'-'+label;actions.append(b);return b;};
+    if(t.status==='offered'){
+      if('showSaveFilePicker' in window)add('选择位置接收',()=>acceptIncoming(t,'disk'),'btn small','download');
+      const b=add('浏览器接收',()=>acceptIncoming(t,'memory'),'btn secondary small');b.disabled=t.size>MEMORY_LIMIT-memoryReserved;
+      add('拒绝',()=>rejectIncoming(t),'text-btn danger');
+      const hint=el('div','file-meta',t.size>MEMORY_LIMIT-memoryReserved?'当前内存预算不足：请使用“选择位置接收”，或换支持此功能的浏览器。':'浏览器接收需完成后再点击下载；大文件建议选择位置接收。');main.append(hint);
+    }else if(t.status==='done'&&t.direction==='in'){add('下载文件',()=>downloadTransfer(t),'btn small','download');add('移除 / 释放缓存',()=>{if(!t.downloadStarted&&!confirm('此文件尚未发起下载，移除后无法恢复。确定移除吗？'))return;removeTransfer(t);},'text-btn');if(t.downloadStarted)main.append(el('div','file-meta','已发起下载；请自行确认浏览器保存成功。'));}
+    else if(TERMINAL.has(t.status)){if(t.direction==='out'&&['error','rejected'].includes(t.status)&&t.file)add('重新发送',()=>retryTransfer(t),'text-btn');add('移除记录',()=>removeTransfer(t),'text-btn');}
+    else {if(t.direction==='out'&&['sending','paused'].includes(t.status))add(t.status==='paused'?'继续':'暂停',()=>pauseTransfer(t),'btn secondary small',t.status==='paused'?'play':'pause');add('取消',()=>cancelTransfer(t),'text-btn danger');}
+    if(t.hash&&['done','saved'].includes(t.status))main.append(el('div','checksum','SHA-256 ✓ '+t.hash));if(actions.children.length)main.append(actions);row.append(main);fragment.append(row);
+  }
+  $('transferList').replaceChildren(fragment);$('transferList').scrollTop=scroll;if(focused){const target=[...$('transferList').querySelectorAll('[data-action-key]')].find(x=>x.dataset.actionKey===focused);target?.focus({preventScroll:true});}
+}
+function updateProgressRows(items){for(const t of items){if(!['sending','receiving','paused','verifying'].includes(t.status))continue;const row=$('transferList').querySelector('[data-id="'+t.id+'"]');if(!row)continue;const percent=t.size?Math.min(100,t.offset/t.size*100):t.status==='verifying'?100:0;const desc=row.querySelector('.progress-description');if(desc)desc.textContent=`${percent.toFixed(1)}% · ${bytes(t.offset)} / ${bytes(t.size)}${t.status==='paused'?'':` · ${bytes(t.rate||0)}/s`}`;const track=row.querySelector('.progress-track');if(track)track.setAttribute('aria-valuenow',percent.toFixed(1));const fill=row.querySelector('.progress-fill');if(fill)fill.style.width=percent+'%';}}
+function performanceReport(){
+  const lines=['邻传 v'+BUILD+' · 批量传输 / 连接弹窗','页面状态：'+(document.visibilityState==='visible'?'前台':'后台（系统仍可能限速或挂起）'),'网络帧约 16 KiB；新版本间读取/写入批次 1 MiB；最大未确认数据 4 MiB。'];
+  for(const c of liveConnections().filter(x=>x.ready)){
+    lines.push('\n设备：'+c.name+' · 对端 '+(c.peerBuild||'未知版本'),
+      '链路：'+c.route+' · '+(c.routeDetail||'尚未获取')+(c.rtt!==undefined?' · RTT '+c.rtt+' ms':''),
+      '发送缓冲：'+bytes(c.dc?.bufferedAmount||0)+'；应用接收排队：'+bytes(c.queuedBytes||0));
+    if(!c.fastIO)lines.push('提示：对端仍为旧版，双方都更新才能启用完整优化。');
+  }
+  const recent=transfers.filter(t=>t.metrics).slice(-6);
+  for(const t of recent){
+    const m=t.metrics, secs=ms=>(ms/1000).toFixed(2)+' s',doneAt=t.completedAt||Date.now();
+    const avg=t.startedAt?Math.max(0,t.offset*1000/Math.max(1,doneAt-t.startedAt)):0;
+    lines.push('\n'+(t.direction==='out'?'发送：':'接收：')+t.name+' · '+statusText(t),
+      '进度：'+bytes(t.offset)+' / '+bytes(t.size)+' · 当前 '+bytes(t.rate||0)+'/s · 全程平均 '+bytes(avg)+'/s');
+    if(t.direction==='out')lines.push('本地读取 '+m.readCalls+' 次 / '+secs(m.readMs)+'；SHA-256 '+secs(m.hashMs),
+      '累计等网络缓冲 '+secs(m.bufferWaitMs)+'；累计等接收确认 '+secs(m.ackWaitMs),
+      '未确认：'+bytes(t.sent-t.acked)+' / '+bytes(t.flowWindow||LEGACY_WINDOW));
+    else lines.push('接收方式：'+(t.mode==='disk'?'批量写入文件':'内存缓存')+'；SHA-256 '+secs(m.hashMs),
+      '文件写入 '+m.writeCalls+' 次 / '+secs(m.writeMs)+(t.mode==='disk'?'；已写入流 '+bytes(t.committed||0):''));
+    if(t.ioPhase)lines.push('当前阶段：'+t.ioPhase);
+  }
+  lines.push('\n指标是应用层耗时，不等于纯网络带宽，也不能单凭等待确认时间判断网络慢。',
+    '请比较两端诊断：读取耗时看发送端；写入耗时看接收端；等待缓冲还可能包含浏览器调度。',
+    'host 候选不保证实际物理路径不经过 VPN；写入流成功不代表每次都强制刷盘。');
+  return lines.join('\n');
+}
+function renderDiagnostics(){
+  $('diagnosticInfo').textContent=`WebRTC：${typeof RTCPeerConnection!=='undefined'?'支持':'不支持'}；安全上下文：${isSecureContext?'是':'否'}；直接保存：${'showSaveFilePicker' in window?'支持':'不支持'}；内存接收占用 ${bytes(memoryReserved)} / ${bytes(MEMORY_LIMIT)}。信令与文件传输是独立的连接。`;
+  $('performanceInfo').textContent=performanceReport();$('diagnosticLog').textContent=logs.join('\n')||'暂无日志';
+}
+async function requestWake(){if(wakeLock||!navigator.wakeLock||document.visibilityState!=='visible')return;try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;});}catch{}}
+function releaseWakeIfIdle(){if(transfers.some(t=>['sending','receiving','paused','verifying','waiting'].includes(t.status)))return;if(wakeLock){wakeLock.release().catch(()=>{});wakeLock=null;}}
+
+// ---- UI wiring ----
+for(const b of document.querySelectorAll('[data-close]'))b.addEventListener('click',()=>$(b.dataset.close).close());
+for(const d of document.querySelectorAll('dialog:not(#connectionRequestDialog)'))d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});
+$('connectionRequestAllow').addEventListener('click',e=>respondToConnectionRequest(e,true));
+$('connectionRequestReject').addEventListener('click',e=>respondToConnectionRequest(e,false));
+$('connectionRequestClose').addEventListener('click',e=>respondToConnectionRequest(e,false));
+$('connectionRequestDialog').addEventListener('cancel',e=>{
+  e.preventDefault();
+  rejectConnection(connections.get(requestDialogConnectionId));
+});
+$('connectionRequestDialog').addEventListener('close',scheduleConnectionRequestDialog);
+function setTheme(theme){document.documentElement.dataset.theme=theme;store.set('linchuan3-theme',theme);}
+setTheme(store.get('linchuan3-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+$('themeBtn').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+$('myName').textContent=myName;$('myAvatar').replaceChildren(icon(deviceKind));
+$('copyCodeBtn').addEventListener('click',()=>copy(formatCode(myCode)));
+$('shareBtn').addEventListener('click',()=>{const url=shareURL();$('shareUrl').value=url;$('shareCode').textContent=formatCode(myCode);$('nativeShareBtn').hidden=!navigator.share;try{const qr=new window.LocalQRCode(-1,0);qr.addData(url);qr.make();const n=qr.getModuleCount(),scale=6,margin=4;const canvas=$('qrCanvas');canvas.width=canvas.height=(n+margin*2)*scale;const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#173c2d';for(let r=0;r<n;r++)for(let col=0;col<n;col++)if(qr.isDark(r,col))ctx.fillRect((col+margin)*scale,(r+margin)*scale,scale,scale);canvas.hidden=false;}catch{ $('qrCanvas').hidden=true;toast('二维码未能生成，请复制邀请链接');}showDialog('shareDialog');});
+$('copyLinkBtn').addEventListener('click',()=>copy(shareURL()));$('nativeShareBtn').addEventListener('click',()=>navigator.share({title:'邻传：连接设备传文件',text:'打开链接，与我的设备建立连接。',url:shareURL()}).catch(e=>{if(e.name!=='AbortError')toast('请改用复制链接');}));
+$('connectForm').addEventListener('submit',e=>{e.preventDefault();try{const code=getCode($('remoteCode').value);connectCode(code).catch(e=>toast(e.message,true));}catch(e){toast(e.message,true);}});
+$('retrySignalBtn').addEventListener('click',()=>startSignal());
+function openSettings(){$('deviceNameInput').value=myName;$('signalUrlInput').value=settings.signalURL;$('signalKeyInput').value=settings.signalKey;$('iceInput').value=JSON.stringify(settings.iceServers,null,2);$('manualOnlyInput').checked=settings.manualOnly;showDialog('settingsDialog');}
+$('settingsBtn').addEventListener('click',openSettings);$('renameBtn').addEventListener('click',()=>{openSettings();$('deviceNameInput').focus();$('deviceNameInput').select();});
+$('resetSettingsBtn').addEventListener('click',()=>{$('signalUrlInput').value=DEFAULTS.signalURL;$('signalKeyInput').value=DEFAULTS.signalKey;$('iceInput').value=JSON.stringify(DEFAULTS.iceServers,null,2);$('manualOnlyInput').checked=false;});
+$('settingsForm').addEventListener('submit',e=>{e.preventDefault();try{const next={signalURL:$('signalUrlInput').value.trim(),signalKey:$('signalKeyInput').value.trim()||'peerjs',iceServers:JSON.parse($('iceInput').value),manualOnly:$('manualOnlyInput').checked};validateSettings(next);const signalChanged=next.signalURL!==settings.signalURL||next.signalKey!==settings.signalKey||next.manualOnly!==settings.manualOnly;settings=next;store.set('linchuan3-settings',JSON.stringify(settings));myName=cleanName($('deviceNameInput').value,40);store.set('linchuan3-name',myName);$('myName').textContent=myName;for(const c of liveConnections())if(c.ready)tryControl(c,{t:'name',name:myName});$('settingsDialog').close();if(signalChanged)startSignal();toast('设置已保存');}catch(e){toast('设置未保存：'+e.message,true);}});
+$('manualBtn').addEventListener('click',()=>showDialog('manualDialog'));$('createOfferBtn').addEventListener('click',createManualOffer);$('applyManualBtn').addEventListener('click',applyManual);$('copyManualBtn').addEventListener('click',()=>copy($('manualOutput').value));$('cancelManualBtn').addEventListener('click',()=>{resetManual();$('manualState').textContent='已重置，可以重新发起手动连接。';});
+$('chooseBtn').addEventListener('click',()=>$('fileInput').click());$('fileInput').addEventListener('change',e=>{stage(e.target.files);e.target.value='';});
+let dragDepth=0;const drop=$('dropzone');drop.addEventListener('dragenter',e=>{e.preventDefault();dragDepth++;drop.classList.add('dragging');});drop.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';});drop.addEventListener('dragleave',e=>{e.preventDefault();if(--dragDepth<=0){dragDepth=0;drop.classList.remove('dragging');}});drop.addEventListener('drop',e=>{e.preventDefault();dragDepth=0;drop.classList.remove('dragging');if([...e.dataTransfer.items||[]].some(i=>i.webkitGetAsEntry?.()?.isDirectory)){toast('文件夹请先压缩后发送',true);}stage(e.dataTransfer.files);});window.addEventListener('dragover',e=>e.preventDefault());window.addEventListener('drop',e=>e.preventDefault());
+$('clearQueueBtn').addEventListener('click',()=>{stagedFiles.length=0;markDirty();});$('sendBtn').addEventListener('click',sendStaged);
+for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>switchTab(b.dataset.tab));$('searchInput').addEventListener('input',markDirty);
+$('clearHistoryBtn').addEventListener('click',()=>{const finished=transfers.filter(t=>TERMINAL.has(t.status));if(finished.some(t=>t.direction==='in'&&t.url&&!t.downloadStarted)&&!confirm('部分收到的文件尚未下载。清理会永久释放本页缓存，确定继续吗？'))return;finished.forEach(removeTransfer);});
+$('helpBtn').addEventListener('click',()=>showDialog('helpDialog'));$('diagnosticsBtn').addEventListener('click',()=>{renderDiagnostics();showDialog('diagnosticsDialog');});$('copyDiagnosticsBtn').addEventListener('click',()=>copy(performanceReport()+'\n\n'+logs.join('\n')));$('diagnosticRetry').addEventListener('click',()=>startSignal());$('diagnosticManual').addEventListener('click',()=>{$('diagnosticsDialog').close();showDialog('manualDialog');});
+$('saveCapability').textContent='showSaveFilePicker' in window?'本机支持批量写入磁盘；大文件请选择保存位置，双方保持页面在前台。':'本机兼容接收总预算 256 MiB；文件夹请先压缩。';
+window.addEventListener('beforeunload',e=>{if(transfers.some(t=>!TERMINAL.has(t.status)||(t.direction==='in'&&t.url&&!t.downloadStarted))){e.preventDefault();e.returnValue='';}});
+window.addEventListener('pagehide',()=>{shuttingDown=true;stopSignal();for(const c of liveConnections())try{c.dc?.close();c.pc.close();}catch{}for(const t of transfers)if(t.url)URL.revokeObjectURL(t.url);});
+window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
+window.addEventListener('online',()=>{if(!signalReady&&!settings.manualOnly)startSignal();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){scheduleConnectionRequestDialog();if(transfers.some(t=>!TERMINAL.has(t.status)))requestWake();}});
+setInterval(()=>{const now=Date.now();let dirty=false;for(const t of transfers){if(['sending','receiving','paused','verifying'].includes(t.status)){const prev=t.sampleAt||now;const elapsed=now-prev;if(elapsed>=700){t.rate=t.status==='paused'?0:Math.max(0,(t.offset-(t.sampleOffset||0))*1000/elapsed);t.sampleAt=now;t.sampleOffset=t.offset;}else if(!t.sampleAt){t.sampleAt=now;t.sampleOffset=t.offset;}dirty=true;}if(t.direction==='in'&&t.status==='receiving'&&now-t.lastActivity>STALL_MS)failTransfer(t,'接收超时，请让对方重新发送',true);if(t.direction==='in'&&t.status==='offered'&&now-t.lastActivity>300000)failTransfer(t,'接收请求已过期',true,'rejected');}if(dirty)markDirty();for(const c of liveConnections()){if(c.disconnectAt&&now-c.disconnectAt>20000)closeConnection(c,'网络中断，文件需要重新发送');else if(c.dc?.readyState==='open'&&!c.ready&&now-c.handshakeAt>180000)closeConnection(c,'等待连接确认超时');}for(const [k,v] of orphanCandidates)if(now-v.at>45000)orphanCandidates.delete(k);},250);
+setInterval(()=>{for(const c of liveConnections())if(c.ready){tryControl(c,{t:'ping'});detectRoute(c);}},15000);
+setInterval(()=>{if($('diagnosticsDialog').open){renderDiagnostics();for(const c of liveConnections())if(c.ready)detectRoute(c);}},1500);
+try{const invite=new URLSearchParams(location.hash.slice(1)).get('to');if(invite){requestedInvite=getCode(invite);$('remoteCode').value=formatCode(requestedInvite);history.replaceState(null,'',location.pathname+location.search);}}catch{toast('邀请链接中的配对码无效',true);}
+markDirty();
+if(typeof RTCPeerConnection==='undefined'){signalUI('浏览器不支持 WebRTC');setBanner('当前浏览器不支持 WebRTC，请改用支持 WebRTC 的浏览器打开页面。',true);}
+else if(!isSecureContext&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){signalUI('请通过 HTTPS 打开');setBanner('请使用 GitHub Pages 提供的 HTTPS 地址打开此页面。',true);}
+else{log('页面已就绪；文件不会通过信令 WebSocket 发送。');startSignal();}
+})();
+
+</script></body></html>

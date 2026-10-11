@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Application update v3.3 (2026-10-11): direct native multi-file controls, separate media picker, batch feedback. Third-party code unchanged. -->
 <!--
 THIRD-PARTY NOTICES
 
@@ -260,6 +261,21 @@ Located in ./vendor/QRCode
 .request-modal-actions .btn{width:100%;min-height:44px;font-size:13px}
 .request-queue-note{text-align:center;font-size:11px;color:var(--muted);margin-top:12px}
 .connection-request-dialog #connectionRequestTitle:focus{outline:none}
+
+/* v3.3: the real file input receives the tap; no hidden-input click proxy. */
+.file-pick-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;width:100%;margin-top:17px}
+.file-pick{position:relative;overflow:hidden;min-height:44px;min-width:140px;margin:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.file-pick:focus-within{outline:3px solid var(--accent);outline-offset:3px}
+.file-pick .file-pick-input{display:block;position:absolute;inset:0;z-index:2;width:100%;height:100%;margin:0;padding:0;border:0;border-radius:inherit;opacity:0;cursor:pointer;font-size:16px;touch-action:manipulation}
+.file-pick-input::file-selector-button{cursor:pointer}
+.dropzone .picker-tip{max-width:420px;margin:11px 0 0;line-height:1.8;font-size:11px;overflow-wrap:anywhere}
+.picker-help{width:100%;max-width:420px;margin-top:8px;font-size:11px;color:var(--muted);text-align:left}
+.picker-help summary{width:fit-content;max-width:100%;margin:auto;padding:6px 3px;color:var(--accent);cursor:pointer;min-height:32px;touch-action:manipulation}
+.picker-help-content{margin-top:7px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);line-height:1.85}
+.picker-help-content p+p{margin-top:7px}
+.picker-help-content .text-btn{min-height:36px;font-size:11px;margin-top:5px}
+.dropzone .picker-status{margin-top:9px;color:var(--accent);font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+@media(max-width:720px){.file-pick-actions{gap:8px}.file-pick{min-width:0;flex:1 1 124px;padding:10px 9px;font-size:12px}.footer{flex-wrap:wrap}.footer-right{flex-wrap:wrap;row-gap:7px}.dropzone .picker-tip{font-size:11px}}
 </style></head><body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><defs>
 <symbol id="i-transfer" viewBox="0 0 24 24"><path d="M4 7h15m-4-4 4 4-4 4M20 17H5m4-4-4 4 4 4"/></symbol>
@@ -304,12 +320,18 @@ Located in ./vendor/QRCode
 </aside>
 <div class="column">
 <section class="card"><div class="heading"><div class="heading-title"><svg class="icon"><use href="#i-upload"/></svg><h2>发送文件</h2></div><span class="recipient" id="recipientLabel">请先连接接收设备</span></div>
-<div class="dropzone" id="dropzone"><div class="file-art" aria-hidden="true"><span class="paper left"><svg class="icon"><use href="#i-image"/></svg></span><span class="paper right"><svg class="icon"><use href="#i-archive"/></svg></span><span class="paper center"><svg class="icon"><use href="#i-upload"/></svg></span></div><h3>把文件拖到这里</h3><p>不限制文件格式，支持多文件、空文件与无后缀文件</p><button class="btn" id="chooseBtn"><svg class="icon sm"><use href="#i-folder"/></svg>选择文件</button><input type="file" id="fileInput" multiple hidden><div class="drop-hints"><span><svg class="icon"><use href="#i-lock"/></svg>加密传输</span><span><svg class="icon"><use href="#i-check"/></svg>SHA-256 校验</span><span><svg class="icon"><use href="#i-transfer"/></svg>双向互传</span></div></div>
-<div class="queue" id="queuePanel" hidden><div class="heading"><span class="tiny" id="queueSummary"></span><button class="text-btn" id="clearQueueBtn">清空待发送</button></div><div class="queue-list" id="queueList"></div></div>
+<div class="dropzone" id="dropzone"><div class="file-art" aria-hidden="true"><span class="paper left"><svg class="icon"><use href="#i-image"/></svg></span><span class="paper right"><svg class="icon"><use href="#i-archive"/></svg></span><span class="paper center"><svg class="icon"><use href="#i-upload"/></svg></span></div><h3 id="dropTitle">把文件拖到这里</h3><p>不限制文件格式，支持多文件、空文件与无后缀文件</p><div class="file-pick-actions" role="group" aria-label="选择多个文件">
+<label class="btn file-pick" id="chooseBtn" for="fileInput"><svg class="icon sm" aria-hidden="true"><use href="#i-folder"/></svg><span>多选文件</span><input type="file" id="fileInput" class="file-pick-input" multiple aria-label="多选文件，不限格式" aria-describedby="mobilePickHint"></label>
+<label class="btn secondary file-pick" id="chooseMediaBtn" for="mediaInput"><svg class="icon sm" aria-hidden="true"><use href="#i-image"/></svg><span>照片 / 视频</span><input type="file" id="mediaInput" class="file-pick-input" accept="image/*,video/*" multiple aria-label="多选照片和视频" aria-describedby="mobilePickHint"></label>
+</div>
+<p class="picker-tip" id="mobilePickHint">可一次选中多个文件，再确认添加；也可继续选择，追加到同一待发送列表。</p>
+<details class="picker-help" id="pickerHelp"><summary>只能选一个文件？</summary><div class="picker-help-content"><p><strong>文件：</strong>在系统列表中尝试长按一个文件，或点“选择 / 多选”，再勾选其他文件，最后点“打开 / 完成”。具体按钮以手机显示为准。</p><p><strong>照片和视频：</strong>用上方“照片 / 视频”入口，在相册里勾选多项后确认。拍照、录制通常一次只生成一个文件。</p><p>系统选择器的多选界面由浏览器和手机决定。若内置浏览器仍只提供单选，请复制地址，在系统浏览器（如 Safari / Chrome）打开，再使用“文件 / 浏览”或相册入口。</p><button type="button" class="text-btn" id="copyPageForPickerBtn">复制本页地址</button></div></details>
+<p class="picker-status" id="pickerStatus" role="status" aria-live="polite" aria-atomic="true" hidden></p><div class="drop-hints"><span><svg class="icon"><use href="#i-lock"/></svg>加密传输</span><span><svg class="icon"><use href="#i-check"/></svg>SHA-256 校验</span><span><svg class="icon"><use href="#i-transfer"/></svg>双向互传</span></div></div>
+<div class="queue" id="queuePanel" hidden><div class="heading"><span class="tiny" id="queueSummary" role="status" aria-live="polite" aria-atomic="true"></span><button class="text-btn" id="clearQueueBtn">清空待发送</button></div><div class="queue-list" id="queueList"></div></div>
 <div class="send-footer"><p id="saveCapability">传输时请保持两端页面打开。文件夹请先压缩。</p><button class="btn" id="sendBtn" disabled><svg class="icon sm"><use href="#i-send"/></svg><span id="sendBtnText">开始发送</span></button></div></section>
 <section class="card" id="historyCard"><div class="heading"><div class="heading-title"><svg class="icon"><use href="#i-transfer"/></svg><h2>传输记录</h2></div><button class="text-btn" id="clearHistoryBtn">清理已结束</button></div><div class="tabbar"><div class="tabs" role="tablist" aria-label="传输记录分类"><button class="tab active" id="allTab" role="tab" aria-selected="true" data-tab="all">全部 <span id="allCount">0</span></button><button class="tab" id="inTab" role="tab" aria-selected="false" data-tab="in">收到的 <span id="inCount">0</span></button><button class="tab" id="outTab" role="tab" aria-selected="false" data-tab="out">发出的 <span id="outCount">0</span></button></div><input class="search" id="searchInput" type="search" placeholder="搜索文件名" aria-label="搜索文件名"></div><div class="transfer-list" id="transferList" role="tabpanel"></div></section>
 </div>
-</main><footer class="footer"><div class="footer-left"><svg class="icon sm"><use href="#i-globe"/></svg><span>静态网页 · 无文件服务器 · 请保持双方在线</span></div><div class="footer-right"><button id="helpBtn">使用说明</button><button id="diagnosticsBtn">连接 / 速度诊断</button><span>v3.2 · 连接弹窗</span></div></footer>
+</main><footer class="footer"><div class="footer-left"><svg class="icon sm"><use href="#i-globe"/></svg><span>静态网页 · 无文件服务器 · 请保持双方在线</span></div><div class="footer-right"><button id="helpBtn">使用说明</button><button id="diagnosticsBtn">连接 / 速度诊断</button><span>v3.3 · 手机多选</span></div></footer>
 </div>
 <dialog id="shareDialog"><div class="modal-heading"><h2>让另一台设备加入</h2><button class="icon-btn" data-close="shareDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy">用系统相机扫描二维码，或分享下方链接。收到对方的连接请求后，此二维码会自动关闭，并弹出确认窗口。</p><div class="qr-wrap"><canvas id="qrCanvas" aria-label="本机邀请链接二维码" role="img"></canvas></div><div class="share-code" id="shareCode"></div><label for="shareUrl">邀请链接</label><input id="shareUrl" class="share-url" readonly><div class="modal-actions"><button class="btn secondary" id="nativeShareBtn" hidden>系统分享</button><button class="btn" id="copyLinkBtn"><svg class="icon sm"><use href="#i-copy"/></svg>复制邀请链接</button></div></dialog>
 <dialog id="connectionRequestDialog" class="connection-request-dialog" role="alertdialog" aria-modal="true" aria-labelledby="connectionRequestTitle" aria-describedby="connectionRequestIntro connectionRequestTrust">
@@ -324,7 +346,7 @@ Located in ./vendor/QRCode
 </dialog>
 <dialog id="manualDialog"><div class="modal-heading"><h2>手动连接</h2><button class="icon-btn" data-close="manualDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy">不经过在线配对服务。A 生成连接信息交给 B，B 生成回复交还 A。双方必须保持本页打开，且网络允许 WebRTC 通信。</p><label class="check-label"><input type="checkbox" id="manualLocal" checked><span>仅使用局域网候选地址，不访问 STUN / TURN。跨网络时可取消勾选，使用设置中的 ICE 服务。</span></label><section class="manual-section"><h3>① 发起方 A</h3><p>点击生成后，将下方输出完整复制给另一台设备。</p><button class="btn secondary" id="createOfferBtn">生成连接信息</button></section><section class="manual-section"><h3>② 粘贴对方的信息</h3><label for="manualInput" class="tiny">B 粘贴 A 的连接信息；A 粘贴 B 的回复。</label><textarea id="manualInput" spellcheck="false" placeholder="LC3.…"></textarea><button class="btn" id="applyManualBtn">读取信息 / 生成回复</button></section><section class="manual-section"><h3>③ 本机输出</h3><textarea id="manualOutput" readonly spellcheck="false" aria-label="本机连接信息输出" placeholder="生成的连接信息或回复会出现在这里"></textarea><button class="btn secondary small" id="copyManualBtn" disabled>复制本机输出</button><button class="text-btn danger" id="cancelManualBtn" style="margin-left:12px">取消本次手动连接</button></section><p class="manual-state" id="manualState" role="status">提示：连接信息含网络候选地址，请只交给可信的接收方。</p></dialog>
 <dialog id="settingsDialog"><div class="modal-heading"><h2>设置</h2><button class="icon-btn" data-close="settingsDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><form id="settingsForm"><div class="field"><label for="deviceNameInput">设备名称</label><input id="deviceNameInput" maxlength="40" required><p class="tiny">名称由设备自行填写，不是经过认证的身份。</p></div><div class="field"><label for="signalUrlInput">信令 WebSocket 地址</label><input id="signalUrlInput" type="url" spellcheck="false" required><p class="tiny">默认使用公共 PeerServer；无需你部署后端。可填写兼容 PeerServer 协议的地址，HTTPS 页面只接受 wss://。</p></div><div class="field"><label for="signalKeyInput">PeerServer key</label><input id="signalKeyInput" spellcheck="false" maxlength="100"></div><div class="field"><label for="iceInput">ICE 服务（JSON，可选 STUN / TURN）</label><textarea id="iceInput" class="mono" rows="5" spellcheck="false"></textarea><p class="tiny">默认只有 STUN，不保证穿透所有网络。填写 [] 可停用。TURN 凭据仅保存在当前浏览器，不要将私人凭据写入公开仓库。</p></div><label class="check-label"><input id="manualOnlyInput" type="checkbox"><span>停用在线配对，仅使用手动连接</span></label><p class="tiny" style="margin-top:12px">设置保存在此浏览器。网络设置仅影响新建连接；已有文件传输不因重连信令而主动中断。</p><div class="modal-actions"><button class="btn secondary" id="resetSettingsBtn" type="button">恢复默认网络设置</button><button class="btn" type="submit">保存设置</button></div></form></dialog>
-<dialog id="helpDialog"><div class="modal-heading"><h2>使用说明</h2><button class="icon-btn" data-close="helpDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="help-item"><h3>怎样在 GitHub Pages 使用？</h3><p>将此 index.html 上传到仓库的 Pages 发布目录，在仓库 Settings → Pages 中选择发布分支。打开发布后的 HTTPS 地址即可使用，不要运行旧版 server.js。</p></div><div class="help-item"><h3>怎样互传？</h3><p>两端打开网页，一方输入对方的配对码或打开邀请链接，另一方确认连接。选择已连接设备与文件，点击发送。对方确认接收后开始传输。双方都可以发文件。</p></div><div class="help-item"><h3>大文件怎么保存？</h3><p>支持“选择位置接收”的浏览器可边接收边写入磁盘，不设应用层文件大小上限，仍受磁盘、浏览器及网络条件限制。其他浏览器采用内存接收，本页文件数据总预算 256 MiB，实际内存占用更高且可能更早耗尽，收到后须点击下载。超出预算请分卷压缩，或换用支持直接保存的浏览器。</p></div><div class="help-item"><h3>v3.1 传输优化</h3><p>双方刷新到 v3.1 后，以 1 MiB 读取和合并写入；网络帧保持约 16 KiB，并通过发送缓冲事件和接收确认推进传输。与旧版配对时自动兼容。连接 / 速度诊断显示链路、延迟、读写次数和等待时间。优化不保证固定速度；不要关闭校验或无限扩大缓存。</p></div><div class="help-item"><h3>离线与隐私</h3><p>自动配对需要能访问公共信令服务，它会获知配对 ID、连接协商信息和连接 IP，但文件正文通过加密数据通道传输，不上传到 GitHub。网页加载后可通过手动交换连接信息，在允许设备互访的局域网内尝试不依赖外部服务的直连。手动模式不是绕过防火墙。</p></div><div class="help-item"><h3>为什么连接失败？</h3><p>先确认双方没有关闭网页、配对码填写正确。信令不可达时尝试手动连接。连接协商失败时，检查访客 Wi-Fi / AP 隔离、VPN 和防火墙；跨网络可能需要可用的 TURN 服务。手机请保持浏览器前台且屏幕亮着。</p></div><div class="help-item"><h3>边界与安全</h3><p>不会自动扫描整个局域网。文件夹先压缩，不限制文件后缀但浏览器或安全软件仍可能阻止某些下载。不打开或执行收到的文件；不要接受陌生连接。重要文件可通过另一个可信渠道核对双方显示的连接校验码。刷新、关闭页面或断线后不支持续传；需重新发送。未点击下载的内存文件会在关闭页面后丢失。</p></div></dialog>
+<dialog id="helpDialog"><div class="modal-heading"><h2>使用说明</h2><button class="icon-btn" data-close="helpDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="help-item"><h3>怎样在 GitHub Pages 使用？</h3><p>将此 index.html 上传到仓库的 Pages 发布目录，在仓库 Settings → Pages 中选择发布分支。打开发布后的 HTTPS 地址即可使用，不要运行旧版 server.js。</p></div><div class="help-item"><h3>怎样互传？</h3><p>两端打开网页，一方输入对方的配对码或打开邀请链接，另一方确认连接。选择已连接设备与文件，点击发送。对方确认接收后开始传输。双方都可以发文件。</p></div><div class="help-item"><h3>手机怎样一次选择多个文件？</h3><p>点击“多选文件”选择任意格式，或点击“照片 / 视频”从相册选择多项。文件选择器中可尝试长按文件、点“选择 / 多选”，勾选后再确认。页面会将系统返回的全部文件加入队列，并显示本次数量；继续选择会追加，不覆盖之前的文件。选择器界面由浏览器和系统控制，内置浏览器只提供单选时，请改用系统浏览器。网页不能强制不支持多选的选择器返回多个文件。</p></div><div class="help-item"><h3>大文件怎么保存？</h3><p>支持“选择位置接收”的浏览器可边接收边写入磁盘，不设应用层文件大小上限，仍受磁盘、浏览器及网络条件限制。其他浏览器采用内存接收，本页文件数据总预算 256 MiB，实际内存占用更高且可能更早耗尽，收到后须点击下载。超出预算请分卷压缩，或换用支持直接保存的浏览器。</p></div><div class="help-item"><h3>v3.1 传输优化</h3><p>双方刷新到 v3.1 后，以 1 MiB 读取和合并写入；网络帧保持约 16 KiB，并通过发送缓冲事件和接收确认推进传输。与旧版配对时自动兼容。连接 / 速度诊断显示链路、延迟、读写次数和等待时间。优化不保证固定速度；不要关闭校验或无限扩大缓存。</p></div><div class="help-item"><h3>离线与隐私</h3><p>自动配对需要能访问公共信令服务，它会获知配对 ID、连接协商信息和连接 IP，但文件正文通过加密数据通道传输，不上传到 GitHub。网页加载后可通过手动交换连接信息，在允许设备互访的局域网内尝试不依赖外部服务的直连。手动模式不是绕过防火墙。</p></div><div class="help-item"><h3>为什么连接失败？</h3><p>先确认双方没有关闭网页、配对码填写正确。信令不可达时尝试手动连接。连接协商失败时，检查访客 Wi-Fi / AP 隔离、VPN 和防火墙；跨网络可能需要可用的 TURN 服务。手机请保持浏览器前台且屏幕亮着。</p></div><div class="help-item"><h3>边界与安全</h3><p>不会自动扫描整个局域网。文件夹先压缩，不限制文件后缀但浏览器或安全软件仍可能阻止某些下载。不打开或执行收到的文件；不要接受陌生连接。重要文件可通过另一个可信渠道核对双方显示的连接校验码。刷新、关闭页面或断线后不支持续传；需重新发送。未点击下载的内存文件会在关闭页面后丢失。</p></div></dialog>
 <dialog id="diagnosticsDialog"><div class="modal-heading"><h2>连接与速度诊断</h2><button class="icon-btn" data-close="diagnosticsDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div><p class="modal-copy" id="diagnosticInfo"></p><pre class="log" id="performanceInfo" style="max-height:360px;white-space:pre-wrap;overflow-wrap:anywhere"></pre><pre class="log" id="diagnosticLog"></pre><div class="modal-actions"><button class="btn secondary" id="copyDiagnosticsBtn">复制诊断</button><button class="btn secondary" id="diagnosticRetry">重连配对服务</button><button class="btn" id="diagnosticManual">使用手动连接</button></div></dialog>
 <div class="toasts" id="toastStack" role="status" aria-live="polite"></div>
 <noscript><div style="padding:24px;text-align:center">本工具需要启用 JavaScript 才能传输文件。</div></noscript>
@@ -1614,7 +1636,7 @@ module.exports = QRCode;
 (() => {
 'use strict';
 const VERSION = 3;
-const BUILD = '3.2';
+const BUILD = '3.3';
 const PREFIX = 'linchuan3-';
 const ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 const MEMORY_LIMIT = 256 * 1024 * 1024;
@@ -1921,7 +1943,61 @@ async function finishIncoming(c,m){const t=c.incoming;if(!t||m.id!==t.id||TERMIN
 function failTransfer(t,reason,notify=true,status='error'){if(TERMINAL.has(t.status))return;t.status=status;t.error=cleanName(reason,220);t.completedAt=Date.now();if(notify)tryControl(t.connection,{t:'cancel',id:t.id,reason:t.error});if(t.direction==='in'){retire(t.connection,t.stream);if(t.connection.incoming===t)t.connection.incoming=null;if(t.writer){const writer=t.writer;t.writer=null;writer.abort().catch(()=>{});}t.parts=[];t.diskBuffer=null;t.diskUsed=0;t.hashState=null;if(t.reserved){memoryReserved-=t.reserved;t.reserved=0;}}if(t.direction==='out'){t.hashState=null;if(status==='cancelled')t.file=null;}wakeSenders(t.connection);markDirty();releaseWakeIfIdle();}
 function cancelTransfer(t){failTransfer(t,'已取消传输',true,'cancelled');}
 function pauseTransfer(t){if(t.status==='sending'){t.status='paused';t.pauseAt=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:true});}else if(t.status==='paused'&&t.direction==='out'){t.status='sending';t.lastActivity=Date.now();tryControl(t.connection,{t:'pause',id:t.id,paused:false});}wakeSenders(t.connection);markDirty();}
-function stage(files){let added=0;for(const file of files){if(stagedFiles.length>=1000){toast('待发送列表最多 1000 个文件',true);break;}if(!(file instanceof File))continue;if(stagedFiles.some(x=>x.file.name===file.name&&x.file.size===file.size&&x.file.lastModified===file.lastModified))continue;stagedFiles.push({key:randomHex(6),file});added++;}if(added)markDirty();}
+function stage(files){
+  const list=Array.from(files||[]);
+  const result={selected:list.length,added:0,duplicates:0,overLimit:0,invalid:0};
+  // Preserve the previous queue's metadata-based duplicate check, but do not silently drop entries.
+  const keyOf=file=>JSON.stringify([file.name,file.size,file.lastModified]);
+  const known=new Set(stagedFiles.map(item=>keyOf(item.file)));
+  for(const file of list){
+    if(!(file instanceof File)){result.invalid++;continue;}
+    const key=keyOf(file);
+    if(known.has(key)){result.duplicates++;continue;}
+    if(stagedFiles.length>=1000){result.overLimit++;continue;}
+    known.add(key);stagedFiles.push({key:randomHex(6),file});result.added++;
+  }
+  if(result.added)markDirty();
+  if(result.overLimit)toast('待发送列表最多 1000 个文件；本次有 '+result.overLimit+' 个未加入',true);
+  return result;
+}
+function reportPickedFiles(files,source){
+  // Snapshot FileList before resetting the input. No file bytes are read at selection time.
+  const result=stage(files);
+  if(!result.selected)return result;
+  let message='本次选中 '+result.selected+' 个，已加入 '+result.added+' 个';
+  if(result.duplicates)message+='；跳过 '+result.duplicates+' 个同名、同大小且修改时间相同的条目';
+  if(result.overLimit)message+='；'+result.overLimit+' 个超出队列上限';
+  if(result.invalid)message+='；'+result.invalid+' 个不是可读取的文件';
+  const status=$('pickerStatus');status.textContent=message;status.hidden=false;
+  log('文件选择（'+source+'）：系统返回 '+result.selected+' 个，加入 '+result.added+' 个；待发送共 '+stagedFiles.length+' 个。');
+  if(result.added)toast('已添加 '+result.added+' 个文件');
+  return result;
+}
+function handleFileSelection(event){
+  const input=event.currentTarget,files=Array.from(input.files||[]);
+  // Clearing allows the same file to be selected again after removal from the queue.
+  input.value='';
+  if(!files.length)return; // Cancel/empty selections must not replace the existing queue.
+  reportPickedFiles(files,input.id==='mediaInput'?'照片 / 视频':'文件');
+}
+function setupFilePickers(){
+  const ua=navigator.userAgent;
+  const appleMobile=/iPad|iPhone|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  let hint='可按住 Ctrl / Command 或 Shift 多选；也可拖拽多个文件到这里。';
+  if(appleMobile)hint='照片 / 视频：勾选多项后点“添加”。文件：进入“浏览”，按界面提示点选多项后确认。';
+  else if(/Android/i.test(ua))hint='文件列表可尝试长按一个文件启用多选，再勾选其他文件；照片请用“照片 / 视频”入口。';
+  else if(matchMedia('(any-pointer: coarse)').matches)hint='可尝试长按文件或点“选择 / 多选”，勾选多项后确认；照片请用“照片 / 视频”入口。';
+  $('mobilePickHint').textContent=hint;
+  if(appleMobile||/Android/i.test(ua)||matchMedia('(any-pointer: coarse)').matches)$('dropTitle').textContent='一次选择，批量发送';
+  for(const id of ['fileInput','mediaInput']){
+    const input=$(id);input.multiple=true;
+    input.addEventListener('change',handleFileSelection);
+    // Native click/label activation is intentional: no .click(), timer, permission preflight or await.
+    input.addEventListener('cancel',()=>{input.value='';});
+  }
+  $('copyPageForPickerBtn').addEventListener('click',()=>{const url=new URL(location.href);url.hash='';copy(url.href);});
+}
+
 function sendStaged(){const c=connections.get(selected);if(!c?.ready||c.closed){toast('请先连接并选择接收设备',true);return;}if(!stagedFiles.length)return;for(const item of stagedFiles){let stream;do{stream=crypto.getRandomValues(new Uint32Array(1))[0];}while(!stream||transfers.some(t=>t.connection===c&&t.stream===stream));const t={id:randomHex(12),stream,direction:'out',connection:c,name:item.file.name,size:item.file.size,file:item.file,status:'queued',offset:0,acked:0,sent:0,createdAt:Date.now(),lastActivity:Date.now(),rate:0};c.queue.push(t);transfers.push(t);}stagedFiles.length=0;switchTab('all');markDirty();requestWake();pump(c);}
 async function pump(c){if(c.processing||c.closed)return;c.processing=true;try{while(c.queue.length&&!c.closed){const t=c.queue.shift();if(TERMINAL.has(t.status))continue;c.out=t;try{await sendOne(t);}catch(e){if(!TERMINAL.has(t.status))failTransfer(t,e.message,true);}finally{if(c.out===t)c.out=null;}}}finally{c.processing=false;markDirty();releaseWakeIfIdle();}}
 function checkOutgoing(t){if(TERMINAL.has(t.status))throw new Error(t.error||'传输已结束');if(t.connection.closed||t.connection.dc?.readyState!=='open')throw new Error('设备连接已断开');}
@@ -2035,7 +2111,7 @@ function renderTransfers(){for(const type of ['all','in','out'])$(type+'Count').
 }
 function updateProgressRows(items){for(const t of items){if(!['sending','receiving','paused','verifying'].includes(t.status))continue;const row=$('transferList').querySelector('[data-id="'+t.id+'"]');if(!row)continue;const percent=t.size?Math.min(100,t.offset/t.size*100):t.status==='verifying'?100:0;const desc=row.querySelector('.progress-description');if(desc)desc.textContent=`${percent.toFixed(1)}% · ${bytes(t.offset)} / ${bytes(t.size)}${t.status==='paused'?'':` · ${bytes(t.rate||0)}/s`}`;const track=row.querySelector('.progress-track');if(track)track.setAttribute('aria-valuenow',percent.toFixed(1));const fill=row.querySelector('.progress-fill');if(fill)fill.style.width=percent+'%';}}
 function performanceReport(){
-  const lines=['邻传 v'+BUILD+' · 批量传输 / 连接弹窗','页面状态：'+(document.visibilityState==='visible'?'前台':'后台（系统仍可能限速或挂起）'),'网络帧约 16 KiB；新版本间读取/写入批次 1 MiB；最大未确认数据 4 MiB。'];
+  const lines=['邻传 v'+BUILD+' · 批量传输 / 连接弹窗 / 手机多选','页面状态：'+(document.visibilityState==='visible'?'前台':'后台（系统仍可能限速或挂起）'),'网络帧约 16 KiB；新版本间读取/写入批次 1 MiB；最大未确认数据 4 MiB。'];
   for(const c of liveConnections().filter(x=>x.ready)){
     lines.push('\n设备：'+c.name+' · 对端 '+(c.peerBuild||'未知版本'),
       '链路：'+c.route+' · '+(c.routeDetail||'尚未获取')+(c.rtt!==undefined?' · RTT '+c.rtt+' ms':''),
@@ -2092,9 +2168,9 @@ $('settingsBtn').addEventListener('click',openSettings);$('renameBtn').addEventL
 $('resetSettingsBtn').addEventListener('click',()=>{$('signalUrlInput').value=DEFAULTS.signalURL;$('signalKeyInput').value=DEFAULTS.signalKey;$('iceInput').value=JSON.stringify(DEFAULTS.iceServers,null,2);$('manualOnlyInput').checked=false;});
 $('settingsForm').addEventListener('submit',e=>{e.preventDefault();try{const next={signalURL:$('signalUrlInput').value.trim(),signalKey:$('signalKeyInput').value.trim()||'peerjs',iceServers:JSON.parse($('iceInput').value),manualOnly:$('manualOnlyInput').checked};validateSettings(next);const signalChanged=next.signalURL!==settings.signalURL||next.signalKey!==settings.signalKey||next.manualOnly!==settings.manualOnly;settings=next;store.set('linchuan3-settings',JSON.stringify(settings));myName=cleanName($('deviceNameInput').value,40);store.set('linchuan3-name',myName);$('myName').textContent=myName;for(const c of liveConnections())if(c.ready)tryControl(c,{t:'name',name:myName});$('settingsDialog').close();if(signalChanged)startSignal();toast('设置已保存');}catch(e){toast('设置未保存：'+e.message,true);}});
 $('manualBtn').addEventListener('click',()=>showDialog('manualDialog'));$('createOfferBtn').addEventListener('click',createManualOffer);$('applyManualBtn').addEventListener('click',applyManual);$('copyManualBtn').addEventListener('click',()=>copy($('manualOutput').value));$('cancelManualBtn').addEventListener('click',()=>{resetManual();$('manualState').textContent='已重置，可以重新发起手动连接。';});
-$('chooseBtn').addEventListener('click',()=>$('fileInput').click());$('fileInput').addEventListener('change',e=>{stage(e.target.files);e.target.value='';});
-let dragDepth=0;const drop=$('dropzone');drop.addEventListener('dragenter',e=>{e.preventDefault();dragDepth++;drop.classList.add('dragging');});drop.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';});drop.addEventListener('dragleave',e=>{e.preventDefault();if(--dragDepth<=0){dragDepth=0;drop.classList.remove('dragging');}});drop.addEventListener('drop',e=>{e.preventDefault();dragDepth=0;drop.classList.remove('dragging');if([...e.dataTransfer.items||[]].some(i=>i.webkitGetAsEntry?.()?.isDirectory)){toast('文件夹请先压缩后发送',true);}stage(e.dataTransfer.files);});window.addEventListener('dragover',e=>e.preventDefault());window.addEventListener('drop',e=>e.preventDefault());
-$('clearQueueBtn').addEventListener('click',()=>{stagedFiles.length=0;markDirty();});$('sendBtn').addEventListener('click',sendStaged);
+setupFilePickers();
+let dragDepth=0;const drop=$('dropzone');drop.addEventListener('dragenter',e=>{e.preventDefault();dragDepth++;drop.classList.add('dragging');});drop.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';});drop.addEventListener('dragleave',e=>{e.preventDefault();if(--dragDepth<=0){dragDepth=0;drop.classList.remove('dragging');}});drop.addEventListener('drop',e=>{e.preventDefault();dragDepth=0;drop.classList.remove('dragging');if([...e.dataTransfer.items||[]].some(i=>i.webkitGetAsEntry?.()?.isDirectory)){toast('文件夹请先压缩后发送',true);}reportPickedFiles(Array.from(e.dataTransfer.files||[]),'拖拽');});window.addEventListener('dragover',e=>e.preventDefault());window.addEventListener('drop',e=>e.preventDefault());
+$('clearQueueBtn').addEventListener('click',()=>{stagedFiles.length=0;$('pickerStatus').hidden=true;$('pickerStatus').textContent='';markDirty();});$('sendBtn').addEventListener('click',sendStaged);
 for(const b of document.querySelectorAll('[data-tab]'))b.addEventListener('click',()=>switchTab(b.dataset.tab));$('searchInput').addEventListener('input',markDirty);
 $('clearHistoryBtn').addEventListener('click',()=>{const finished=transfers.filter(t=>TERMINAL.has(t.status));if(finished.some(t=>t.direction==='in'&&t.url&&!t.downloadStarted)&&!confirm('部分收到的文件尚未下载。清理会永久释放本页缓存，确定继续吗？'))return;finished.forEach(removeTransfer);});
 $('helpBtn').addEventListener('click',()=>showDialog('helpDialog'));$('diagnosticsBtn').addEventListener('click',()=>{renderDiagnostics();showDialog('diagnosticsDialog');});$('copyDiagnosticsBtn').addEventListener('click',()=>copy(performanceReport()+'\n\n'+logs.join('\n')));$('diagnosticRetry').addEventListener('click',()=>startSignal());$('diagnosticManual').addEventListener('click',()=>{$('diagnosticsDialog').close();showDialog('manualDialog');});
