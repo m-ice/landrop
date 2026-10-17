@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<meta name="description" content="Flutter 蓝牙运动器材兼职面谈速查：GetX、Provider、Riverpod、BLE、面试问答与兼职风险控制。">
+<title>Flutter 蓝牙运动器材项目｜兼职面谈速查</title>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--ink:#172033;--muted:#5c667a;--line:#dfe5ee;--brand:#2259d6;--brand2:#eaf0ff;--green:#13795b;--amber:#965d00;--red:#b42318;--shadow:0 8px 26px rgba(18,34,66,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:78px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--brand);overflow-wrap:anywhere}button,input{font:inherit}.top{background:#101827;color:#fff;padding:25px 18px 20px}.wrap{max-width:980px;margin:auto}.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#a9c1ff;font-weight:800}.top h1{font-size:clamp(1.65rem,5vw,2.55rem);line-height:1.2;margin:.45rem 0 .75rem}.top p{color:#d4dbea;margin:0;max-width:760px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.chip{border:1px solid #53617a;border-radius:999px;padding:4px 10px;font-size:.82rem;color:#e7edfa}.sticky{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav{display:flex;gap:6px;overflow:auto;padding:9px 12px;max-width:980px;margin:auto;scrollbar-width:thin}.nav a{white-space:nowrap;text-decoration:none;color:#33415a;font-size:.83rem;font-weight:700;padding:7px 10px;border-radius:9px}.nav a:hover,.nav a:focus{background:var(--brand2);color:var(--brand)}main{max-width:980px;margin:auto;padding:18px 14px 70px}.intro{background:#eaf0ff;border:1px solid #d1ddff;border-radius:16px;padding:15px 17px;margin:0 0 18px}.intro strong{color:#183f9f}.section{margin:26px 0}.section h2{font-size:1.4rem;line-height:1.3;margin:0 0 12px;display:flex;gap:10px;align-items:center}.num{display:inline-grid;place-items:center;width:31px;height:31px;border-radius:10px;background:#172b52;color:white;font-size:.9rem;flex:none}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:var(--shadow);min-width:0}.card h3{font-size:1.05rem;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:.88rem}.tag{display:inline-block;border-radius:7px;background:var(--brand2);color:#244caa;font-size:.75rem;font-weight:800;padding:2px 7px;margin:2px 4px 2px 0}.good{color:var(--green);font-weight:750}.warn{color:var(--amber);font-weight:750}.bad{color:var(--red);font-weight:750}ul,ol{padding-left:1.25rem;margin:.4rem 0}.tight li{margin:.2rem 0}.tablewrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:620px;font-size:.9rem}th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}th{background:#f0f3f9;font-weight:800}tr:last-child td{border-bottom:0}.qa{background:white;border:1px solid var(--line);border-radius:13px;margin:9px 0;overflow:hidden}.qa summary{padding:13px 15px;cursor:pointer;font-weight:800;list-style:none;display:flex;gap:10px;align-items:start}.qa summary::-webkit-details-marker{display:none}.qa summary:before{content:"Q";font-size:.72rem;line-height:1.7;text-align:center;flex:none;background:#eaf0ff;color:#244caa;width:22px;height:22px;border-radius:6px}.answer{padding:0 15px 15px 47px;color:#354056}.answer p{margin:.2rem 0 .6rem}.answer ul{margin:.25rem 0}.callout{border-left:4px solid var(--brand);background:#f0f4ff;padding:12px 14px;border-radius:0 10px 10px 0;margin:10px 0}.callout.amber{border-color:#c68113;background:#fff7e8}.callout.red{border-color:#c73b32;background:#fff0ef}.code{background:#111827;color:#e7edf8;border-radius:10px;padding:12px;overflow:auto;font: .83rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre}.pillrow{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:7px 10px;background:white;border:1px solid var(--line);border-radius:10px;font-size:.88rem}.checklist label{display:flex;gap:10px;align-items:start;padding:9px 0;border-bottom:1px solid var(--line)}.checklist input{margin-top:6px;transform:scale(1.15)}.progress{font-size:.84rem;color:var(--muted);margin:8px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.btn{border:0;border-radius:10px;background:var(--brand);color:white;padding:10px 13px;font-weight:800;cursor:pointer}.btn.secondary{background:white;color:var(--ink);border:1px solid var(--line)}.flashcard{min-height:130px;display:flex;flex-direction:column;justify-content:center;gap:12px}.flashcard .front{font-weight:850;font-size:1.15rem}.flashcard .back{display:none}.flashcard.show .front{display:none}.flashcard.show .back{display:block}.footer{border-top:1px solid var(--line);padding:22px 14px;color:var(--muted);font-size:.85rem;text-align:center}.sources li{margin:.45rem 0;overflow-wrap:anywhere}
+@media(max-width:680px){main{padding:14px 11px 50px}.grid{grid-template-columns:1fr}.card{padding:13px}.top{padding:22px 15px 18px}.answer{padding-left:15px}.section h2{font-size:1.25rem}.nav{padding:7px 8px}.nav a{padding:7px 8px}.intro{padding:13px}.top p{font-size:.94rem}}
+@media print{.sticky,.actions,.btn{display:none!important}body{background:#fff;font-size:11pt}.top{background:#fff;color:#111;padding:0}.top p,.chip{color:#333}.chips{display:none}main{padding:0;max-width:none}.card,.qa{box-shadow:none;break-inside:avoid}.section{break-inside:auto}.answer{display:block!important}.qa summary:before{display:none}.qa summary{padding-bottom:4px}.answer{padding:0 10px 10px}.grid{grid-template-columns:repeat(2,1fr)}a{color:#111;text-decoration:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<div class="eyebrow">FIELD GUIDE · FLUTTER + BLE</div>
+<h1>蓝牙运动器材 App<br>兼职面谈速查手册</h1>
+<p>面向 Flutter 开发者：用一套可复述的框架准备状态管理、BLE 技术、项目交付与兼职边界。重点不是背 API，而是讲清楚“状态、数据流、生命周期、失败恢复、验收标准”。</p>
+<div class="chips"><span class="chip">面试问答</span><span class="chip">GetX / Provider / Riverpod</span><span class="chip">BLE 实战</span><span class="chip">兼职风险控制</span></div>
+</div></header>
+<div class="sticky"><nav class="nav" aria-label="页面导航">
+<a href="#quick">速记</a><a href="#state">状态管理</a><a href="#ble">蓝牙核心</a><a href="#qa">面试题</a><a href="#design">架构方案</a><a href="#parttime">兼职事项</a><a href="#plan">临场计划</a><a href="#sources">资料</a>
+</nav></div>
+<main>
+<div class="intro"><strong>先记住一句话：</strong>运动器材 BLE App 的难点通常不在按钮，而在异步连接状态、协议正确性、Android/iOS 差异、断线恢复和设备实测。面谈时用“先确认协议与验收，再分层实现，最后用真机和日志验证”建立专业感。</div>
+
+<section class="section" id="quick"><h2><span class="num">0</span> 60 秒速记卡</h2>
+<div class="grid">
+<div class="card"><h3>状态管理怎么选</h3><p><b>GetX：</b>快、集成度高；注意全局依赖与生命周期。</p><p><b>Provider：</b>轻量、Flutter 原生生态友好；依赖注入常用，复杂异步需自己组织。</p><p><b>Riverpod：</b>依赖声明清晰、测试与异步状态好；新项目综合优先考虑。</p></div>
+<div class="card"><h3>BLE 记忆链</h3><p><b>Scan → Connect → Discover → Subscribe/Read/Write → Disconnect</b></p><p>扫描不是连接；连接不是服务发现；写入成功不一定代表设备执行成功；通知流需要订阅和取消。</p></div>
+<div class="card"><h3>架构原则</h3><p>UI → Controller/Notifier/Cubit → Repository/Protocol → BLE Plugin。</p><p>把扫描、连接、协议解析、重试放在服务/仓储层；UI 只呈现状态和发起意图。</p></div>
+<div class="card"><h3>兼职原则</h3><p><b>先评估再报价，先书面确认再开工。</b></p><p>范围、里程碑、验收、付款、变更、设备提供、源码/IP、维护期必须明确。</p></div>
+</div>
+</section>
+
+<section class="section" id="state"><h2><span class="num">1</span> GetX、Provider、Riverpod 核心对比</h2>
+<div class="tablewrap"><table><thead><tr><th>维度</th><th>GetX</th><th>Provider</th><th>Riverpod</th></tr></thead><tbody>
+<tr><td>主要模型</td><td>Rx / Obx、GetBuilder、Controller</td><td>InheritedWidget 封装；ChangeNotifier、Consumer</td><td>Provider 声明式依赖图；Notifier、AsyncNotifier、StreamProvider 等</td></tr>
+<tr><td>依赖注入</td><td>Get.put / Get.find / Bindings</td><td>Provider / MultiProvider</td><td>Provider 声明依赖；ProviderScope 管理容器</td></tr>
+<tr><td>UI 订阅</td><td>Obx 或 GetBuilder</td><td>watch / Consumer / Selector</td><td>ref.watch / select / ConsumerWidget</td></tr>
+<tr><td>更新模型</td><td>Rx 细粒度；GetBuilder 显式更新</td><td>ChangeNotifier.notifyListeners，或替换不可变状态</td><td>监听 provider 输出；Notifier 通过 state 更新</td></tr>
+<tr><td>异步/流</td><td>Rx + StreamSubscription，需明确管理</td><td>可结合 StreamBuilder/FutureBuilder/自建状态</td><td>FutureProvider / StreamProvider / AsyncNotifier 更系统</td></tr>
+<tr><td>测试与隔离</td><td>可测，但全局 Get 容器/服务定位需小心</td><td>易入门；依赖替换常需组织好 Provider 树</td><td>ProviderContainer、覆盖依赖、测试隔离较自然</td></tr>
+<tr><td>优势</td><td>开发快，路由/依赖/状态一体化</td><td>概念较少，与 Flutter 生态一致</td><td>依赖显式、异步状态和测试能力较强</td></tr>
+<tr><td>代价</td><td>容易把状态、路由、服务定位混在一起；需纪律化分层</td><td>ChangeNotifier 易变成大状态对象；复杂异步要自行约定</td><td>概念较多，版本/API 需一致；需理解 ref 生命周期</td></tr>
+<tr><td>蓝牙项目建议</td><td>已有代码且团队熟悉时可继续</td><td>小型 App、简单共享状态可用</td><td>新项目/中大型 BLE App 的稳妥候选</td></tr>
+</tbody></table></div>
+<div class="callout"><b>专业表述：</b>“状态管理没有绝对排名。我会根据团队已有技术栈、异步复杂度、测试要求和维护成本选型。蓝牙事件持续且生命周期敏感，我更看重依赖可替换、流订阅可控、状态转换可测试，而不是只看代码短不短。”</div>
+<h3>关键 API 一页记忆</h3>
+<div class="grid">
+<div class="card"><h3>GetX</h3><div class="code">final count = 0.obs;
+
+// UI
+Obx(() =&gt; Text('${count.value}'));
+
+count.value++;
+// 生命周期：onInit / onClose</div><p class="small muted">Rx 变量通常通过 .value 访问；Obx 自动跟踪读取到的 Rx。流订阅应在 onClose 中取消。</p></div>
+<div class="card"><h3>Provider</h3><div class="code">ChangeNotifierProvider(
+  create: (_) =&gt; CounterModel(),
+);
+
+// UI
+final count = context.watch&lt;CounterModel&gt;().count;
+
+// 命令
+context.read&lt;CounterModel&gt;().increment();</div><p class="small muted">watch 用于订阅；read 用于一次性读取/调用；Selector 可减少不相关重建。注意 Provider 的创建与 dispose 语义。</p></div>
+<div class="card"><h3>Riverpod</h3><div class="code">final countProvider =
+  NotifierProvider&lt;Counter, int&gt;(Counter.new);
+
+// UI
+final count = ref.watch(countProvider);
+
+// 命令
+ref.read(countProvider.notifier).increment();</div><p class="small muted">watch 订阅依赖，read 调用操作，listen 执行副作用。需要在应用根部配置 ProviderScope。</p></div>
+<div class="card"><h3>BLE Stream 设计</h3><div class="code">final scanResultsProvider =
+  StreamProvider.autoDispose&lt;List&lt;Device&gt;&gt;((ref) {
+    final ble = ref.watch(bleServiceProvider);
+    return ble.scanResults;
+  });</div><p class="small muted">示意代码。真实 API 类型取决于所选 BLE 插件；扫描启动/停止通常由显式命令控制，避免监听 provider 时意外反复启动扫描。</p></div>
+</div>
+<h3>面谈选型回答模板</h3>
+<div class="card"><p>“如果是已有 GetX 项目，我不会为了技术偏好贸然重写，会先沿用既有模式并补齐服务层和生命周期管理。如果是新建、需要长期维护的 BLE App，我倾向 Riverpod：扫描结果、连接状态和通知数据可以用 Stream/Async 状态建模，依赖容易替换，测试也方便。若项目有复杂 OTA、配网状态机和严格团队规范，BLoC/Cubit 也很合适。最终会结合团队熟悉度和插件现状决定。”</p></div>
+</section>
+
+<section class="section" id="ble"><h2><span class="num">2</span> BLE 蓝牙知识：运动器材重点</h2>
+<div class="grid">
+<div class="card"><h3>BLE 基本概念</h3><ul class="tight"><li><b>Central / Peripheral：</b>手机通常是 Central，器材通常是 Peripheral。</li><li><b>GATT：</b>数据组织模型；Service 下包含 Characteristic。</li><li><b>UUID：</b>标识服务/特征；标准 UUID 与厂商自定义 UUID 都可能存在。</li><li><b>Read / Write / Notify / Indicate：</b>读、写、通知、带确认的指示。</li><li><b>MTU：</b>影响单次 ATT 载荷；不要假设各平台/设备协商结果一致。</li></ul></div>
+<div class="card"><h3>常见完整流程</h3><ol class="tight"><li>检查蓝牙状态、权限和系统限制。</li><li>开始扫描；按 Service UUID、名称、厂商数据等过滤。</li><li>停止扫描或控制扫描策略，连接目标设备。</li><li>等待连接状态确认，再发现 GATT 服务/特征。</li><li>按协议设置 MTU（如支持），订阅通知。</li><li>写入控制命令，解析通知并校验数据。</li><li>断连时取消订阅、清理状态，按策略重连。</li></ol></div>
+<div class="card"><h3>运动器材业务字段</h3><p>跑步机/动感单车/划船机可能包含：速度、坡度、阻力、踏频 RPM、功率 W、心率 BPM、距离、时间、卡路里、训练模式、设备状态、错误码。</p><p class="small muted">字段单位、缩放因子、字节序、有效范围、更新频率、读写权限都必须以设备协议为准；不能凭 UI 猜协议。</p></div>
+<div class="card"><h3>数据包解析检查清单</h3><ul class="tight"><li>字节序：little-endian / big-endian。</li><li>有符号/无符号、字段长度、位域。</li><li>缩放比例与单位换算。</li><li>帧头、长度、序号、校验和/CRC（若协议定义）。</li><li>分包/粘包、重复包、乱序、无效值。</li><li>协议版本兼容和未知字段处理。</li></ul></div>
+<div class="card"><h3>连接与重连策略</h3><ul class="tight"><li>连接状态要建模为状态机，避免多个地方同时发起连接。</li><li>区分用户主动断开、设备离开范围、系统蓝牙关闭、超时。</li><li>重连用有上限的指数退避和随机抖动；不要无限紧密重试。</li><li>重连成功后通常需要重新发现服务、重新订阅通知。</li><li>应用前后台切换要按产品需求与平台能力设计。</li></ul></div>
+<div class="card"><h3>平台与安全</h3><ul class="tight"><li>Android 权限因 OS 版本和 targetSdk 不同而不同；新版本涉及 Nearby devices 权限，旧版本扫描可能涉及位置权限。</li><li>iOS 需配置蓝牙用途说明；后台行为受系统能力和审核规则限制。</li><li>处理用户拒绝权限、永久拒绝、系统蓝牙关闭和权限撤销。</li><li>不要把设备名称/地址当作可靠身份认证；敏感控制命令需考虑配对、认证和重放风险。</li><li>真机测试 Android/iOS、不同厂商机型与系统版本。</li></ul></div>
+</div>
+<div class="callout amber"><b>安全提醒：</b>跑步机、健身车等器材可能控制电机、速度、坡度或阻力。命令要有边界校验、急停/停止优先级、通信丢失策略与硬件侧安全保护；手机 UI 不能成为唯一安全防线。不要未经设备厂商确认就发送控制指令。</div>
+<h3>蓝牙插件怎么回答</h3>
+<div class="card"><p><b>常见候选：</b><a href="https://pub.dev/packages/flutter_blue_plus" target="_blank" rel="noopener">flutter_blue_plus</a>、<a href="https://pub.dev/packages/quick_blue" target="_blank" rel="noopener">quick_blue</a> 等。实际选型前应核对当前版本、Android/iOS 支持、维护活跃度、许可、已知 issue、所需功能和设备兼容性。</p><p>回答时强调：先读现有项目 pubspec、插件封装和设备协议；不要在没有设备/协议的情况下承诺兼容性。经典蓝牙串口与 BLE GATT 不是同一套工作流，先确认设备类型。</p></div>
+</section>
+
+<section class="section" id="qa"><h2><span class="num">3</span> 高频面试题与专业答案</h2>
+<p class="muted small">建议先自己口述，再展开答案。点开题目查看参考要点。</p>
+<details class="qa" open><summary>Q1：GetX、Provider、Riverpod 的核心区别是什么？</summary><div class="answer"><p>GetX 是集成度较高的响应式/状态/依赖/路由方案；Provider 是围绕 Flutter InheritedWidget 的依赖与状态暴露工具，常搭配 ChangeNotifier；Riverpod 是独立于 BuildContext 的声明式 provider 系统，依赖图、异步状态和测试替换更系统。</p><p>选型重点是团队熟悉度、异步流管理、可测试性、生命周期和维护成本，不是单纯比较代码行数。</p></div></details>
+<details class="qa"><summary>Q2：为什么 BLE 项目不能只用一个 isConnected 布尔值？</summary><div class="answer"><p>因为连接过程有多个阶段：未连接、扫描中、连接中、已连接、发现服务、订阅通知、断开中、失败/重试。单一布尔值无法区分阶段与错误原因，容易造成重复操作和 UI 与真实设备状态不一致。应建模状态机，并把用户主动断开与意外断连区分开。</p></div></details>
+<details class="qa"><summary>Q3：扫描到设备后为什么还不能直接读写？</summary><div class="answer"><p>扫描结果只说明广播被发现，不代表 GATT 连接已建立。连接后通常还要发现服务和特征，确认目标 UUID 与属性，再按协议读写或订阅通知；每一步都可能失败或超时。</p></div></details>
+<details class="qa"><summary>Q4：Notify 和 Indicate 有什么区别？</summary><div class="answer"><p>两者都是服务端向客户端发送更新的方式。Notify 通常不要求 ATT 层确认，吞吐/延迟更合适；Indicate 需要客户端确认，可靠性语义更强但开销更大。最终选择由设备特征属性和协议决定；应用层仍可能需要序号、校验或确认机制。</p></div></details>
+<details class="qa"><summary>Q5：如何避免 BLE Stream 泄漏？</summary><div class="answer"><p>明确谁拥有订阅、何时创建、何时取消。连接结束或服务销毁时取消 StreamSubscription、通知监听和扫描；用 autoDispose/Controller 生命周期辅助，但不要假设状态管理框架会自动关闭底层蓝牙连接。清理策略应在 service/repository 中集中定义，并处理重复 dispose。</p></div></details>
+<details class="qa"><summary>Q6：Riverpod 的 watch、read、listen 有何区别？</summary><div class="answer"><p><code>watch</code> 建立响应式依赖，值变化会使消费方更新；<code>read</code> 读取当前值或调用 Notifier 命令，不建立持续订阅；<code>listen</code> 监听变化并执行副作用，例如导航、日志或提示。不要在 build 中用 read 代替需要响应式更新的 watch。</p></div></details>
+<details class="qa"><summary>Q7：Provider 中 watch 和 read 有何区别？</summary><div class="answer"><p><code>context.watch&lt;T&gt;()</code> 订阅 T 的变化并触发相关重建；<code>context.read&lt;T&gt;()</code> 一次性读取，常用于按钮回调调用方法；<code>Selector</code> 可只监听某个字段，减少不相关重建。</p></div></details>
+<details class="qa"><summary>Q8：GetX 的 Obx 与 GetBuilder 区别？</summary><div class="answer"><p>Obx 根据构建期间读取的 Rx 变量自动追踪依赖；GetBuilder 通常配合 Controller 的 update() 显式触发刷新。选择依据是自动响应式还是显式更新。不要把大量业务状态和蓝牙资源都塞进一个 Controller。</p></div></details>
+<details class="qa"><summary>Q9：设备断连后如何重连？</summary><div class="answer"><p>先识别原因和用户意图；停止旧订阅并把 UI 更新为断连/重连中；使用有上限的指数退避；避免重复连接任务；连接成功后重新发现服务并恢复订阅；若用户主动断开则不自动重连。记录失败原因、重试次数和耗时，便于诊断。</p></div></details>
+<details class="qa"><summary>Q10：如何处理高频实时数据导致 UI 卡顿？</summary><div class="answer"><p>测量后优化。把原始 BLE 通知与 UI 展示解耦；必要时聚合/采样数据、批量更新、只监听必要字段、避免整页重建；解析与计算避免阻塞主 isolate，重计算可考虑 isolate。保留业务所需的数据精度，不能为性能随意丢掉安全相关命令或关键事件。</p></div></details>
+<details class="qa"><summary>Q11：写入命令成功是否代表设备执行成功？</summary><div class="answer"><p>不一定。它可能只代表 GATT 写操作完成或数据已交给协议栈。要看协议是否定义设备应答、状态通知、错误码或执行确认。控制类设备需要明确命令超时、重复命令、幂等性和安全状态。</p></div></details>
+<details class="qa"><summary>Q12：如何定位“某些手机能连、某些手机不能连”？</summary><div class="answer"><p>按层排查：系统版本/权限/蓝牙开关 → 扫描过滤与设备广播 → 连接时序/超时 → GATT 服务与特征 → MTU/写入类型/通知订阅 → 插件版本和厂商差异。收集脱敏日志、设备型号、OS、插件版本、复现步骤和时间线；用真机矩阵复测。</p></div></details>
+<details class="qa"><summary>Q13：运动器材的实时数据怎样保证可信？</summary><div class="answer"><p>按设备协议解析字段、字节序、符号、缩放比例和单位；校验长度、范围、序号与校验和（如果协议定义）；区分瞬时值、累计值和估算值；异常数据标记而非静默伪装成正常值。卡路里、距离、功率等算法要确认由设备还是 App 计算。</p></div></details>
+<details class="qa"><summary>Q14：Android 和 iOS BLE 开发差异有哪些？</summary><div class="answer"><p>权限模型、系统蓝牙状态、后台执行限制、连接恢复、扫描策略和日志能力不同；Android 还存在设备厂商实现差异。将平台能力封装在服务层，按官方文档配置权限和用途说明，并制定多系统版本真机测试矩阵。</p></div></details>
+<details class="qa"><summary>Q15：你接手陌生蓝牙项目，前半天做什么？</summary><div class="answer"><p>先跑通现有项目与真机；查看 README、pubspec、平台配置、BLE 插件版本、核心服务、协议文档和日志；复现一条主路径；梳理连接状态与异常路径；记录未知项、阻塞项和风险。先给出诊断与小步计划，不在不了解协议时大规模重构。</p></div></details>
+<details class="qa"><summary>Q16：怎样证明自己做完了，而不是“我这边可以”？</summary><div class="answer"><p>定义可复现验收：指定手机/OS/设备型号、初始条件、操作步骤、预期结果、异常场景、日志/视频证据和已知限制。交付代码、构建方式、版本号、测试记录、未完成项和回滚方案；让委托方按同一清单验收。</p></div></details>
+</section>
+
+<section class="section" id="design"><h2><span class="num">4</span> 推荐架构与状态模型</h2>
+<div class="card"><h3>分层边界</h3><div class="code">lib/
+  features/
+    device/
+      presentation/   # 页面、组件
+      application/    # Notifier / Controller / Cubit
+      domain/         # Device、BleState、用例/规则
+      data/
+        ble_repository.dart
+        ble_protocol.dart
+        ble_plugin_adapter.dart
+  shared/
+    permissions/
+    logging/
+    errors/</div><p class="small muted">项目较小时不必为了分层而分层；至少把插件 API、协议解析和 UI 状态分开，避免页面直接操作底层连接对象。</p></div>
+<div class="grid">
+<div class="card"><h3>状态建议</h3><ul class="tight"><li>Adapter：蓝牙可用/关闭/未知。</li><li>Permission：未询问/允许/拒绝/需设置。</li><li>Scan：空闲/扫描中/完成/失败。</li><li>Connection：断开/连接中/已连接/断开中/失败。</li><li>Session：服务发现、通知订阅、设备信息、协议版本。</li><li>Telemetry：实时值、时间戳、数据质量。</li></ul></div>
+<div class="card"><h3>错误分类</h3><ul class="tight"><li>权限/系统蓝牙错误。</li><li>扫描超时或设备未发现。</li><li>连接超时/连接被拒。</li><li>服务/特征不匹配。</li><li>读写失败、通知未到、协议解析失败。</li><li>设备业务错误、用户主动停止。</li></ul></div>
+</div>
+<h3>接手项目时的最小技术问题清单</h3>
+<div class="checklist" id="techChecks">
+<label><input type="checkbox"> 设备是 BLE GATT，还是经典蓝牙串口？是否有多个型号？</label>
+<label><input type="checkbox"> 是否有正式协议文档：UUID、字段、单位、缩放、校验、命令应答？</label>
+<label><input type="checkbox"> Android/iOS 最低版本、权限、后台连接需求是什么？</label>
+<label><input type="checkbox"> 是否提供可用于开发的真机、固件版本和测试账号？</label>
+<label><input type="checkbox"> 断连、重连、退出页面、App 后台、蓝牙关闭如何处理？</label>
+<label><input type="checkbox"> 哪些指令会控制电机/速度/阻力？急停与失联保护由谁负责？</label>
+<label><input type="checkbox"> 当前架构、插件版本、构建流程、已有 bug 和测试覆盖是什么？</label>
+</div><div class="progress" id="techProgress">已完成 0 / 7 项</div>
+</section>
+
+<section class="section" id="parttime"><h2><span class="num">5</span> 接兼职：先把边界谈清楚</h2>
+<div class="callout red"><b>高风险信号：</b>要求先做一大段免费试工；没有设备/协议却承诺“包兼容”；需求不断增加但不接受变更费用；要求交付个人账号密码/签署空白文件；付款主体和合同主体不一致且拒绝解释；要求绕过安全保护或伪造测试结果。</div>
+<div class="grid">
+<div class="card"><h3>开工前必须确认</h3><ul class="tight"><li><b>范围：</b>页面、设备型号、功能、平台、离线/后台要求。</li><li><b>现状：</b>从零开发还是接手；仓库、构建环境、技术债、可复现 bug。</li><li><b>资源：</b>设备样机、协议文档、固件、测试账号、设计稿、联系人。</li><li><b>交付：</b>源码、分支/PR、安装包、文档、日志、测试报告。</li><li><b>验收：</b>客观步骤、设备/机型/OS、通过条件、反馈时限。</li></ul></div>
+<div class="card"><h3>商务与法律边界</h3><ul class="tight"><li>报价方式：按阶段/工时/固定总价；先约定预估和上限。</li><li>付款节点：定金/里程碑/验收尾款，明确逾期处理。</li><li>需求变更：新增设备型号、协议变化、新页面应重新估时报价。</li><li>知识产权：既有代码、第三方开源许可、交付代码归属与授权。</li><li>保密与数据：不把客户协议、密钥、源码上传到未经批准的服务。</li><li>维护期：修复缺陷与新增需求的区别、响应时间、支持时段。</li></ul></div>
+<div class="card"><h3>工时估算公式</h3><p><b>总工时 = 开发 + 集成 + 真机验证 + 修复 + 发布 + 沟通/交付。</b></p><p>蓝牙项目必须单列“设备联调与跨机型测试”，不能只按页面数估算。协议未知、设备未到、固件不稳定都应列为风险与前置条件。</p></div>
+<div class="card"><h3>建议里程碑</h3><ol class="tight"><li>付费技术评估：构建、插件、协议、风险清单。</li><li>主链路 PoC：扫描、连接、服务发现、读写/通知。</li><li>功能阶段：页面、状态、业务流程与错误处理。</li><li>设备矩阵测试：目标手机、OS、设备/固件版本。</li><li>交付验收：源码、构建说明、测试记录、遗留问题。</li></ol></div>
+</div>
+<h3>面谈时可直接问对方的 12 个问题</h3>
+<div class="checklist" id="clientChecks">
+<label><input type="checkbox"> 目前 App 是从零开发，还是接手已有项目？仓库能否提前查看？</label>
+<label><input type="checkbox"> 设备使用 BLE 还是经典蓝牙？品牌/型号/固件版本有哪些？</label>
+<label><input type="checkbox"> 是否有协议文档和可用样机？由谁负责硬件端问题？</label>
+<label><input type="checkbox"> 当前最核心的 3 个业务流程和最痛的 bug 是什么？</label>
+<label><input type="checkbox"> 需要 Android、iOS 还是双端？最低 OS 版本？</label>
+<label><input type="checkbox"> 是否需要后台持续连接、锁屏数据、自动重连？</label>
+<label><input type="checkbox"> 当前使用什么状态管理和 BLE 插件？是否允许增量改造？</label>
+<label><input type="checkbox"> 有哪些必须支持的手机型号/设备型号？验收环境是谁提供？</label>
+<label><input type="checkbox"> 谁做产品决策、协议答疑、固件修复和最终验收？</label>
+<label><input type="checkbox"> 交付清单、验收标准和反馈周期是什么？</label>
+<label><input type="checkbox"> 预算、付款节点、需求变更流程和维护期如何约定？</label>
+<label><input type="checkbox"> 源码、第三方库许可、保密要求和成果归属如何约定？</label>
+</div><div class="progress" id="clientProgress">已完成 0 / 12 项</div>
+<div class="callout"><b>建议表达：</b>“我可以先做一个有明确交付物的付费技术评估，确认现有工程能构建、BLE 主链路可跑通、协议和设备风险明确，再按里程碑报价。设备联调和需求变更会单独列出，避免双方对完成标准理解不一致。”</div>
+</section>
+
+<section class="section" id="plan"><h2><span class="num">6</span> 下午面谈的 30 分钟准备法</h2>
+<div class="grid">
+<div class="card"><h3>前 10 分钟：背框架</h3><ul class="tight"><li>三种状态管理的核心差异。</li><li>BLE 流程和 GATT 术语。</li><li>状态机、Stream 清理、重连策略。</li></ul></div>
+<div class="card"><h3>中间 10 分钟：准备案例</h3><ul class="tight"><li>讲一个你做过的异步/设备/网络问题。</li><li>按“现象→定位→方案→验证→结果”复盘。</li><li>没有真实 BLE 经验就诚实说明，讲可迁移能力和验证计划。</li></ul></div>
+<div class="card"><h3>最后 10 分钟：确认商务</h3><ul class="tight"><li>问设备、协议、平台、核心流程。</li><li>确认付款、验收、交付、变更和维护边界。</li><li>争取先做付费评估或小里程碑。</li></ul></div>
+<div class="card"><h3>回答结构：PREP</h3><p><b>P</b>oint：先说结论。</p><p><b>R</b>eason：解释原因。</p><p><b>E</b>xample：给出项目例子或实施方案。</p><p><b>P</b>lan：补充验证/风险控制。</p><p class="small muted">例如：“我会优先把 BLE 服务与 UI 分离，因为连接和通知生命周期比页面复杂；先跑通扫描到通知的主链路，再测断连恢复和跨机型差异。”</p></div>
+</div>
+<h3>抽认卡：点按显示答案</h3>
+<div class="card flashcard" id="flashcard"><div class="front" id="flashQ">BLE 的 Scan、Connect、Discover、Notify 有什么先后关系？</div><div class="back" id="flashA">先扫描发现广播，再连接设备，然后发现 GATT 服务/特征，最后按协议订阅通知或读写。每一步都要处理失败、超时与取消。</div></div>
+<div class="actions"><button class="btn" id="flip">显示 / 隐藏答案</button><button class="btn secondary" id="nextCard">下一题</button><button class="btn secondary" onclick="window.print()">打印 / 保存 PDF</button></div>
+</section>
+
+<section class="section" id="sources"><h2><span class="num">7</span> 官方资料与核验入口</h2>
+<p class="muted">面谈前不必背所有 API。优先看当前项目锁定的插件版本与官方文档；权限、系统行为、插件支持范围会随版本变化。</p>
+<ul class="sources">
+<li><b>Flutter 状态管理：</b><a href="https://docs.flutter.dev/data-and-backend/state-mgmt/options" target="_blank" rel="noopener">Flutter 官方 State management options</a></li>
+<li><b>Provider：</b><a href="https://pub.dev/packages/provider" target="_blank" rel="noopener">pub.dev/packages/provider</a></li>
+<li><b>Riverpod：</b><a href="https://riverpod.dev/" target="_blank" rel="noopener">riverpod.dev</a>；<a href="https://pub.dev/packages/flutter_riverpod" target="_blank" rel="noopener">flutter_riverpod</a></li>
+<li><b>GetX：</b><a href="https://pub.dev/packages/get" target="_blank" rel="noopener">pub.dev/packages/get</a></li>
+<li><b>BLE 插件：</b><a href="https://pub.dev/packages/flutter_blue_plus" target="_blank" rel="noopener">flutter_blue_plus</a>；<a href="https://pub.dev/packages/quick_blue" target="_blank" rel="noopener">quick_blue</a></li>
+<li><b>Android BLE：</b><a href="https://developer.android.com/develop/connectivity/bluetooth/ble/ble-overview" target="_blank" rel="noopener">Android Developers — Bluetooth Low Energy</a></li>
+<li><b>Apple Core Bluetooth：</b><a href="https://developer.apple.com/documentation/corebluetooth" target="_blank" rel="noopener">Apple Developer — Core Bluetooth</a></li>
+<li><b>Bluetooth SIG GATT：</b><a href="https://www.bluetooth.com/specifications/specs/" target="_blank" rel="noopener">Bluetooth SIG Specifications</a></li>
+</ul>
+<div class="callout amber"><b>版本提示：</b>本页是面谈与方案设计速查，不替代项目当前依赖版本的 API 文档、设备协议和安全要求。实施前核对 Flutter/Dart SDK、锁文件、插件 changelog、Android targetSdk 与 Apple 平台要求。</div>
+</section>
+</main>
+<footer class="footer">Flutter BLE Freelance Field Guide · 手机优先 · 可离线打开 · 点击题目展开答案<br>建议：面谈时坦诚区分“做过”“理解原理”“需要在真机验证”，比夸大经验更专业。</footer>
+<script>
+const qa = [
+["BLE 的 Scan、Connect、Discover、Notify 有什么先后关系？","先扫描发现广播，再连接设备，然后发现 GATT 服务/特征，最后按协议订阅通知或读写。每一步都要处理失败、超时与取消。"],
+["为什么写入成功不一定代表器材执行成功？","GATT 写入完成可能只代表传输层接受数据。需要检查设备协议是否有应答、状态通知、错误码或执行确认。"],
+["怎么避免蓝牙通知监听泄漏？","明确订阅所有者；在断连/切换设备/服务销毁时取消订阅；集中管理清理逻辑；验证重复进入页面和重复连接不会创建重复监听。"],
+["GetX、Provider、Riverpod 怎么选？","看团队技术栈、异步流、测试与维护成本。GetX 快速集成；Provider 轻量；Riverpod 的依赖声明、异步状态与测试替换更系统。"],
+["如何设计断线重连？","区分主动断开和意外断连；清理旧订阅；有上限地退避重试；成功后重新发现服务和订阅；记录原因与次数。"],
+["运动器材协议解析要确认什么？","UUID、字段长度、字节序、符号、缩放比例、单位、校验、序号、分包规则、错误码、协议版本和命令应答。"]
+];
+let idx=0;const q=document.getElementById('flashQ'),a=document.getElementById('flashA'),f=document.getElementById('flashcard');
+document.getElementById('flip').addEventListener('click',()=>f.classList.toggle('show'));
+document.getElementById('nextCard').addEventListener('click',()=>{idx=(idx+1)%qa.length;q.textContent=qa[idx][0];a.textContent=qa[idx][1];f.classList.remove('show')});
+function setupChecks(id,progress){const root=document.getElementById(id),out=document.getElementById(progress);function update(){const boxes=[...root.querySelectorAll('input[type=checkbox]')];const done=boxes.filter(x=>x.checked).length;out.textContent=`已完成 ${done} / ${boxes.length} 项`;out.style.color=done===boxes.length?'#13795b':''}root.addEventListener('change',update);update()}
+setupChecks('techChecks','techProgress');setupChecks('clientChecks','clientProgress');
+</script>
+</body></html>
