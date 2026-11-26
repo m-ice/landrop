@@ -99,7 +99,8 @@ test('chat navigation and assets are available before joining the host', async (
   assert.match(html, /<meta name="landrop-chat-signaling" content="lan">/);
   assert.match(page.headers.get('content-security-policy'), /media-src blob:/);
   for (const [file, type] of [['style.css', 'text/css'], ['peer.js', 'text/javascript'],
-    ['qrcode.js', 'text/javascript'], ['offline.js', 'text/javascript'],
+    ['qrcode.js', 'text/javascript'], ['jsqr.js', 'text/javascript'], ['qr-reader.js', 'text/javascript'],
+    ['offline.js', 'text/javascript'],
     ['group.js', 'text/javascript'], ['app.js', 'text/javascript']]) {
     const asset = await request(`/chat/${file}`, { method: 'HEAD' });
     assert.equal(asset.status, 200);

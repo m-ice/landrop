@@ -35,6 +35,8 @@
   let answer = null;
   let hostInbox = null;
   let handoffState = '';
+  let cameraScan = null;
+  let qrFileMode = null;
   let shareToken = '';
   let shareQr = null;
   let room = null;
@@ -93,22 +95,20 @@
       $('groupRequestCount').textContent = groupRequests.length > 1 ? `另有 ${groupRequests.length - 1} 份申请。` : '';
     }
     $('pageDescription').textContent = automatic ? '在同一个 Wi-Fi 或局域网内，群聊并互发文字、照片、视频和文件。' : '在同一个 Wi-Fi 或局域网内，一对一发送文字、照片、视频和文件。';
-    $('deviceNameField').hidden = automatic;
-    $('joinForm').hidden = automatic;
+    $('manualJoinControls').hidden = automatic;
     $('lanHostHint').hidden = automatic || !served;
-    $('joinNameField').hidden = Boolean(room);
     $('joiningDevice').hidden = !group;
     $('joiningDevice').textContent = localGroupName ? `我的设备 ${localGroupName}` : '';
-    $('manualAnswer').hidden = Boolean(room);
+    $('answerReceiver').hidden = automatic;
     $('setupHint').textContent = automatic ? '创建会话并分享链接或二维码，收到申请后点同意。每个会话最多 6 台设备。' : '当前为一对一配对。创建后，请把邀请链接或二维码发给对方。';
-    $('joinHint').textContent = room ? '点击申请加入，等待对方确认。' : '生成申请后，把申请链接发给创建方。';
+    $('joinHint').textContent = room ? '点击申请加入，等待对方确认。' : '申请后，请把二维码展示给创建方。';
     $('hostHint').textContent = room
       ? '请对方扫描二维码或打开邀请链接，申请会出现在此处。'
-      : '请对方把申请链接发给你。保留此页，在同一个浏览器打开申请链接，回来点同意。';
+      : '请对方打开邀请并点申请加入。扫描对方的申请二维码，或读取对方发来的二维码图片。';
     $('handoffHint').textContent = {
       checking: '正在查找创建会话的标签页…',
       delivered: '申请已转交，请回到创建会话的标签页点击同意。',
-      failed: '未找到等待申请的标签页。请在创建会话的浏览器打开此链接，或在原页面展开手动粘贴。'
+      failed: '未找到等待申请的标签页。请在创建会话的浏览器打开此链接，或回到原页面扫描申请二维码。'
     }[handoffState] || '';
     $('handoffButton').hidden = handoffState !== 'failed';
     $('copyHandoffButton').hidden = handoffState !== 'failed';
@@ -118,8 +118,9 @@
     reset.disabled = busy;
     reset.textContent = hostControls ? '结束会话' : group?.connected ? '退出会话' : status === 'connected' ? '断开连接' : '返回连接选项';
     for (const id of ['createButton', 'requestButton', 'approveButton', 'rejectButton', 'handoffButton']) $(id).disabled = busy || !Peer || !window.RTCPeerConnection || (automatic && !Room);
-    $('joinForm').querySelector('button').disabled = busy || !Peer || !window.RTCPeerConnection;
-    $('answerForm').querySelector('button').disabled = busy;
+    for (const id of ['scanInviteButton', 'pickInviteImageButton', 'scanAnswerButton', 'pickAnswerImageButton']) {
+      $(id).disabled = busy || !Peer || !window.RTCPeerConnection;
+    }
     $('connectionStatus').dataset.state = status;
     const label = hostControls && status === 'waiting' ? '等待加入' : statusNames[status];
     if ($('connectionLabel').textContent !== label) $('connectionLabel').textContent = label;
@@ -155,14 +156,6 @@
     return online;
   }
 
-  function nameFrom(input) {
-    const name = input.value.trim() || defaultName;
-    $('deviceName').value = name;
-    $('joinName').value = name;
-    try { localStorage.setItem('landrop-chat-name', name); } catch { /* Storage is optional. */ }
-    return name;
-  }
-
   function inputToken(input, key) {
     const value = input.trim();
     if (value.startsWith('LC1.')) return value;
@@ -171,7 +164,7 @@
       const candidate = new URLSearchParams(url.hash.slice(1)).get(key);
       if (candidate?.startsWith('LC1.')) return candidate;
     } catch { /* Fall through to the field message. */ }
-    throw new Error(key === 'invite' ? '请粘贴完整的邀请链接或连接码。' : '请粘贴完整的申请链接或连接码。');
+    throw new Error(key === 'invite' ? '请读取邻传的邀请二维码。' : '请读取邻传的申请二维码。');
   }
 
   function shareUrl(key, token) {
@@ -225,15 +218,14 @@
     }));
     if (origins.includes(existingOrigin)) address.value = existingOrigin;
     $('shareAddressField').hidden = origins.length < 2;
-    $('copyTokenButton').hidden = roomInvite;
     $('shareTitle').textContent = invitation ? '分享邀请' : '分享加入申请';
     const instructions = roomInvite ? '请对方扫码或打开链接，点申请加入。收到申请后，你可以同意或拒绝。' :
-      invitation ? '用另一台设备扫描二维码或打开链接。' : '请创建方在创建会话的浏览器打开此链接，再回到原页面确认。';
-    const offlineHint = !served ? '无外网时，请复制链接或连接码，粘贴到对方已打开的离线网页。' : '';
+      invitation ? '用另一台设备扫描二维码或打开链接。' : '请创建方在原页面扫描此二维码，或用同一个浏览器打开此链接。';
+    const offlineHint = !served ? '无外网时，请在对方已打开的邻传页面读取二维码。' : '';
     let loopbackHint = '';
     if (loopback && !origins.length) {
       loopbackHint = roomInvite ? '当前只能生成本机地址。请确认主机已连接局域网，并允许其他设备访问邻传。' :
-        '本机地址在另一台设备上无法打开。可复制连接码，或用主机的局域网地址打开此页后重新生成。';
+        '本机地址在另一台设备上无法打开。请在对方已打开的邻传页面读取二维码。';
     }
     $('shareHint').textContent = instructions + offlineHint + loopbackHint;
     if (!$('shareDialog').open) $('shareDialog').showModal();
@@ -246,6 +238,7 @@
     $('shareLink').value = url;
     $('qrCanvas').setAttribute('aria-label', key === 'answer' ? '申请链接二维码' : '邀请链接二维码');
     $('qrCanvas').hidden = true;
+    $('saveQrButton').hidden = true;
     $('qrHint').hidden = true;
     announce('', false, $('shareStatus'));
     try { paintQr(url); } catch {
@@ -256,14 +249,23 @@
       }
       try {
         paintQr(token);
-        $('qrCanvas').setAttribute('aria-label', '连接码二维码');
-        $('qrHint').textContent = '请扫码复制连接码，再粘贴到聊天网页。';
+        $('qrHint').textContent = '请在邻传聊天中读取此二维码。';
       } catch {
         shareQr = null;
-        $('qrHint').textContent = '无法生成二维码，请复制链接或连接码。';
+        $('qrHint').textContent = '无法生成二维码，请复制链接。';
       }
       $('qrHint').hidden = false;
     }
+    $('saveQrButton').hidden = $('qrCanvas').hidden;
+  }
+
+  function saveQrImage() {
+    const canvas = $('qrCanvas');
+    if (canvas.hidden) return;
+    const link = element('a');
+    link.download = $('shareTitle').textContent === '分享加入申请' ? '邻传申请二维码.png' : '邻传邀请二维码.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
   }
 
   async function copy(value, target = $('notice')) {
@@ -336,8 +338,8 @@
     stage = 'setup';
     statusMessage = '';
     if ($('shareDialog').open) $('shareDialog').close();
-    $('inviteInput').value = $('answerInput').value = $('messageInput').value = '';
-    $('manualAnswer').open = false;
+    closeScanner();
+    $('messageInput').value = '';
     attachments.length = 0;
     renderAttachments();
     announce(wasConnected ? '连接已断开。' : '');
@@ -452,13 +454,17 @@
     const key = expected === 'invite' ? 'invite' : 'answer';
     const token = inputToken(input, key);
     const info = await Peer.readToken(token);
-    if (info.kind !== expected) throw new Error(expected === 'invite' ? '这是加入申请，请交给会话发起方。' : '这是邀请链接，请粘贴对方生成的加入申请。');
+    if (info.kind !== expected) throw new Error(expected === 'invite' ? '这是加入申请，请交给会话创建方。' : '这是邀请二维码，请扫描对方的申请二维码。');
     return { token, info };
   }
 
-  async function inspectOffer(input) {
-    offer = await read(input, 'invite');
+  async function inspectOffer(input, stillOpen = () => true) {
+    const pending = await read(input, 'invite');
+    if (!stillOpen()) return;
+    offer = pending;
+    closeScanner();
     showOffer();
+    if (!busy) $('requestButton').focus();
   }
 
   async function openRoom(id) {
@@ -483,13 +489,12 @@
 
   function showOffer() {
     $('inviterName').textContent = offer.info.name;
-    $('joinName').value = $('deviceName').value;
     stage = 'invite';
     render();
   }
 
   async function createInvite() {
-    const session = automatic ? bindGroup(true) : bindPeer(nameFrom($('deviceName')));
+    const session = automatic ? bindGroup(true) : bindPeer(defaultName);
     try {
       if (automatic) {
         const created = await session.create();
@@ -518,7 +523,7 @@
       await group.apply(room.id);
       return;
     }
-    const session = bindPeer(nameFrom($('joinName')));
+    const session = bindPeer(defaultName);
     try {
       const token = await session.createRequest(offer.token);
       answer = { token };
@@ -536,16 +541,101 @@
     }
   }
 
-  async function inspectAnswer(input) {
+  async function inspectAnswer(input, stillOpen = () => true) {
     const pending = await read(input, 'request');
+    if (!stillOpen()) return;
     if (!peer || stage !== 'host' || pending.info.sessionId !== peer.sessionId) throw new Error('这份加入申请不属于当前会话。请回到生成邀请的页面。');
     answer = pending;
-    $('manualAnswer').open = false;
+    closeScanner();
     if ($('shareDialog').open) $('shareDialog').close();
     $('requesterName').textContent = answer.info.name;
     stage = 'review';
     render();
     if (!busy) $('approveButton').focus();
+  }
+
+  function canReadQr(mode) {
+    return !automatic && (mode === 'invite' ? stage === 'setup' : mode === 'request' && stage === 'host' && peer && !room);
+  }
+
+  function acceptQr(mode, value, stillOpen) {
+    return mode === 'invite' ? inspectOffer(value, stillOpen) : inspectAnswer(value, stillOpen);
+  }
+
+  function stopCameraScan() {
+    if (!cameraScan) return;
+    clearTimeout(cameraScan.timer);
+    cameraScan.stream?.getTracks().forEach(track => track.stop());
+    cameraScan = null;
+    const video = $('answerScanVideo');
+    video.srcObject = null;
+    video.hidden = true;
+  }
+
+  function closeScanner() {
+    stopCameraScan();
+    if ($('answerScanDialog').open) $('answerScanDialog').close();
+  }
+
+  async function scanCameraFrame(scan) {
+    const active = () => cameraScan === scan && $('answerScanDialog').open && canReadQr(scan.mode);
+    if (!active()) return;
+    try {
+      const value = await window.readLanChatQr($('answerScanVideo'));
+      if (active() && value && value !== scan.lastValue) {
+        scan.lastValue = value;
+        await acceptQr(scan.mode, value, active);
+      } else if (!value) {
+        scan.lastValue = '';
+      }
+    } catch (error) {
+      if (active()) $('answerScanHint').textContent = error.message || '未能读取二维码，请对准二维码重试。';
+    }
+    if (active()) scan.timer = setTimeout(() => { void scanCameraFrame(scan); }, 240);
+  }
+
+  async function openScanner(mode) {
+    if (busy || !canReadQr(mode) || $('answerScanDialog').open) return;
+    const scan = { mode, stream: null, timer: null, lastValue: '' };
+    cameraScan = scan;
+    $('answerScanTitle').textContent = mode === 'invite' ? '扫描邀请二维码' : '扫描申请二维码';
+    $('answerScanHint').textContent = '正在打开摄像头…';
+    $('answerScanDialog').showModal();
+    try {
+      if (!navigator.mediaDevices?.getUserMedia || typeof window.readLanChatQr !== 'function') {
+        throw new Error('摄像头不可用');
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 960 }, height: { ideal: 720 } },
+        audio: false
+      });
+      if (cameraScan !== scan || !$('answerScanDialog').open) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      scan.stream = stream;
+      const video = $('answerScanVideo');
+      video.srcObject = stream;
+      video.hidden = false;
+      await video.play();
+      if (cameraScan !== scan) return;
+      $('answerScanHint').textContent = '将二维码完整放入画面。';
+      void scanCameraFrame(scan);
+    } catch {
+      if (cameraScan !== scan) return;
+      scan.stream?.getTracks().forEach(track => track.stop());
+      const video = $('answerScanVideo');
+      video.srcObject = null;
+      video.hidden = true;
+      $('answerScanHint').textContent = '无法使用摄像头。请选择对方发来的二维码图片。';
+    }
+  }
+
+  function pickQrImage(mode) {
+    if (busy || !canReadQr(mode)) return;
+    closeScanner();
+    qrFileMode = mode;
+    $('answerQrFile').click();
   }
 
   function answerChannel(sessionId) {
@@ -609,7 +699,6 @@
   async function reject() {
     if (group) { await decideGroupRequest('rejected'); return; }
     answer = null;
-    $('answerInput').value = '';
     stage = 'host';
     announce('已拒绝本次申请。你仍可查看其他设备的申请。');
     render();
@@ -822,8 +911,6 @@
     if (batch.length) await sendFiles(current, batch);
   }
 
-  $('deviceName').value = defaultName;
-  try { $('deviceName').value = localStorage.getItem('landrop-chat-name') || defaultName; } catch { /* Storage is optional. */ }
   $('fileTransferLink').hidden = !served;
   $('offlineButton').hidden = !served || !window.downloadLanChat;
   $('offlineButton').addEventListener('click', async () => {
@@ -833,23 +920,35 @@
     finally { $('offlineButton').disabled = false; }
   });
   $('createButton').addEventListener('click', () => task(createInvite, '正在生成邀请链接…'));
-  $('joinForm').addEventListener('submit', event => {
-    event.preventDefault();
-    task(() => inspectOffer($('inviteInput').value));
+  $('scanInviteButton').addEventListener('click', () => openScanner('invite'));
+  $('pickInviteImageButton').addEventListener('click', () => pickQrImage('invite'));
+  $('scanAnswerButton').addEventListener('click', () => openScanner('request'));
+  $('pickAnswerImageButton').addEventListener('click', () => pickQrImage('request'));
+  $('answerScanFileButton').addEventListener('click', () => pickQrImage(cameraScan?.mode));
+  $('answerScanDialog').addEventListener('close', () => {
+    if (!$('answerScanDialog').open) stopCameraScan();
+  });
+  $('answerQrFile').addEventListener('change', event => {
+    const file = event.target.files[0];
+    event.target.value = '';
+    const mode = qrFileMode;
+    qrFileMode = null;
+    if (!file || !canReadQr(mode)) return;
+    task(async () => {
+      const value = await window.readLanChatQr(file);
+      if (!value) throw new Error('图片里没有读到二维码。请选择完整、清晰的邻传二维码。');
+      await acceptQr(mode, value, () => canReadQr(mode));
+    }, '正在读取二维码…');
   });
   $('requestButton').addEventListener('click', () => task(createRequest, '正在生成加入申请…'));
   $('showInviteButton').addEventListener('click', () => room ? openShare('room', room.id) : openShare('invite', offer.token));
   $('showAnswerButton').addEventListener('click', () => openShare('answer', answer.token));
-  $('answerForm').addEventListener('submit', event => {
-    event.preventDefault();
-    task(() => inspectAnswer($('answerInput').value));
-  });
   $('approveButton').addEventListener('click', () => task(approve, '正在建立连接…'));
   $('rejectButton').addEventListener('click', () => task(reject));
   $('handoffButton').addEventListener('click', () => task(handOffAnswer));
   $('copyHandoffButton').addEventListener('click', () => copy(shareUrl('answer', answer.token)));
   $('resetButton').addEventListener('click', reset);
-  $('copyTokenButton').addEventListener('click', () => copy(shareToken, $('shareStatus')));
+  $('saveQrButton').addEventListener('click', saveQrImage);
   $('copyLinkButton').addEventListener('click', () => copy($('shareLink').value, $('shareStatus')));
   $('shareAddress').addEventListener('change', () => updateShareCode('room', shareToken));
   window.addEventListener('resize', drawQr);
@@ -865,7 +964,7 @@
     if (!$('sendButton').disabled) $('composer').requestSubmit();
   });
   $('composer').addEventListener('submit', sendMessage);
-  window.addEventListener('pagehide', () => { closePeer(); clearHistory(); });
+  window.addEventListener('pagehide', () => { closeScanner(); closePeer(); clearHistory(); });
   window.addEventListener('pageshow', event => { if (event.persisted) reset(); });
 
   async function readHash() {

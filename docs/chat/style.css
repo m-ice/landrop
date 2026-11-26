@@ -99,14 +99,11 @@ label { display: block; margin-bottom: 6px; font-size: .9rem; font-weight: 650; 
 .guidance { margin-top: 6px; color: var(--muted); font-size: .9rem; }
 .guidance strong { color: var(--ink); }
 .mode-hint { margin: 0 0 11px; }
-#joinNameField[hidden] + #requestButton { margin-top: 14px; }
 .field { margin-bottom: 11px; }
 .spaced { margin-top: 14px; }
 .following { margin-top: 8px; }
 .separated { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
-.manual-answer { margin-top: 12px; padding-top: 4px; border-top: 1px solid var(--line); }
-.manual-answer summary { min-height: 44px; padding: 10px 0; color: var(--accent); cursor: pointer; font-size: .9rem; font-weight: 650; }
-.manual-answer form { margin-top: 8px; }
+.qr-actions { display: grid; gap: 4px; margin-top: 10px; }
 .button, .text-button {
   display: inline-flex;
   min-height: 44px;
@@ -185,6 +182,7 @@ dialog::backdrop { background: #0a2019a3; }
 .dialog-heading h2 { font-size: 1.2rem; }
 .qr-wrap { display: grid; justify-items: center; margin-block: 12px; }
 .qr-wrap canvas { display: block; max-width: 100%; height: auto; image-rendering: pixelated; }
+.qr-camera { display: block; width: 100%; max-height: 48dvh; margin-top: 12px; border-radius: 9px; background: var(--quiet); object-fit: contain; }
 .share-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 @media (max-width: 740px) {
   .shell { width: calc(100% - 32px); padding-bottom: 22px; }

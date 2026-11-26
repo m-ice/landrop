@@ -22,6 +22,8 @@ const CHAT_ASSETS = new Map([
   ['/chat/index.html', ['index.html', 'text/html']],
   ['/chat/style.css', ['style.css', 'text/css']],
   ['/chat/qrcode.js', ['qrcode.js', 'text/javascript']],
+  ['/chat/jsqr.js', ['jsqr.js', 'text/javascript']],
+  ['/chat/qr-reader.js', ['qr-reader.js', 'text/javascript']],
   ['/chat/peer.js', ['peer.js', 'text/javascript']],
   ['/chat/app.js', ['app.js', 'text/javascript']],
   ['/chat/group.js', ['group.js', 'text/javascript']],

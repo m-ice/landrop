@@ -8,12 +8,14 @@
   <meta name="description" content="在同一个局域网里聊天，直接发送消息、图片、视频和文件。">
   <title>邻传 · 局域网聊天</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%23267c5b'/%3E%3Cpath d='M13 14h22v15H23l-6 5v-5h-4z' fill='none' stroke='white' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=qr">
   <script defer src="qrcode.js"></script>
+  <script defer src="jsqr.js"></script>
+  <script defer src="qr-reader.js"></script>
   <script defer src="peer.js"></script>
   <script defer src="group.js"></script>
   <script defer src="offline.js"></script>
-  <script defer src="app.js"></script>
+  <script defer src="app.js?v=qr"></script>
 </head>
 <body>
   <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -45,35 +47,34 @@
           <header class="section-heading"><svg class="icon" aria-hidden="true"><use href="#i-device"/></svg><h2 id="sessionTitle">设备连接</h2></header>
           <div class="session-body">
             <div id="setupPanel">
-              <div class="field" id="deviceNameField"><label for="deviceName">我的设备名称</label><input id="deviceName" maxlength="40" autocomplete="off" value="我的设备"></div>
               <p class="guidance mode-hint" id="setupHint">创建会话后，把邀请链接或二维码发给对方。</p>
               <button class="button primary wide" id="createButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>创建会话</button>
               <p class="guidance spaced" id="lanHostHint" hidden>想自动接收申请或创建群聊？用 <code>node server.js</code> 启动邻传，再打开局域网聊天。<a href="https://github.com/m-ice/landrop#局域网聊天">查看启动方法</a></p>
-              <form id="joinForm" class="separated">
-                <label for="inviteInput">已有邀请</label>
-                <div class="field"><textarea id="inviteInput" rows="2" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="粘贴邀请链接或连接码" required></textarea></div>
-                <button class="button secondary wide" type="submit">查看邀请</button>
-              </form>
+              <div class="separated" id="manualJoinControls" hidden>
+                <h3>已有邀请</h3>
+                <div class="qr-actions">
+                  <button class="button secondary wide" id="scanInviteButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>扫描邀请二维码</button>
+                  <button class="text-button wide" id="pickInviteImageButton" type="button">读取邀请二维码图片</button>
+                </div>
+              </div>
             </div>
             <div id="invitePanel" hidden>
               <h3>加入会话</h3>
-              <p class="guidance"><strong id="inviterName"></strong> 邀请你聊天。<span id="joinHint">生成申请后，请把链接或二维码交还给对方确认。</span></p>
+              <p class="guidance"><strong id="inviterName"></strong> 邀请你聊天。<span id="joinHint">申请后出示二维码，或把申请链接发给创建者。</span></p>
               <p class="guidance" id="joiningDevice" hidden></p>
-              <div class="field spaced" id="joinNameField"><label for="joinName">我的设备名称</label><input id="joinName" maxlength="40" autocomplete="off"></div>
-              <button class="button primary wide" id="requestButton" type="button">申请加入</button>
+              <button class="button primary wide spaced" id="requestButton" type="button">申请加入</button>
             </div>
             <div id="hostPanel" hidden>
               <h3>邀请另一台设备</h3>
-              <p class="guidance" id="hostHint">请对方将申请链接发给你。保持本标签页打开，用同一个浏览器打开申请链接，然后回到这里确认。</p>
+              <p class="guidance" id="hostHint">请对方打开邀请并生成申请。你可以扫描对方的申请二维码，或用同一个浏览器打开对方发来的申请链接。</p>
               <button class="button secondary wide spaced" id="showInviteButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>邀请链接与二维码</button>
-              <details id="manualAnswer" class="manual-answer" hidden>
-                <summary>无法打开申请链接？手动粘贴</summary>
-                <form id="answerForm">
-                  <label for="answerInput">加入申请链接</label>
-                  <div class="field"><textarea id="answerInput" rows="2" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="粘贴完整的申请链接" required></textarea></div>
-                  <button class="button secondary wide" type="submit">查看申请</button>
-                </form>
-              </details>
+              <div class="separated" id="answerReceiver" hidden>
+                <h3>接收加入申请</h3>
+                <div class="qr-actions">
+                  <button class="button secondary wide" id="scanAnswerButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>扫描申请二维码</button>
+                  <button class="text-button wide" id="pickAnswerImageButton" type="button">读取二维码图片</button>
+                </div>
+              </div>
             </div>
             <div id="reviewPanel" hidden>
               <h3>收到加入申请</h3>
@@ -86,7 +87,7 @@
             </div>
             <div id="requestPanel" hidden>
               <h3>把申请交给对方</h3>
-              <p class="guidance">把申请链接发给创建者，请对方用创建会话的浏览器打开链接，再回到原标签页确认。</p>
+              <p class="guidance">请创建者扫描申请二维码。也可以把二维码图片或申请链接发给对方。</p>
               <button class="button secondary wide spaced" id="showAnswerButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>申请链接与二维码</button>
             </div>
             <div id="pendingPanel" hidden>
@@ -136,13 +137,20 @@
     </main>
     <noscript><p class="notice">请启用 JavaScript 后使用局域网聊天。</p></noscript>
   </div>
+  <input type="file" id="answerQrFile" accept="image/*" hidden>
+  <dialog id="answerScanDialog" aria-labelledby="answerScanTitle">
+    <header class="dialog-heading"><h2 id="answerScanTitle">扫描二维码</h2><form method="dialog"><button class="button secondary icon-button" aria-label="关闭" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></form></header>
+    <p class="guidance" id="answerScanHint" role="status">正在打开摄像头…</p>
+    <video id="answerScanVideo" class="qr-camera" aria-label="摄像头预览" autoplay muted playsinline hidden></video>
+    <div class="share-actions"><button class="button secondary" id="answerScanFileButton" type="button">读取二维码图片</button></div>
+  </dialog>
   <dialog id="shareDialog" aria-labelledby="shareTitle">
     <header class="dialog-heading"><h2 id="shareTitle"></h2><form method="dialog"><button class="button secondary icon-button" aria-label="关闭" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></form></header>
     <p class="guidance" id="shareHint"></p>
     <div class="field spaced" id="shareAddressField" hidden><label for="shareAddress">局域网地址</label><select id="shareAddress"></select></div>
     <div class="qr-wrap"><canvas id="qrCanvas" role="img" aria-label="会话二维码" hidden></canvas><p id="qrHint" class="guidance" hidden></p></div>
     <label for="shareLink">链接</label><textarea id="shareLink" rows="2" readonly spellcheck="false"></textarea>
-    <div class="share-actions"><button class="button secondary" id="copyTokenButton" type="button">复制连接码</button><button class="button primary" id="copyLinkButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>复制链接</button></div>
+    <div class="share-actions"><button class="button secondary" id="saveQrButton" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>保存二维码</button><button class="button primary" id="copyLinkButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>复制链接</button></div>
     <p class="guidance spaced" id="shareStatus" role="status" hidden></p>
   </dialog>
 </body>
