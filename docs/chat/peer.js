@@ -162,11 +162,13 @@
     #incoming = null;
     #receivedBytes = 0;
     #receivedCount = 0;
+    #reserveIncoming;
     #waiters = new Set();
 
-    constructor(name) {
+    constructor(name, { reserveIncoming } = {}) {
       super();
       this.#name = cleanName(typeof name === 'string' ? name : '', 40, '我的设备');
+      this.#reserveIncoming = reserveIncoming;
     }
 
     get connected() {
@@ -247,7 +249,7 @@
       this.#channel.send('T' + text);
     }
 
-    async sendFile(file, progress = () => {}) {
+    async sendFile(file, progress = () => {}, readChunk = (start, end) => file.slice(start, end).arrayBuffer()) {
       if (!(file instanceof Blob) || file.size > FILE_LIMIT) throw new Error('单个附件需在 256 MiB 以内。');
       if (!this.connected) throw new Error('请先连接设备。');
       if (this.#outgoing) throw new Error('请等待当前附件发送完毕。');
@@ -268,10 +270,11 @@
           mime: cleanMime(file.type), size: file.size
         });
         await this.#waitUntil(() => transfer.accepted, transfer);
+        const hasRoom = () => this.#channel.bufferedAmount < SEND_WINDOW &&
+          transfer.sent - transfer.received < SEND_WINDOW;
         while (transfer.sent < file.size) {
-          await this.#waitUntil(() => this.#channel.bufferedAmount < SEND_WINDOW &&
-            transfer.sent - transfer.received < SEND_WINDOW, transfer);
-          const part = await file.slice(transfer.sent, transfer.sent + CHUNK_SIZE).arrayBuffer();
+          await this.#waitUntil(hasRoom, transfer);
+          const part = await readChunk(transfer.sent, Math.min(file.size, transfer.sent + CHUNK_SIZE));
           if (!this.connected || transfer.error) throw transfer.error || new Error('连接已断开。');
           this.#channel.send(part);
           transfer.sent += part.byteLength;
@@ -377,6 +380,8 @@
     }
 
     #waitUntil(condition, transfer) {
+      // Arm a stall timer only when the channel or the receiver needs time to catch up.
+      if (this.connected && !transfer?.error && condition()) return Promise.resolve();
       return new Promise((resolve, reject) => {
         const finish = error => {
           clearTimeout(timeout);
@@ -460,8 +465,13 @@
         this.#sendControl({ t: 'reject', id: msg.id, reason: 'limit' }, true);
         return;
       }
+      const release = this.#reserveIncoming?.(msg.size);
+      if (release === null) {
+        this.#sendControl({ t: 'reject', id: msg.id, reason: 'limit' }, true);
+        return;
+      }
       const transfer = {
-        id: msg.id, name: cleanFilename(msg.name), type: cleanMime(msg.mime), size: msg.size,
+        id: msg.id, name: cleanFilename(msg.name), type: cleanMime(msg.mime), size: msg.size, release,
         received: 0, lastAck: 0, chunks: [], parts: [], lastActivity: Date.now(), timer: null
       };
       this.#incoming = transfer;
@@ -529,9 +539,10 @@
     }
 
     #abortIncoming(message, notify = true) {
-      const { id, name, timer } = this.#incoming;
+      const { id, name, timer, release } = this.#incoming;
       clearTimeout(timer);
       this.#incoming = null;
+      release?.();
       if (notify) this.#sendControl({ t: 'reject', id }, true);
       this.#emit('transfererror', { id, name, message });
     }

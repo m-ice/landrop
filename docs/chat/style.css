@@ -45,11 +45,11 @@ h1, h2, h3, p, ol, ul { margin: 0; }
 h1, h2, h3 { line-height: 1.35; }
 p, strong { overflow-wrap: anywhere; }
 a { color: var(--accent); text-underline-offset: .18em; }
-textarea, button, input { font: inherit; color: inherit; }
+textarea, button, input, select { font: inherit; color: inherit; }
 a, button { touch-action: manipulation; }
 button { cursor: pointer; }
 button:disabled, textarea:disabled { cursor: default; }
-textarea, input {
+textarea, input, select {
   width: 100%;
   min-width: 0;
   padding: 9px 12px;
@@ -93,11 +93,13 @@ label { display: block; margin-bottom: 6px; font-size: .9rem; font-weight: 650; 
 .session { overflow: clip; }
 .section-heading { display: flex; align-items: center; gap: 9px; min-height: 63px; padding: 14px 19px; border-bottom: 1px solid var(--line); }
 .section-heading .icon { color: var(--accent); }
-.section-heading h2, .thread-heading h2 { font-size: 1rem; }
+.section-heading h2, .thread-heading h2 { font-size: 1.25rem; }
 .session-body { padding: 17px 19px 0; }
-.session-body h3, .thread-empty h3 { font-size: 1.06rem; }
+.session-body h3, .thread-empty h3 { font-size: 1rem; }
 .guidance { margin-top: 6px; color: var(--muted); font-size: .9rem; }
 .guidance strong { color: var(--ink); }
+.mode-hint { margin: 0 0 11px; }
+#joinNameField[hidden] + #requestButton { margin-top: 14px; }
 .field { margin-bottom: 11px; }
 .spaced { margin-top: 14px; }
 .following { margin-top: 8px; }
@@ -125,6 +127,10 @@ label { display: block; margin-bottom: 6px; font-size: .9rem; font-weight: 650; 
 .wide { width: 100%; }
 .icon-button { width: 44px; flex: none; padding: 0; }
 .pair-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; }
+.member-list { display: grid; gap: 6px; padding: 8px 0 0; list-style: none; }
+.member-list li { display: flex; justify-content: space-between; gap: 8px; font-size: .875rem; }
+.member-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.member-status { flex: none; color: var(--muted); }
 .session-foot { display: flex; align-items: center; gap: 7px; min-height: 53px; margin-top: 17px; padding: 10px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
 .session-foot .icon { width: 15px; height: 15px; }
 .conversation { display: flex; flex-direction: column; height: clamp(435px, calc(100dvh - 220px), 830px); }

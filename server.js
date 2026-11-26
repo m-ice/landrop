@@ -14,6 +14,7 @@ const os = require('node:os');
 const crypto = require('node:crypto');
 const { Transform } = require('node:stream');
 const { pipeline } = require('node:stream/promises');
+const { createChatSignaling } = require('./chat-signaling');
 
 const ROOT = __dirname;
 const CHAT_ASSETS = new Map([
@@ -23,6 +24,7 @@ const CHAT_ASSETS = new Map([
   ['/chat/qrcode.js', ['qrcode.js', 'text/javascript']],
   ['/chat/peer.js', ['peer.js', 'text/javascript']],
   ['/chat/app.js', ['app.js', 'text/javascript']],
+  ['/chat/group.js', ['group.js', 'text/javascript']],
   ['/chat/offline.js', ['offline.js', 'text/javascript']],
 ]);
 const PORT = positiveNumber('PORT', 8080, 65535);
@@ -42,13 +44,33 @@ const RUN_DIR = path.join(DATA_ROOT, `run-${Date.now()}-${crypto.randomBytes(4).
 const sessions = new Map();
 const transfers = new Map();
 const attempts = new Map();
-const localIPs = [...new Set(Object.values(os.networkInterfaces()).flat()
-  .filter(n => n && n.family === 'IPv4' && !n.internal).map(n => n.address))];
+const localInterfaces = Object.entries(os.networkInterfaces()).flatMap(([name, addresses]) =>
+  (addresses || []).filter(address => address.family === 'IPv4' && !address.internal)
+    .map(({ address }) => ({ name, address })));
+const localIPs = [...new Set(localInterfaces.map(({ address }) => address))];
 const allowedHosts = new Set(['localhost', '127.0.0.1', '[::1]', ...localIPs,
   ...(process.env.ALLOWED_HOSTS || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean)]);
 if (HOST !== '0.0.0.0' && HOST !== '::') allowedHosts.add(HOST.toLowerCase());
 let server;
 let closing = false;
+const chatSignaling = createChatSignaling({ assert, json, readJson, cleanText, joinOrigins: chatJoinOrigins });
+
+function interfacePriority({ name, address }) {
+  const privateAddress = /^(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(address);
+  const physical = /^(?:en\d|eno|ens|enp|eth|wl|wi[- ]?fi)/i.test(name);
+  const linkLocal = address.startsWith('169.254.');
+  return 2 * Number(privateAddress) + Number(physical) - 4 * Number(linkLocal);
+}
+
+function chatJoinOrigins() {
+  const listener = server.address();
+  if (!listener) return [];
+  const reachable = listener.address === '0.0.0.0' || listener.address === '::'
+    ? localInterfaces
+    : localInterfaces.filter(({ address }) => address === listener.address);
+  const sorted = [...reachable].sort((a, b) => interfacePriority(b) - interfacePriority(a));
+  return [...new Set(sorted.map(({ address }) => `http://${address}:${listener.port}`))];
+}
 
 function positiveNumber(name, fallback, max) {
   const n = Number(process.env[name] || fallback);
@@ -260,10 +282,17 @@ async function route(req, res) {
     if (chatAsset) {
       const [name, type] = chatAsset;
       if (type === 'text/html') securityHeaders(res, true);
-      const content = await fsp.readFile(path.join(ROOT, 'docs', 'chat', name));
+      let content = await fsp.readFile(path.join(ROOT, 'docs', 'chat', name));
+      if (type === 'text/html') {
+        content = Buffer.from(content.toString('utf8').replace('</head>',
+          '  <meta name="landrop-chat-signaling" content="lan">\n</head>'));
+      }
       res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8`, 'Content-Length': content.length });
       res.end(method === 'HEAD' ? undefined : content); return;
     }
+  }
+  if (url.pathname.startsWith('/api/chat/')) {
+    await chatSignaling.handle(req, res, url.pathname); return;
   }
   if (url.pathname === '/favicon.ico') { res.writeHead(204); res.end(); return; }
   if (url.pathname === '/api/health' && method === 'GET') { json(res, 200, { ok: true, app: 'landrop' }); return; }
@@ -357,6 +386,7 @@ async function main() {
   server.listen(PORT, HOST, () => {
     console.log('\n  邻传 LAN DROP  ·  局域网文件中转\n');
     console.log(`  本机访问:  http://localhost:${PORT}`);
+    console.log(`  局域网聊天: http://localhost:${PORT}/chat/`);
     if (HOST === '127.0.0.1' || HOST === 'localhost') console.log('  当前仅监听本机，其他设备无法访问。');
     else for (const ip of localIPs) console.log(`  局域网:    http://${ip}:${PORT}`);
     console.log(`\n  访问码:    ${ACCESS_CODE}`);
@@ -372,6 +402,7 @@ async function main() {
     for (const t of transfers.values()) if (!t.busy && now - t.updatedAt > TTL_MS) removeTransfer(t).catch(console.error);
     for (const [key, s] of sessions) if (s.expiresAt < now) sessions.delete(key);
     for (const [key, value] of attempts) if (now - value.since > 15 * 60000) attempts.delete(key);
+    chatSignaling.prune(now);
   }, 60000);
   cleanup.unref();
   async function shutdown() {

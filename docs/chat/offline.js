@@ -12,6 +12,7 @@ window.downloadLanChat = async function () {
 
   const source = await readAsset(pageUrl);
   const page = new DOMParser().parseFromString(source, 'text/html');
+  page.querySelector('meta[name="landrop-chat-signaling"]')?.remove();
   const assets = page.querySelectorAll('link[rel="stylesheet"], script[src]');
   const replacements = await Promise.all([...assets].map(async asset => {
     const isScript = asset.localName === 'script';

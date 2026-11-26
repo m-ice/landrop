@@ -94,10 +94,13 @@ test('chat navigation and assets are available before joining the host', async (
   const page = await request('/chat');
   assert.equal(page.status, 200);
   assert.equal(new URL(page.url).pathname, '/chat/');
-  assert.match(await page.text(), /局域网聊天|邻传聊天/);
+  const html = await page.text();
+  assert.match(html, /局域网聊天|邻传聊天/);
+  assert.match(html, /<meta name="landrop-chat-signaling" content="lan">/);
   assert.match(page.headers.get('content-security-policy'), /media-src blob:/);
   for (const [file, type] of [['style.css', 'text/css'], ['peer.js', 'text/javascript'],
-    ['qrcode.js', 'text/javascript'], ['offline.js', 'text/javascript'], ['app.js', 'text/javascript']]) {
+    ['qrcode.js', 'text/javascript'], ['offline.js', 'text/javascript'],
+    ['group.js', 'text/javascript'], ['app.js', 'text/javascript']]) {
     const asset = await request(`/chat/${file}`, { method: 'HEAD' });
     assert.equal(asset.status, 200);
     assert.equal(asset.headers.get('content-type'), `${type}; charset=utf-8`);
@@ -105,6 +108,74 @@ test('chat navigation and assets are available before joining the host', async (
   }
   const privateApi = await request('/api/health', { headers: navigation });
   assert.equal(privateApi.status, 403);
+});
+
+test('room owner approves multiple members and pairing metadata is limited to each pair', async () => {
+  const session = 'a'.repeat(22);
+  const sdp = 'v=0\nm=application 9 UDP/DTLS/SCTP webrtc-datachannel\na=candidate:1 1 udp 1 127.0.0.1 12345 typ host';
+  const token = (kind, name, id = session) =>
+    'LC1.u' + Buffer.from(JSON.stringify([kind, id, name, sdp])).toString('base64url');
+  const rooms = '/api/chat/rooms';
+  const write = (url, method, data, secret) => request(url, {
+    method,
+    headers: {
+      'X-Landrop': '1', 'Content-Type': 'application/json',
+      ...(secret ? { Authorization: `Bearer ${secret}` } : {}),
+    },
+    ...(data === undefined ? {} : { body: JSON.stringify(data) }),
+  });
+  const read = (url, secret) => request(url, {
+    headers: secret ? { Authorization: `Bearer ${secret}` } : {},
+  });
+
+  const createRoom = await write(rooms, 'POST', { name: '创建方' });
+  assert.equal(createRoom.status, 201, await createRoom.clone().text());
+  const { room, ownerToken, memberId, joinOrigins } = await createRoom.json();
+  assert.deepEqual(joinOrigins, []);
+  const roomPath = `${rooms}/${room}`;
+  const requests = `${roomPath}/requests`;
+  const statePath = `${roomPath}/state`;
+  const state = secret => read(statePath, secret).then(res => res.json());
+  assert.equal((await read(roomPath).then(res => res.json())).hostName, '创建方');
+  assert.equal((await read(statePath)).status, 403);
+
+  async function apply(name) {
+    const response = await write(requests, 'POST', { name });
+    assert.equal(response.status, 201, await response.clone().text());
+    return response.json();
+  }
+  const first = await apply('设备一');
+  const second = await apply('设备二');
+  const firstPath = `${requests}/${first.id}`;
+  const secondPath = `${requests}/${second.id}`;
+  const approval = { decision: 'approved' };
+  assert.deepEqual((await state(ownerToken)).requests, [
+    { id: first.id, name: '设备一' }, { id: second.id, name: '设备二' },
+  ]);
+  assert.equal((await state(first.requestToken)).status, 'pending');
+  assert.equal((await write(firstPath, 'PATCH', approval, first.requestToken)).status, 403);
+  assert.equal((await write(firstPath, 'PATCH', approval, ownerToken)).status, 200);
+  assert.equal((await write(secondPath, 'PATCH', approval, ownerToken)).status, 200);
+  const firstState = await state(first.requestToken);
+  assert.equal(firstState.status, 'approved');
+  assert.deepEqual(firstState.members.map(member => member.id), [memberId, first.id, second.id]);
+  assert.deepEqual(firstState.requests, []);
+  const pair = firstState.pairs.find(pair => pair.remoteId === second.id);
+  assert.equal(pair.initiator, true);
+  const pairPath = `${roomPath}/pairs/${pair.id}`;
+  const offer = token('invite', '设备一');
+  const answer = token('request', '设备二');
+  assert.equal((await write(pairPath, 'PUT', { offer }, ownerToken)).status, 403);
+  assert.equal((await write(pairPath, 'PUT', { offer }, first.requestToken)).status, 200);
+  assert.equal((await write(pairPath, 'PUT', { answer: token('request', '设备二', 'b'.repeat(22)) }, second.requestToken)).status, 400);
+  assert.equal((await write(pairPath, 'PUT', { answer }, second.requestToken)).status, 200);
+  assert.equal((await state(first.requestToken)).pairs.find(({ id }) => id === pair.id).answer, answer);
+  assert.equal((await state(ownerToken)).pairs.some(({ id }) => id === pair.id), false);
+  assert.equal((await write(`${roomPath}/members/${second.id}`, 'DELETE', undefined, second.requestToken)).status, 200);
+  assert.equal((await state(first.requestToken)).members.length, 2);
+  assert.equal((await write(roomPath, 'DELETE', undefined, first.requestToken)).status, 403);
+  assert.equal((await write(roomPath, 'DELETE', undefined, ownerToken)).status, 200);
+  assert.equal((await read(roomPath)).status, 404);
 });
 
 test('three separate authenticated devices discover each other',async()=>{
