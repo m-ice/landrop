@@ -1,6 +1,6 @@
 'use strict';
 
-const { randomBytes, timingSafeEqual, createHash } = require('node:crypto');
+const { randomBytes, randomInt, timingSafeEqual, createHash } = require('node:crypto');
 const { inflateSync } = require('node:zlib');
 
 const ROOM_TTL = 10 * 60 * 1000;
@@ -11,6 +11,7 @@ const MAX_ROOMS_PER_IP = 12;
 const MAX_MEMBERS = 6;
 const MAX_REQUESTS = 16;
 const MAX_PENDING = 8;
+const REQUEST_CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 const TOKEN_LIMIT = 16000;
 const SIGNAL_ID = /^[A-Za-z0-9_-]{22}$/;
 const ROOM_PATH = /^\/api\/chat\/rooms\/([A-Za-z0-9_-]{24})(?:\/(state|requests|pairs|members)(?:\/([A-Za-z0-9_-]{24}))?)?$/;
@@ -25,6 +26,16 @@ function newId() {
 
 function newCredential() {
   return randomBytes(32).toString('base64url');
+}
+
+function newRequestCode(requests) {
+  const reserved = new Set([...requests.values()].map(({ code }) => code));
+  let code;
+  do {
+    code = Array.from({ length: 4 }, () =>
+      REQUEST_CODE_ALPHABET[randomInt(REQUEST_CODE_ALPHABET.length)]).join('');
+  } while (reserved.has(code));
+  return code;
 }
 
 function readCredential(req) {
@@ -137,10 +148,11 @@ function createChatSignaling({ assert, json, readJson, cleanText, joinOrigins })
     assert(room.requests.size < MAX_REQUESTS && pendingRequests(room).length < MAX_PENDING, 429, '此房间的加入申请过多。');
     const id = newId();
     const requestToken = newCredential();
+    const code = newRequestCode(room.requests);
     room.requests.set(id, {
-      id, name: getName(name), credential: digest(requestToken), status: 'pending', expiresAt: Date.now() + REQUEST_TTL
+      id, code, name: getName(name), credential: digest(requestToken), status: 'pending', expiresAt: Date.now() + REQUEST_TTL
     });
-    json(res, 201, { id, requestToken });
+    json(res, 201, { id, requestToken, code });
   }
 
   async function decideRequest(req, res, roomId, requestId) {
@@ -190,7 +202,7 @@ function createChatSignaling({ assert, json, readJson, cleanText, joinOrigins })
         offer: pair.offer, answer: pair.answer });
     }
     const members = [...room.members.values()].map(({ id, name }) => ({ id, name }));
-    const requests = isOwner ? pendingRequests(room).map(({ id, name }) => ({ id, name })) : [];
+    const requests = isOwner ? pendingRequests(room).map(({ id, name, code }) => ({ id, name, code })) : [];
     json(res, 200, { status: 'approved', memberId: participant.id, expiresAt: room.expiresAt, members, pairs, requests });
   }
 

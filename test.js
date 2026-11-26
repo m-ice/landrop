@@ -111,7 +111,7 @@ test('chat navigation and assets are available before joining the host', async (
   assert.equal(privateApi.status, 403);
 });
 
-test('room owner approves multiple members and pairing metadata is limited to each pair', async () => {
+test('room owner receives unique application codes and approves multiple members with private pairing metadata', async () => {
   const session = 'a'.repeat(22);
   const sdp = 'v=0\nm=application 9 UDP/DTLS/SCTP webrtc-datachannel\na=candidate:1 1 udp 1 127.0.0.1 12345 typ host';
   const token = (kind, name, id = session) =>
@@ -147,15 +147,22 @@ test('room owner approves multiple members and pairing metadata is limited to ea
   }
   const first = await apply('设备一');
   const second = await apply('设备二');
+  assert.match(first.code, /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{4}$/);
+  assert.match(second.code, /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{4}$/);
+  assert.notEqual(first.code, second.code);
   const firstPath = `${requests}/${first.id}`;
   const secondPath = `${requests}/${second.id}`;
   const approval = { decision: 'approved' };
   assert.deepEqual((await state(ownerToken)).requests, [
-    { id: first.id, name: '设备一' }, { id: second.id, name: '设备二' },
+    { id: first.id, name: '设备一', code: first.code }, { id: second.id, name: '设备二', code: second.code },
   ]);
-  assert.equal((await state(first.requestToken)).status, 'pending');
+  assert.deepEqual(await state(first.requestToken), { status: 'pending' });
+  assert.equal((await read(statePath, first.code)).status, 403);
   assert.equal((await write(firstPath, 'PATCH', approval, first.requestToken)).status, 403);
+  assert.equal((await write(firstPath, 'PATCH', approval, first.code)).status, 403);
   assert.equal((await write(firstPath, 'PATCH', approval, ownerToken)).status, 200);
+  assert.deepEqual((await state(first.requestToken)).requests, []);
+  assert.deepEqual((await state(ownerToken)).requests, [{ id: second.id, name: '设备二', code: second.code }]);
   assert.equal((await write(secondPath, 'PATCH', approval, ownerToken)).status, 200);
   const firstState = await state(first.requestToken);
   assert.equal(firstState.status, 'approved');

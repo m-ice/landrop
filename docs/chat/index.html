@@ -8,14 +8,14 @@
   <meta name="description" content="在同一个局域网里聊天，直接发送消息、图片、视频和文件。">
   <title>邻传 · 局域网聊天</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%23267c5b'/%3E%3Cpath d='M13 14h22v15H23l-6 5v-5h-4z' fill='none' stroke='white' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=qr">
+  <link rel="stylesheet" href="style.css?v=application-code">
   <script defer src="qrcode.js"></script>
   <script defer src="jsqr.js"></script>
   <script defer src="qr-reader.js"></script>
   <script defer src="peer.js"></script>
-  <script defer src="group.js"></script>
+  <script defer src="group.js?v=application-code"></script>
   <script defer src="offline.js"></script>
-  <script defer src="app.js?v=qr"></script>
+  <script defer src="app.js?v=application-code"></script>
 </head>
 <body>
   <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -49,7 +49,7 @@
             <div id="setupPanel">
               <p class="guidance mode-hint" id="setupHint">创建会话后，把邀请链接或二维码发给对方。</p>
               <button class="button primary wide" id="createButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>创建会话</button>
-              <p class="guidance spaced" id="lanHostHint" hidden>想自动接收申请或创建群聊？用 <code>node server.js</code> 启动邻传，再打开局域网聊天。<a href="https://github.com/m-ice/landrop#局域网聊天">查看启动方法</a></p>
+              <p class="guidance spaced" id="lanHostHint" hidden>使用 4 位申请码或群聊需要邻传局域网主机。在创建方电脑运行 <code>node server.js</code> 后，<a href="http://localhost:8080/chat/" target="_blank" rel="noopener">打开本机聊天</a>。<a href="https://github.com/m-ice/landrop#局域网聊天">查看启动方法</a></p>
               <div class="separated" id="manualJoinControls" hidden>
                 <h3>已有邀请</h3>
                 <div class="qr-actions">
@@ -74,11 +74,24 @@
                   <button class="button secondary wide" id="scanAnswerButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>扫描申请二维码</button>
                   <button class="text-button wide" id="pickAnswerImageButton" type="button">读取二维码图片</button>
                 </div>
+                <p class="guidance" id="staticCodeHint">4 位申请码由邻传局域网主机分配。运行 <code>node server.js</code> 后，<a href="http://localhost:8080/chat/" target="_blank" rel="noopener">打开本机聊天</a>创建会话。</p>
               </div>
+              <details class="code-lookup" id="requestCodePanel" hidden>
+                <summary>通过 4 位申请码查找</summary>
+                <form id="requestCodeForm">
+                  <label for="requestCodeInput">加入申请码</label>
+                  <div class="code-input-row">
+                    <input id="requestCodeInput" class="request-code-input" type="text" inputmode="text" minlength="4" maxlength="4" pattern="[A-Za-z0-9]{4}" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="requestCodeHint" required>
+                    <button class="button secondary" type="submit">查找</button>
+                  </div>
+                  <p class="guidance" id="requestCodeHint" role="status">输入对方页面显示的 4 位申请码。</p>
+                </form>
+              </details>
             </div>
             <div id="reviewPanel" hidden>
               <h3>收到加入申请</h3>
               <p class="guidance"><strong id="requesterName"></strong> 申请加入。请核实对方设备名称。</p>
+              <p class="guidance review-code" id="reviewCodePanel" hidden>申请码 <samp class="request-code-value" id="reviewRequestCode"></samp></p>
               <p class="guidance" id="groupRequestCount" hidden></p>
               <div class="pair-actions spaced">
                 <button class="button secondary" id="rejectButton" type="button">拒绝</button>
@@ -93,6 +106,10 @@
             <div id="pendingPanel" hidden>
               <h3>等待发起方确认</h3>
               <p class="guidance" id="pendingHint">加入申请已发出。请保持本页打开，同意后会自动连接。</p>
+              <div class="separated guest-code" id="guestCodePanel" hidden>
+                <p class="guidance">把此码告诉创建方</p>
+                <samp class="request-code-value" id="guestRequestCode" aria-label="加入申请码"></samp>
+              </div>
             </div>
             <div id="handoffPanel" hidden>
               <h3 id="handoffHeading" tabindex="-1">转交加入申请</h3>

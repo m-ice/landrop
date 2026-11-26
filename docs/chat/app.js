@@ -44,6 +44,8 @@
   let groupHost = false;
   let localGroupName = '';
   let groupRequests = [];
+  let selectedGroupRequestId = '';
+  let guestRequestCode = '';
   let busy = false;
   let fileSendingPeer = null;
   let progressFrame = null;
@@ -80,6 +82,10 @@
     $('messageInput').placeholder = connected ? '输入消息' : '连接设备后可发送';
   }
 
+  function currentGroupRequest() {
+    return groupRequests.find(request => request.id === selectedGroupRequestId) || groupRequests[0];
+  }
+
   function render() {
     for (const [name, id] of Object.entries(panels)) $(id).hidden = stage !== name;
     const hostControls = groupHost && Boolean(room) && !['closed', 'failed'].includes(status);
@@ -87,11 +93,18 @@
     const guestRosterOnly = Boolean(group && !groupHost && status === 'connected');
     if (guestRosterOnly) $('connectionPanel').hidden = true;
     $('membersPanel').classList.toggle('separated', !guestRosterOnly);
-    $('reviewPanel').hidden = stage !== 'review' && (!hostControls || !groupRequests.length);
+    const request = currentGroupRequest();
+    $('reviewPanel').hidden = stage !== 'review' && (!hostControls || !request);
     $('reviewPanel').classList.toggle('separated', hostControls);
     $('groupRequestCount').hidden = !hostControls || groupRequests.length < 2;
-    if (groupRequests.length) {
-      $('requesterName').textContent = groupRequests[0].name;
+    $('requestCodePanel').hidden = !hostControls;
+    $('requestCodeForm').querySelector('button').disabled = busy;
+    $('guestCodePanel').hidden = !guestRequestCode;
+    $('guestRequestCode').textContent = guestRequestCode;
+    $('reviewCodePanel').hidden = !hostControls || !request?.code;
+    $('reviewRequestCode').textContent = hostControls && request?.code || '';
+    if (request) {
+      $('requesterName').textContent = request.name;
       $('groupRequestCount').textContent = groupRequests.length > 1 ? `另有 ${groupRequests.length - 1} 份申请。` : '';
     }
     $('pageDescription').textContent = automatic ? '在同一个 Wi-Fi 或局域网内，群聊并互发文字、照片、视频和文件。' : '在同一个 Wi-Fi 或局域网内，一对一发送文字、照片、视频和文件。';
@@ -323,6 +336,11 @@
     groupHost = false;
     localGroupName = '';
     groupRequests = [];
+    selectedGroupRequestId = '';
+    guestRequestCode = '';
+    $('requestCodePanel').open = false;
+    $('requestCodeForm').reset();
+    announce('', false, $('requestCodeHint'));
     previous?.close();
     closeInbox();
   }
@@ -371,12 +389,13 @@
     groupHost = host;
     session.addEventListener('requests', ({ detail }) => {
       if (group !== session) return;
-      const first = groupRequests[0]?.id;
+      const first = currentGroupRequest()?.id;
       groupRequests = detail.requests;
-      const next = groupRequests[0]?.id;
+      if (!groupRequests.some(request => request.id === selectedGroupRequestId)) selectedGroupRequestId = '';
+      const next = currentGroupRequest()?.id;
       if (next && next !== first && $('shareDialog').open) $('shareDialog').close();
       render();
-      if (next && next !== first && !busy) $('approveButton').focus();
+      if (next && next !== first && !busy && !$('requestCodePanel').open) $('approveButton').focus();
     });
     return bindSession(session);
   }
@@ -520,7 +539,9 @@
 
   async function createRequest() {
     if (group) {
-      await group.apply(room.id);
+      const current = group;
+      const code = await current.apply(room.id);
+      if (group === current) guestRequestCode = code || '';
       return;
     }
     const session = bindPeer(defaultName);
@@ -706,11 +727,43 @@
   }
 
   async function decideGroupRequest(decision) {
-    const request = groupRequests[0];
+    const request = currentGroupRequest();
     if (!request) return;
     await group.decide(request.id, decision);
-    groupRequests = groupRequests.filter(item => item.id !== request.id);
+    $('requestCodeForm').reset();
+    announce('', false, $('requestCodeHint'));
     announce(decision === 'approved' ? '' : '已拒绝本次申请。');
+  }
+
+  async function lookupGroupRequest(event) {
+    event.preventDefault();
+    if (!groupHost || !group || busy) return;
+    const input = $('requestCodeInput');
+    const feedback = $('requestCodeHint');
+    const code = input.value.trim().toUpperCase();
+    input.value = code;
+    if (!/^[2-9A-HJ-NP-Z]{4}$/.test(code)) {
+      announce('请输入对方页面显示的 4 位申请码。', true, feedback);
+      return;
+    }
+    let matched = false;
+    await task(async () => {
+      announce('正在查找申请…', false, feedback);
+      try {
+        const requests = await group.refreshRequests();
+        const request = requests.find(item => item.code === code);
+        if (!request) {
+          announce('没有找到该申请。请核对申请码，或让对方重新申请。', true, feedback);
+          return;
+        }
+        selectedGroupRequestId = request.id;
+        matched = true;
+        announce('已找到申请，请核对设备后确认。', false, feedback);
+      } catch (error) {
+        announce(error.message || '暂时无法查找申请，请重试。', true, feedback);
+      }
+    });
+    if (matched) $('approveButton').focus();
   }
 
   function readableSize(bytes) {
@@ -941,6 +994,8 @@
     }, '正在读取二维码…');
   });
   $('requestButton').addEventListener('click', () => task(createRequest, '正在生成加入申请…'));
+  $('requestCodeForm').addEventListener('submit', lookupGroupRequest);
+  $('requestCodeInput').addEventListener('input', () => announce('', false, $('requestCodeHint')));
   $('showInviteButton').addEventListener('click', () => room ? openShare('room', room.id) : openShare('invite', offer.token));
   $('showAnswerButton').addEventListener('click', () => openShare('answer', answer.token));
   $('approveButton').addEventListener('click', () => task(approve, '正在建立连接…'));

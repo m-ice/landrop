@@ -104,6 +104,18 @@ label { display: block; margin-bottom: 6px; font-size: .9rem; font-weight: 650; 
 .following { margin-top: 8px; }
 .separated { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
 .qr-actions { display: grid; gap: 4px; margin-top: 10px; }
+.code-lookup { margin-top: 13px; padding-top: 4px; border-top: 1px solid var(--line); }
+.code-lookup summary { min-height: 44px; padding-block: 10px; color: var(--accent); cursor: pointer; font-size: .9rem; font-weight: 650; }
+.code-lookup form { margin-top: 7px; }
+.code-lookup .guidance[data-error="true"] { color: var(--error); }
+.code-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.request-code-input, .request-code-value { font-family: ui-monospace, monospace; font-weight: 700; letter-spacing: .15em; }
+.request-code-input { text-transform: uppercase; }
+.request-code-value { padding: 3px 8px; border-radius: 6px; background: var(--soft); color: var(--accent); }
+.review-code { display: flex; align-items: center; gap: 8px; }
+.guest-code { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.guest-code .guidance { margin-top: 0; }
+.guest-code .request-code-value { font-size: 1.35rem; }
 .button, .text-button {
   display: inline-flex;
   min-height: 44px;

@@ -44,6 +44,9 @@
     #closed = false;
     #lastState = '';
     #lastRequests = '';
+    #ownerRequests = [];
+    #requestVersion = 0;
+    #stateVersion = 0;
     #managementDown = false;
     #receivedBytes = 0;
     #receivedCount = 0;
@@ -81,13 +84,26 @@
 
     async apply(room) {
       if (!/^[A-Za-z0-9_-]{24}$/.test(room)) throw new Error('此邀请链接不完整。');
-      const { id, requestToken } = await request('/' + room + '/requests', 'POST', { name: this.#name });
+      const { id, requestToken, code } = await request('/' + room + '/requests', 'POST', { name: this.#name });
       this.#start(room, requestToken, id, false);
+      return code;
+    }
+
+    async refreshRequests() {
+      if (this.#closed || !this.#host) throw new Error('会话已经结束。');
+      const version = ++this.#stateVersion;
+      const state = await this.#request('/state');
+      if (this.#closed) throw new Error('会话已经结束。');
+      this.#updateRequests(state.requests, version);
+      return this.#ownerRequests;
     }
 
     async decide(id, decision) {
       if (this.#closed || !this.#host) throw new Error('会话已经结束。');
       await this.#request('/requests/' + id, 'PATCH', { decision });
+      if (!this.#closed) {
+        this.#updateRequests(this.#ownerRequests.filter(request => request.id !== id), ++this.#stateVersion);
+      }
     }
 
     async sendText(text) {
@@ -144,6 +160,7 @@
     }
 
     async #poll() {
+      const version = ++this.#stateVersion;
       try {
         const state = await this.#request('/state');
         if (this.#closed) return;
@@ -152,7 +169,7 @@
           this.#finish('rejected', '创建者拒绝了申请。你可以重新申请。');
           return;
         }
-        if (state.status === 'approved') this.#update(state);
+        if (state.status === 'approved') this.#update(state, version);
         this.#emitState();
       } catch (error) {
         if (this.#closed) return;
@@ -167,7 +184,18 @@
       }
     }
 
-    #update(state) {
+    #updateRequests(requests, version) {
+      // An older poll can finish after a manual lookup or a completed decision.
+      if (version < this.#requestVersion) return;
+      this.#requestVersion = version;
+      const signature = JSON.stringify(requests);
+      if (signature === this.#lastRequests) return;
+      this.#lastRequests = signature;
+      this.#ownerRequests = requests;
+      this.#emit('requests', { requests });
+    }
+
+    #update(state, version) {
       this.#roster = state.members.filter(member => member.id !== this.#memberId);
       const pairIds = new Set(state.pairs.map(pair => pair.id));
       for (const [memberId, link] of this.#links) {
@@ -175,13 +203,7 @@
         this.#links.delete(memberId);
         link.peer.close();
       }
-      if (this.#host) {
-        const signature = JSON.stringify(state.requests);
-        if (signature !== this.#lastRequests) {
-          this.#lastRequests = signature;
-          this.#emit('requests', { requests: state.requests });
-        }
-      }
+      if (this.#host) this.#updateRequests(state.requests, version);
       const names = new Map(this.#roster.map(member => [member.id, member.name]));
       for (const pair of state.pairs) {
         let link = this.#links.get(pair.remoteId);
