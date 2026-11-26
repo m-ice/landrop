@@ -16,6 +16,15 @@ const { Transform } = require('node:stream');
 const { pipeline } = require('node:stream/promises');
 
 const ROOT = __dirname;
+const CHAT_ASSETS = new Map([
+  ['/chat/', ['index.html', 'text/html']],
+  ['/chat/index.html', ['index.html', 'text/html']],
+  ['/chat/style.css', ['style.css', 'text/css']],
+  ['/chat/qrcode.js', ['qrcode.js', 'text/javascript']],
+  ['/chat/peer.js', ['peer.js', 'text/javascript']],
+  ['/chat/app.js', ['app.js', 'text/javascript']],
+  ['/chat/offline.js', ['offline.js', 'text/javascript']],
+]);
 const PORT = positiveNumber('PORT', 8080, 65535);
 const HOST = process.env.HOST || '0.0.0.0';
 const QUOTA = Math.floor(positiveNumber('MAX_TOTAL_GB', 20, 1024 * 1024) * 1024 ** 3);
@@ -59,15 +68,16 @@ function json(res, status, value, extra = {}) {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': body.length, ...extra });
   res.end(body);
 }
-function securityHeaders(res) {
+function securityHeaders(res, chatPage = false) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'no-referrer');
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
-  res.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
+  const media = chatPage ? "img-src 'self' data: blob:; media-src blob:" : "img-src 'self' data:";
+  res.setHeader('Content-Security-Policy', `default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; ${media}; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'`);
 }
-function checkHostAndOrigin(req) {
+function checkHostAndOrigin(req, chatNavigation = false) {
   let host;
   try { host = new URL(`http://${req.headers.host}`).hostname.toLowerCase(); }
   catch { throw new HttpError(400, 'Host 无效。'); }
@@ -77,7 +87,7 @@ function checkHostAndOrigin(req) {
     try { origin = new URL(req.headers.origin); } catch { throw new HttpError(403, '不允许跨站访问。'); }
     assert(['http:', 'https:'].includes(origin.protocol) && origin.host === req.headers.host, 403, '不允许跨站访问。');
   }
-  assert(!['cross-site'].includes(req.headers['sec-fetch-site']), 403, '不允许跨站访问。');
+  assert(chatNavigation || req.headers['sec-fetch-site'] !== 'cross-site', 403, '不允许跨站访问。');
   if (!['GET', 'HEAD'].includes(req.method)) {
     assert(req.headers['x-landrop'] === '1', 403, '缺少同源请求标识。');
   }
@@ -231,13 +241,29 @@ async function download(req, res, s, id) {
 }
 async function route(req, res) {
   securityHeaders(res);
-  checkHostAndOrigin(req);
-  const url = new URL(req.url, `http://${req.headers.host}`);
   const method = req.method;
+  const chatNavigation = method === 'GET' && req.headers['sec-fetch-mode'] === 'navigate' &&
+    req.headers['sec-fetch-dest'] === 'document' && ['/chat', '/chat/', '/chat/index.html'].includes(req.url.split('?')[0]);
+  checkHostAndOrigin(req, chatNavigation);
+  const url = new URL(req.url, `http://${req.headers.host}`);
   if ((url.pathname === '/' || url.pathname === '/index.html') && ['GET', 'HEAD'].includes(method)) {
     const page = await fsp.readFile(path.join(ROOT, 'index.html'));
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': page.length });
     res.end(method === 'HEAD' ? undefined : page); return;
+  }
+  if (method === 'GET' || method === 'HEAD') {
+    if (url.pathname === '/chat') {
+      res.writeHead(308, { Location: '/chat/' });
+      res.end(); return;
+    }
+    const chatAsset = CHAT_ASSETS.get(url.pathname);
+    if (chatAsset) {
+      const [name, type] = chatAsset;
+      if (type === 'text/html') securityHeaders(res, true);
+      const content = await fsp.readFile(path.join(ROOT, 'docs', 'chat', name));
+      res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8`, 'Content-Length': content.length });
+      res.end(method === 'HEAD' ? undefined : content); return;
+    }
   }
   if (url.pathname === '/favicon.ico') { res.writeHead(204); res.end(); return; }
   if (url.pathname === '/api/health' && method === 'GET') { json(res, 200, { ok: true, app: 'landrop' }); return; }

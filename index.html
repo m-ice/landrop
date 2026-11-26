@@ -90,13 +90,13 @@
       <p class="note"><svg class="icon"><use href="#i-info"/></svg><span id="storageNote">文件通过局域网主机中转，不上传云端。接收后请及时保存。</span></p>
     </div>
   </main>
-  <footer class="footer"><span class="footer-left"><svg class="icon"><use href="#i-globe"/></svg>只走局域网的那一小段路。<span>HTTP 未加密，请仅在可信网络使用。</span></span><button type="button" class="text-button" id="footerHelp">使用帮助 ↗</button><span class="footer-right">BUILT FOR YOUR LOCAL NETWORK</span></footer>
+  <footer class="footer"><span class="footer-left"><svg class="icon"><use href="#i-globe"/></svg>只走局域网的那一小段路。<span>HTTP 未加密，请仅在可信网络使用。</span></span><a class="text-button" href="/chat/">局域网聊天</a><button type="button" class="text-button" id="footerHelp">使用帮助 ↗</button><span class="footer-right">BUILT FOR YOUR LOCAL NETWORK</span></footer>
 </div>
 <div class="modal-layer" id="loginLayer" hidden>
   <section class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <span class="brand-mark"><svg class="icon lg"><use href="#i-logo"/></svg></span><h2 id="loginTitle">和身边的设备，连上线。</h2><p class="modal-description" id="loginDescription">输入主机控制台上的访问码，即可加入。<br>无需注册，也不会把文件发往云端。</p>
     <form id="loginForm"><div class="field"><label for="deviceNameInput">这台设备叫什么？</label><input id="deviceNameInput" name="deviceName" autocomplete="off" maxlength="40" placeholder="例如：我的笔记本" required></div><div class="field"><label for="accessCodeInput">访问码</label><input id="accessCodeInput" name="accessCode" type="password" autocomplete="current-password" maxlength="128" placeholder="在运行 server.js 的控制台查看" required><small>默认是 8 位数字；自定义访问码请按原样输入。</small></div><p class="form-error" id="loginError" role="alert" hidden></p><button type="submit" class="primary-button submit" id="joinButton">加入局域网 <svg class="icon"><use href="#i-arrow"/></svg></button></form>
-    <p class="modal-foot">只在可信局域网使用 · HTTP 连接未加密<br><button class="text-button" id="loginHelp" type="button">第一次使用？查看启动方法</button></p>
+    <p class="modal-foot">只在可信局域网使用 · HTTP 连接未加密<br><button class="text-button" id="loginHelp" type="button">第一次使用？查看启动方法</button><br><a class="text-button" href="/chat/">打开局域网聊天</a></p>
   </section>
 </div>
 <div class="modal-layer help-layer" id="helpLayer" hidden>

@@ -8,6 +8,7 @@ const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 const net = require('node:net');
+const http = require('node:http');
 const crypto = require('node:crypto');
 let proc, tmp, origin, port, alice, bob, carol, privateFile, sharedFile;
 const code = 'TEST-12345678';
@@ -80,6 +81,32 @@ test('static page, unauthenticated API, host/origin/CSRF checks',async()=>{
   assert.equal((await jsonRequest('/api/join','POST',{code:'bad',name:'x'})).status,403);
   assert.equal((await jsonRequest('/api/join','POST',null)).status,400);
 });
+test('chat navigation and assets are available before joining the host', async () => {
+  const navigation = { 'Sec-Fetch-Site': 'cross-site', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Dest': 'document' };
+  const redirect = await new Promise((resolve, reject) => {
+    http.get(`${origin}/chat`, { headers: navigation }, response => {
+      response.resume();
+      resolve(response);
+    }).on('error', reject);
+  });
+  assert.equal(redirect.statusCode, 308);
+  assert.equal(redirect.headers.location, '/chat/');
+  const page = await request('/chat');
+  assert.equal(page.status, 200);
+  assert.equal(new URL(page.url).pathname, '/chat/');
+  assert.match(await page.text(), /局域网聊天|邻传聊天/);
+  assert.match(page.headers.get('content-security-policy'), /media-src blob:/);
+  for (const [file, type] of [['style.css', 'text/css'], ['peer.js', 'text/javascript'],
+    ['qrcode.js', 'text/javascript'], ['offline.js', 'text/javascript'], ['app.js', 'text/javascript']]) {
+    const asset = await request(`/chat/${file}`, { method: 'HEAD' });
+    assert.equal(asset.status, 200);
+    assert.equal(asset.headers.get('content-type'), `${type}; charset=utf-8`);
+    assert.ok(Number(asset.headers.get('content-length')) > 0);
+  }
+  const privateApi = await request('/api/health', { headers: navigation });
+  assert.equal(privateApi.status, 403);
+});
+
 test('three separate authenticated devices discover each other',async()=>{
   alice=await join('发送端'); bob=await join('接收端'); carol=await join('无关第三台');
   const r=await request('/api/state',{},alice.cookie); const s=await r.json();

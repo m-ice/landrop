@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="在同一个局域网里聊天，直接发送消息、图片、视频和文件。">
+  <title>邻传 · 局域网聊天</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%23267c5b'/%3E%3Cpath d='M13 14h22v15H23l-6 5v-5h-4z' fill='none' stroke='white' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="qrcode.js"></script>
+  <script defer src="peer.js"></script>
+  <script defer src="offline.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M8 10h8"/></symbol>
+    <symbol id="i-device" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="m10 13 4-4m-5 7-2 2a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0m0 10a4 4 0 0 0 6 0l5-5a4 4 0 0 0-6-6l-2 2" transform="translate(1 1) scale(.9)"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><path d="M3 3h6v6H3zm12 0h6v6h-6zM3 15h6v6H3zm12 0h3v3h3v3m-6 0h1m5-6v1"/></symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24"><path d="m8 13 7-7a3 3 0 0 1 4 4l-9 9a5 5 0 0 1-7-7l9-9m-5 11a1.5 1.5 0 0 0 2 2l8-8"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 9 15m13-13-8 20-5-7-7-5Z"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm8 0v5h5m-11 5h7m-7 4h7"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5m-13 5v5h16v-5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  </svg>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></span><span>邻传 <span class="brand-detail">/ 聊天</span></span></div>
+      <div class="top-actions">
+        <button class="quiet-button offline-button" id="offlineButton" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>保存离线网页</span></button>
+        <a class="quiet-button" id="fileTransferLink" href="../index.html">文件传输</a>
+      </div>
+    </header>
+    <main>
+      <div class="page-heading"><h1>局域网聊天</h1><p>在同一个 Wi-Fi 或局域网内，一对一发送文字、照片、视频和文件。</p></div>
+      <p class="notice" id="notice" role="status" hidden></p>
+      <div class="workspace">
+        <section class="session" aria-labelledby="sessionTitle">
+          <header class="section-heading"><svg class="icon" aria-hidden="true"><use href="#i-device"/></svg><h2 id="sessionTitle">设备连接</h2></header>
+          <div class="session-body">
+            <div id="setupPanel">
+              <div class="field"><label for="deviceName">我的设备名称</label><input id="deviceName" maxlength="40" autocomplete="off" value="我的设备"></div>
+              <button class="button primary wide" id="createButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>创建会话</button>
+              <form id="joinForm" class="separated">
+                <label for="inviteInput">已有邀请</label>
+                <div class="field"><textarea id="inviteInput" rows="2" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="粘贴邀请链接或连接码" required></textarea></div>
+                <button class="button secondary wide" type="submit">查看邀请</button>
+              </form>
+            </div>
+            <div id="invitePanel" hidden>
+              <h3>加入会话</h3>
+              <p class="guidance"><strong id="inviterName"></strong> 邀请你聊天。生成申请后，请把链接或二维码交还给对方确认。</p>
+              <div class="field spaced"><label for="joinName">我的设备名称</label><input id="joinName" maxlength="40" autocomplete="off"></div>
+              <button class="button primary wide" id="requestButton" type="button">申请加入</button>
+            </div>
+            <div id="hostPanel" hidden>
+              <h3>邀请另一台设备</h3>
+              <p class="guidance">让对方打开邀请链接或扫描二维码，再把生成的加入申请发给你。</p>
+              <button class="button secondary wide spaced" id="showInviteButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>邀请链接与二维码</button>
+              <form id="answerForm" class="separated">
+                <label for="answerInput">收到的加入申请</label>
+                <div class="field"><textarea id="answerInput" rows="2" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="粘贴申请链接或连接码" required></textarea></div>
+                <button class="button secondary wide" type="submit">查看申请</button>
+              </form>
+            </div>
+            <div id="reviewPanel" hidden>
+              <h3>收到加入申请</h3>
+              <p class="guidance"><strong id="requesterName"></strong> 申请加入。请核实对方设备名称。</p>
+              <div class="pair-actions spaced">
+                <button class="button secondary" id="rejectButton" type="button">拒绝</button>
+                <button class="button primary" id="approveButton" type="button">同意并连接</button>
+              </div>
+            </div>
+            <div id="requestPanel" hidden>
+              <h3>把申请交给对方</h3>
+              <p class="guidance">让发起方打开申请链接、扫描二维码或粘贴连接码。确认后即可聊天。</p>
+              <button class="button secondary wide spaced" id="showAnswerButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>申请链接与二维码</button>
+            </div>
+            <div id="handoffPanel" hidden>
+              <h3>转交加入申请</h3>
+              <p class="guidance">将 <strong id="handoffName"></strong> 的申请发给本浏览器中创建会话的标签页。</p>
+              <button class="button primary wide spaced" id="handoffButton" type="button">转交申请</button>
+              <button class="button secondary wide following" id="copyHandoffButton" type="button">复制申请链接</button>
+              <p class="guidance spaced">也可以复制链接，回到创建会话的原页面粘贴。</p>
+            </div>
+            <div id="connectionPanel" hidden>
+              <h3 id="connectedName"></h3>
+              <p class="guidance" id="connectionHint"></p>
+            </div>
+            <button class="text-button spaced" id="resetButton" type="button" hidden>返回连接选项</button>
+            <div class="session-foot"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>设备直连 · 页面关闭后聊天记录清除</span></div>
+          </div>
+        </section>
+        <section class="conversation" aria-labelledby="threadTitle">
+          <header class="thread-heading">
+            <span class="thread-icon"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></span>
+            <div class="thread-title"><h2 id="threadTitle">聊天消息</h2><p id="threadSubtitle">连接另一台设备后开始聊天</p></div>
+            <span class="connection-status" id="connectionStatus" role="status" data-state="idle"><span class="status-dot" aria-hidden="true"></span><span id="connectionLabel">未连接</span></span>
+          </header>
+          <div class="message-viewport" id="messageViewport" tabindex="0" aria-label="聊天记录">
+            <div class="thread-empty" id="emptyThread"><span class="empty-icon"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></span><h3 id="emptyTitle">等待设备加入</h3><p id="emptyHint">创建会话或打开对方的邀请，建立连接后即可发送消息和附件。</p></div>
+            <ol class="messages" id="messages" role="log" aria-label="聊天消息" aria-live="polite" aria-relevant="additions" hidden></ol>
+          </div>
+          <form id="composer" class="composer" aria-label="编写消息">
+            <ul class="attachments" id="attachments" aria-label="待发送附件" hidden></ul>
+            <div class="compose-row">
+              <button class="button secondary icon-button" type="button" id="attachButton" aria-label="添加附件" title="添加附件" disabled><svg class="icon" aria-hidden="true"><use href="#i-paperclip"/></svg></button>
+              <input type="file" id="fileInput" multiple hidden>
+              <textarea id="messageInput" rows="1" maxlength="4000" placeholder="输入消息" aria-label="消息内容" disabled></textarea>
+              <button class="button primary" type="submit" id="sendButton" disabled><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg><span>发送</span></button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+    <noscript><p class="notice">请启用 JavaScript 后使用局域网聊天。</p></noscript>
+  </div>
+  <dialog id="shareDialog" aria-labelledby="shareTitle">
+    <header class="dialog-heading"><h2 id="shareTitle"></h2><form method="dialog"><button class="button secondary icon-button" aria-label="关闭" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></form></header>
+    <p class="guidance" id="shareHint"></p>
+    <div class="qr-wrap"><canvas id="qrCanvas" role="img" aria-label="会话二维码" hidden></canvas><p id="qrHint" class="guidance" hidden></p></div>
+    <label for="shareLink">链接</label><textarea id="shareLink" rows="2" readonly spellcheck="false"></textarea>
+    <div class="share-actions"><button class="button secondary" id="copyTokenButton" type="button">复制连接码</button><button class="button primary" id="copyLinkButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>复制链接</button></div>
+    <p class="guidance spaced" id="shareStatus" role="status" hidden></p>
+  </dialog>
+</body>
+</html>
