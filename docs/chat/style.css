@@ -104,6 +104,9 @@ label { display: block; margin-bottom: 6px; font-size: .9rem; font-weight: 650; 
 .spaced { margin-top: 14px; }
 .following { margin-top: 8px; }
 .separated { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
+.manual-answer { margin-top: 12px; padding-top: 4px; border-top: 1px solid var(--line); }
+.manual-answer summary { min-height: 44px; padding: 10px 0; color: var(--accent); cursor: pointer; font-size: .9rem; font-weight: 650; }
+.manual-answer form { margin-top: 8px; }
 .button, .text-button {
   display: inline-flex;
   min-height: 44px;

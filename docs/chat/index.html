@@ -48,7 +48,7 @@
               <div class="field" id="deviceNameField"><label for="deviceName">我的设备名称</label><input id="deviceName" maxlength="40" autocomplete="off" value="我的设备"></div>
               <p class="guidance mode-hint" id="setupHint">创建会话后，把邀请链接或二维码发给对方。</p>
               <button class="button primary wide" id="createButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>创建会话</button>
-              <p class="guidance spaced" id="lanHostHint" hidden>多人会话和自动接收申请可通过邻传局域网主机使用。<a href="https://github.com/m-ice/landrop#局域网聊天">查看启动方法</a></p>
+              <p class="guidance spaced" id="lanHostHint" hidden>想自动接收申请或创建群聊？用 <code>node server.js</code> 启动邻传，再打开局域网聊天。<a href="https://github.com/m-ice/landrop#局域网聊天">查看启动方法</a></p>
               <form id="joinForm" class="separated">
                 <label for="inviteInput">已有邀请</label>
                 <div class="field"><textarea id="inviteInput" rows="2" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="粘贴邀请链接或连接码" required></textarea></div>
@@ -64,13 +64,16 @@
             </div>
             <div id="hostPanel" hidden>
               <h3>邀请另一台设备</h3>
-              <p class="guidance" id="hostHint">让对方打开邀请链接或扫描二维码，再把生成的加入申请发给你。</p>
+              <p class="guidance" id="hostHint">请对方将申请链接发给你。保持本标签页打开，用同一个浏览器打开申请链接，然后回到这里确认。</p>
               <button class="button secondary wide spaced" id="showInviteButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>邀请链接与二维码</button>
-              <form id="answerForm" class="separated">
-                <label for="answerInput">收到的加入申请</label>
-                <div class="field"><textarea id="answerInput" rows="2" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="粘贴申请链接或连接码" required></textarea></div>
-                <button class="button secondary wide" type="submit">查看申请</button>
-              </form>
+              <details id="manualAnswer" class="manual-answer" hidden>
+                <summary>无法打开申请链接？手动粘贴</summary>
+                <form id="answerForm">
+                  <label for="answerInput">加入申请链接</label>
+                  <div class="field"><textarea id="answerInput" rows="2" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="粘贴完整的申请链接" required></textarea></div>
+                  <button class="button secondary wide" type="submit">查看申请</button>
+                </form>
+              </details>
             </div>
             <div id="reviewPanel" hidden>
               <h3>收到加入申请</h3>
@@ -83,7 +86,7 @@
             </div>
             <div id="requestPanel" hidden>
               <h3>把申请交给对方</h3>
-              <p class="guidance">让发起方打开申请链接、扫描二维码或粘贴连接码。确认后即可聊天。</p>
+              <p class="guidance">把申请链接发给创建者，请对方用创建会话的浏览器打开链接，再回到原标签页确认。</p>
               <button class="button secondary wide spaced" id="showAnswerButton" type="button"><svg class="icon" aria-hidden="true"><use href="#i-qr"/></svg>申请链接与二维码</button>
             </div>
             <div id="pendingPanel" hidden>
@@ -91,11 +94,11 @@
               <p class="guidance" id="pendingHint">加入申请已发出。请保持本页打开，同意后会自动连接。</p>
             </div>
             <div id="handoffPanel" hidden>
-              <h3>转交加入申请</h3>
-              <p class="guidance">将 <strong id="handoffName"></strong> 的申请发给本浏览器中创建会话的标签页。</p>
-              <button class="button primary wide spaced" id="handoffButton" type="button">转交申请</button>
-              <button class="button secondary wide following" id="copyHandoffButton" type="button">复制申请链接</button>
-              <p class="guidance spaced">也可以复制链接，回到创建会话的原页面粘贴。</p>
+              <h3 id="handoffHeading" tabindex="-1">转交加入申请</h3>
+              <p class="guidance"><strong id="handoffName"></strong> 申请加入。</p>
+              <p class="guidance" id="handoffHint" role="status">正在查找创建会话的标签页…</p>
+              <button class="button primary wide spaced" id="handoffButton" type="button" hidden>重试转交</button>
+              <button class="button secondary wide following" id="copyHandoffButton" type="button" hidden>复制申请链接</button>
             </div>
             <div id="connectionPanel" hidden>
               <h3 id="connectedName"></h3>

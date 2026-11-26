@@ -34,6 +34,7 @@
   let offer = null;
   let answer = null;
   let hostInbox = null;
+  let handoffState = '';
   let shareToken = '';
   let shareQr = null;
   let room = null;
@@ -98,10 +99,19 @@
     $('joinNameField').hidden = Boolean(room);
     $('joiningDevice').hidden = !group;
     $('joiningDevice').textContent = localGroupName ? `我的设备 ${localGroupName}` : '';
-    $('answerForm').hidden = Boolean(room);
-    $('setupHint').textContent = automatic ? '创建会话并分享链接或二维码，收到申请后点同意。每个会话最多 6 台设备。' : '离线配对需要双方交换连接信息。';
-    $('joinHint').textContent = room ? '点击申请加入，等待对方确认。' : '生成申请后，请把链接或二维码交还给对方确认。';
-    $('hostHint').textContent = room ? '请对方扫描二维码或打开邀请链接，申请会出现在此处。' : '让对方打开邀请链接或扫描二维码，再把生成的加入申请发给你。';
+    $('manualAnswer').hidden = Boolean(room);
+    $('setupHint').textContent = automatic ? '创建会话并分享链接或二维码，收到申请后点同意。每个会话最多 6 台设备。' : '当前为一对一配对。创建后，请把邀请链接或二维码发给对方。';
+    $('joinHint').textContent = room ? '点击申请加入，等待对方确认。' : '生成申请后，把申请链接发给创建方。';
+    $('hostHint').textContent = room
+      ? '请对方扫描二维码或打开邀请链接，申请会出现在此处。'
+      : '请对方把申请链接发给你。保留此页，在同一个浏览器打开申请链接，回来点同意。';
+    $('handoffHint').textContent = {
+      checking: '正在查找创建会话的标签页…',
+      delivered: '申请已转交，请回到创建会话的标签页点击同意。',
+      failed: '未找到等待申请的标签页。请在创建会话的浏览器打开此链接，或在原页面展开手动粘贴。'
+    }[handoffState] || '';
+    $('handoffButton').hidden = handoffState !== 'failed';
+    $('copyHandoffButton').hidden = handoffState !== 'failed';
     $('pendingHint').textContent = statusMessage.startsWith('暂时无法') ? statusMessage + ' 请保持本页打开，网页会重试连接。' : '加入申请已发出。请保持本页打开，同意后会自动连接。';
     const reset = $('resetButton');
     reset.hidden = stage === 'setup';
@@ -218,7 +228,7 @@
     $('copyTokenButton').hidden = roomInvite;
     $('shareTitle').textContent = invitation ? '分享邀请' : '分享加入申请';
     const instructions = roomInvite ? '请对方扫码或打开链接，点申请加入。收到申请后，你可以同意或拒绝。' :
-      invitation ? '用另一台设备扫描二维码或打开链接。' : '请发起方扫描二维码或打开链接，回到原页面确认。';
+      invitation ? '用另一台设备扫描二维码或打开链接。' : '请创建方在创建会话的浏览器打开此链接，再回到原页面确认。';
     const offlineHint = !served ? '无外网时，请复制链接或连接码，粘贴到对方已打开的离线网页。' : '';
     let loopbackHint = '';
     if (loopback && !origins.length) {
@@ -294,7 +304,7 @@
     finally {
       busy = false;
       render();
-      const nextControl = { invite: 'requestButton', review: 'approveButton', handoff: 'handoffButton' }[stage];
+      const nextControl = { invite: 'requestButton', review: 'approveButton', handoff: 'handoffHeading' }[stage];
       if (nextControl && stage !== originalStage && !$('shareDialog').open) $(nextControl).focus();
     }
   }
@@ -321,11 +331,13 @@
     failReceives('接收中断，请让对方重新发送。');
     closePeer();
     offer = answer = null;
+    handoffState = '';
     status = wasConnected ? 'closed' : 'idle';
     stage = 'setup';
     statusMessage = '';
     if ($('shareDialog').open) $('shareDialog').close();
     $('inviteInput').value = $('answerInput').value = $('messageInput').value = '';
+    $('manualAnswer').open = false;
     attachments.length = 0;
     renderAttachments();
     announce(wasConnected ? '连接已断开。' : '');
@@ -528,6 +540,7 @@
     const pending = await read(input, 'request');
     if (!peer || stage !== 'host' || pending.info.sessionId !== peer.sessionId) throw new Error('这份加入申请不属于当前会话。请回到生成邀请的页面。');
     answer = pending;
+    $('manualAnswer').open = false;
     if ($('shareDialog').open) $('shareDialog').close();
     $('requesterName').textContent = answer.info.name;
     stage = 'review';
@@ -543,7 +556,12 @@
     try { hostInbox = answerChannel(sessionId); } catch { return; }
     const inbox = hostInbox;
     inbox.addEventListener('message', ({ data }) => {
-      if (stage !== 'host' || data?.kind !== 'join-request' || typeof data.id !== 'string' || typeof data.token !== 'string') return;
+      if (data?.kind !== 'join-request' || typeof data.id !== 'string' || typeof data.token !== 'string') return;
+      if (stage === 'review' && answer?.token === data.token) {
+        inbox.postMessage({ kind: 'request-received', id: data.id });
+        return;
+      }
+      if (stage !== 'host') return;
       inspectAnswer(data.token).then(() => {
         if (hostInbox === inbox) inbox.postMessage({ kind: 'request-received', id: data.id });
       }).catch(() => {});
@@ -551,22 +569,29 @@
   }
 
   async function handOffAnswer() {
+    handoffState = 'checking';
+    render();
     let channel;
-    try { channel = answerChannel(answer.info.sessionId); }
-    catch { throw new Error('此浏览器无法转交。请复制申请链接并回到创建会话的原页面粘贴。'); }
-    const id = Array.from(crypto.getRandomValues(new Uint32Array(3)), value => value.toString(16)).join('-');
-    const delivered = await new Promise(resolve => {
-      const timer = setTimeout(() => { channel.close(); resolve(false); }, 2500);
-      channel.addEventListener('message', ({ data }) => {
-        if (data?.kind !== 'request-received' || data.id !== id) return;
-        clearTimeout(timer);
-        channel.close();
-        resolve(true);
+    try {
+      const { token, info } = answer;
+      channel = answerChannel(info.sessionId);
+      const id = Array.from(crypto.getRandomValues(new Uint32Array(3)), value => value.toString(16)).join('-');
+      const delivered = await new Promise(resolve => {
+        const timer = setTimeout(() => resolve(false), 4000);
+        channel.addEventListener('message', ({ data }) => {
+          if (data?.kind !== 'request-received' || data.id !== id) return;
+          clearTimeout(timer);
+          resolve(true);
+        });
+        try { channel.postMessage({ kind: 'join-request', id, token }); }
+        catch { clearTimeout(timer); resolve(false); }
       });
-      channel.postMessage({ kind: 'join-request', id, token: answer.token });
-    });
-    if (!delivered) throw new Error('没有找到等待申请的原页面。请复制链接，回到创建会话的页面粘贴。');
-    announce('申请已转交。请返回创建会话的页面确认。');
+      handoffState = delivered ? 'delivered' : 'failed';
+    } catch {
+      handoffState = 'failed';
+    } finally {
+      channel?.close();
+    }
   }
 
   async function approve() {
@@ -588,7 +613,7 @@
     stage = 'host';
     announce('已拒绝本次申请。你仍可查看其他设备的申请。');
     render();
-    $('answerInput').focus();
+    $('showInviteButton').focus();
   }
 
   async function decideGroupRequest(decision) {
@@ -821,7 +846,7 @@
   });
   $('approveButton').addEventListener('click', () => task(approve, '正在建立连接…'));
   $('rejectButton').addEventListener('click', () => task(reject));
-  $('handoffButton').addEventListener('click', () => task(handOffAnswer, '正在查找创建会话的页面…'));
+  $('handoffButton').addEventListener('click', () => task(handOffAnswer));
   $('copyHandoffButton').addEventListener('click', () => copy(shareUrl('answer', answer.token)));
   $('resetButton').addEventListener('click', reset);
   $('copyTokenButton').addEventListener('click', () => copy(shareToken, $('shareStatus')));
@@ -862,6 +887,7 @@
         answer = await read(requestToken, 'request');
         $('handoffName').textContent = answer.info.name;
         stage = 'handoff';
+        await handOffAnswer();
       } else if (stage === 'setup' || stage === 'invite') {
         closePeer();
         await inspectOffer(inviteToken);
